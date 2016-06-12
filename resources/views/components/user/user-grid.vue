@@ -62,48 +62,24 @@
 
 <script>
 export default{
-	data: function () {
-		return {
-			users: []
-		}
-	},
-
-	ready: function() {  	
-  	this.fetchData('/api/user/');
+	props: {
+    users: Array,
+    pagination: Object
   },
 
 	methods: {
-		fetchData: function(api_url){
-  		var resource = this.$resource(api_url);
-
-			resource.get().then(function(response){ 
-				var result = response.data;
-	  		
-	  		this.users = result.data;
-
-	  		this.setPagination(result);
-
-	  	});
-  	},
-  	
-		previous: function(){
-			if(this.pagination.current_page === 1) return;
-
-  		this.fetchData(this.pagination.prev_page_url);	
-  	},
-
-  	next: function(){
-			if(this.pagination.current_page === this.pagination.last_page) return;
-
-  		this.fetchData(this.pagination.next_page_url);
-  	},
-
-  	goTo: function(page){
-  		this.fetchData('/api/user/?page=' + page);
-  	},
-
   	showForm: function(){
   		this.$dispatch('show-form-msg');
+  	},
+
+  	success: function(response){ 
+			var result = response.data;
+
+			//this.data = result;
+  		
+  		this.users = result.data;
+
+  		this.setPagination(result);
   	}
 	},
 

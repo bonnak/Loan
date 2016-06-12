@@ -1,16 +1,7 @@
 export default {
 	data: function(){
 		return {
-			pagination: {
-	  		current_page: '',
-	  		from: '',
-	  		to: '',
-	  		per_page: '',
-	  		last_page: '',
-	  		total: '',
-	  		next_page_url: '',
-	  		prev_page_url: ''
-	  	},
+			
 			check_all: false,
 			checked_list: []
 		}
@@ -42,6 +33,28 @@ export default {
   		this.pagination.last_page = pagination.last_page;
   		this.pagination.next_page_url = pagination.next_page_url;
   		this.pagination.prev_page_url = pagination.prev_page_url;
+  	},
+
+  	fetchData: function(api_url, success){
+  		var resource = this.$resource(api_url);
+
+			resource.get().then(success);
+  	},
+  	
+		previous: function(){
+			if(this.pagination.current_page === 1) return;
+
+  		this.fetchData(this.pagination.prev_page_url, this.success);	
+  	},
+
+  	next: function(){
+			if(this.pagination.current_page === this.pagination.last_page) return;
+
+  		this.fetchData(this.pagination.next_page_url, this.success);
+  	},
+
+  	goTo: function(page){
+  		this.fetchData('/api/user/?page=' + page, this.success);
   	}
 	}
 }
