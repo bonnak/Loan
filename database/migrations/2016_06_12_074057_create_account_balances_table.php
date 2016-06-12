@@ -14,7 +14,7 @@ class CreateAccountBalancesTable extends Migration
     {
         Schema::create('account_balances', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('end_of_day');
+            $table->integer('end_of_day_id');
             $table->integer('chart_account_id');
             $table->decimal('amount');
             $table->timestamps();
