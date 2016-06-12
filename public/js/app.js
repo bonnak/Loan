@@ -14834,7 +14834,7 @@ var _dashboard = require('../../views/components/dashboard.vue');
 
 var _dashboard2 = _interopRequireDefault(_dashboard);
 
-var _user_account = require('../../views/components/user_account.vue');
+var _user_account = require('../../views/components/user/user_account.vue');
 
 var _user_account2 = _interopRequireDefault(_user_account);
 
@@ -14860,7 +14860,7 @@ router.map({
 
 router.start(App, 'body');
 
-},{"../../views/components/dashboard.vue":9,"../../views/components/user_account.vue":12,"./mixins/grid":8,"vue":5,"vue-resource":3,"vue-router":4}],8:[function(require,module,exports){
+},{"../../views/components/dashboard.vue":9,"../../views/components/user/user_account.vue":12,"./mixins/grid":8,"vue":5,"vue-resource":3,"vue-router":4}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14869,16 +14869,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {
   data: function data() {
     return {
-      pagination: {
-        current_page: '',
-        from: '',
-        to: '',
-        per_page: '',
-        last_page: '',
-        total: '',
-        next_page_url: '',
-        prev_page_url: ''
-      },
+
       check_all: false,
       checked_list: []
     };
@@ -14908,6 +14899,28 @@ exports.default = {
       this.pagination.last_page = pagination.last_page;
       this.pagination.next_page_url = pagination.next_page_url;
       this.pagination.prev_page_url = pagination.prev_page_url;
+    },
+
+    fetchData: function fetchData(api_url, success) {
+      var resource = this.$resource(api_url);
+
+      resource.get().then(success);
+    },
+
+    previous: function previous() {
+      if (this.pagination.current_page === 1) return;
+
+      this.fetchData(this.pagination.prev_page_url, this.success);
+    },
+
+    next: function next() {
+      if (this.pagination.current_page === this.pagination.last_page) return;
+
+      this.fetchData(this.pagination.next_page_url, this.success);
+    },
+
+    goTo: function goTo(page) {
+      this.fetchData('/api/user/?page=' + page, this.success);
     }
   }
 };
@@ -14983,7 +14996,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/var/www/Loan/resources/views/components/user-form.vue"
+  var id = "/var/www/Loan/resources/views/components/user/user-form.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -14999,58 +15012,35 @@ var __vueify_style__ = require("vueify-insert-css").insert("\n.dataTables_Footer
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 exports.default = {
-	data: function data() {
-		return {
-			users: []
-		};
-	},
+  props: {
+    users: Array,
+    pagination: Object
+  },
 
-	ready: function ready() {
-		this.fetchData('/api/user/');
-	},
+  methods: {
+    showForm: function showForm() {
+      this.$dispatch('show-form-msg');
+    },
 
-	methods: {
-		fetchData: function fetchData(api_url) {
-			var resource = this.$resource(api_url);
+    success: function success(response) {
+      var result = response.data;
 
-			resource.get().then(function (response) {
-				var result = response.data;
+      //this.data = result;
 
-				this.users = result.data;
+      this.users = result.data;
 
-				this.setPagination(result);
-			});
-		},
+      this.setPagination(result);
+    }
+  },
 
-		previous: function previous() {
-			if (this.pagination.current_page === 1) return;
-
-			this.fetchData(this.pagination.prev_page_url);
-		},
-
-		next: function next() {
-			if (this.pagination.current_page === this.pagination.last_page) return;
-
-			this.fetchData(this.pagination.next_page_url);
-		},
-
-		goTo: function goTo(page) {
-			this.fetchData('/api/user/?page=' + page);
-		},
-
-		showForm: function showForm() {
-			this.$dispatch('show-form-msg');
-		}
-	},
-
-	events: {
-		'add-new-user-msg': function addNewUserMsg() {
-			console.log('form grid');
-		}
-	}
+  events: {
+    'add-new-user-msg': function addNewUserMsg() {
+      console.log('form grid');
+    }
+  }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"panel panel-default\">\n\t<div class=\"panel-body\">\n\t\t<div class=\"dataTables_wrapper no-footer\">\t\n\t\t\t<div class=\"dataTables_length\">\n\t\t\t\t<button class=\"btn btn-primary\" v-on:click=\"showForm\">New</button>\n\t\t\t</div>\t\n\t\t\t<div class=\"dataTables_filter\">\n\t\t\t\t<label>Search:<input class=\"form-control \" type=\"search\"></label>\n\t\t\t</div>\n\t\t\t<table class=\"table datatable dataTable no-footer\">\n\t\t    <thead>\n\t\t      <tr>\n\t\t      \t<th style=\"width: 30px; text-align: center;\"><input type=\"checkbox\" v-model=\"check_all\" v-on:change=\"onSelectAll(users)\"></th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting_desc\">User Account</th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting\">Full Name</th>\n\t\t      \t<th style=\"width: 250px;\" class=\"sorting\">Email</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Role</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Status</th>\n\t\t      </tr>\n\t\t    </thead>\n\t\t    <tbody>\n\t\t      <tr v-for=\"user in users\">\n\t\t      \t\t<td style=\"text-align: center;\">\n\t\t      \t\t\t<input type=\"checkbox\" value=\"{{ user.id }}\" v-model=\"checked_list\" v-on:change=\"onSelectItems\">\n\t\t      \t\t</td>\n\t\t          <td>{{ user.user_name }}</td>\n\t\t          <td>{{ user.full_name }}</td>\n\t\t          <td>{{ user.email }}</td>\n\t\t          <td>{{ user.role.name }}</td>\n\t\t          <td>{{ user.status }}</td>\n\t\t      </tr>\n\t\t    </tbody>\n\t\t\t</table>\n\t\t\t<div class=\"dataTables_Footer clearfix\" v-if=\"pagination.last_page > 1\">\n\t\t\t\t<div class=\"footer_left\">\n\t\t\t\t\t<label>Show \n\t\t\t\t\t\t<select class=\"form-control\">\n\t\t\t\t\t\t\t<option value=\"10\">10</option>\n\t\t\t\t\t\t\t<option value=\"25\">25</option>\n\t\t\t\t\t\t\t<option value=\"50\">50</option>\n\t\t\t\t\t\t\t<option value=\"100\">100</option>\n\t\t\t\t\t\t</select> \n\t\t\t\t\t\trecords ({{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }})\n\t\t\t\t\t</label>\n\t\t\t\t</div>\t\t\t\t\n\t\t\t\t<div class=\"dataTables_paginate paging_simple_numbers\">\n\t\t\t\t\t<a v-on:click.stop.prevent=\"previous\" class=\"paginate_button previous\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === 1}\"><i class=\"fa fa-angle-left\"></i></a>\n\t\t\t\t\t<span v-for=\"page in pagination.last_page\">\n\t\t\t\t\t\t<a v-on:click.stop.prevent=\"goTo(page + 1)\" class=\"paginate_button\" v-bind:class=\"{ 'current': pagination.current_page === page + 1}\">{{ page + 1 }}</a>\n\t\t\t\t\t</span>\n\t\t\t\t\t<a v-on:click.stop.prevent=\"next\" class=\"paginate_button next\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === pagination.last_page}\"><i class=\"fa fa-angle-right\"></i></a>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
@@ -15058,7 +15048,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/var/www/Loan/resources/views/components/user-grid.vue"
+  var id = "/var/www/Loan/resources/views/components/user/user-grid.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["\n.dataTables_Footer{\n\tfont-size: 12px;\n\tpadding: 0px 0px 5px; \n}\n\n.dataTables_Footer .footer_left{\n  float: left;     \n}\n\n.dataTables_Footer .footer_left label{\n\tpadding: 0px;  \n  height: auto; \n  margin: 0px; \n  font-weight: normal; \n}\n\n.dataTables_Footer .footer_left select{\n\twidth: auto;\n  display: inline;\n  margin: 0px 5px;\n}\n\n.dataTables_Footer .footer_right{\n\tfloat: right;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -15090,13 +15080,40 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = {
 	data: function data() {
 		return {
-			currentView: 'user_grid'
+			currentView: 'user_grid',
+			users: [],
+			pagination: {
+				current_page: '',
+				from: '',
+				to: '',
+				per_page: '',
+				last_page: '',
+				total: '',
+				next_page_url: '',
+				prev_page_url: ''
+			}
 		};
 	},
 
 	components: {
 		user_grid: _userGrid2.default,
 		user_form: _userForm2.default
+	},
+
+	ready: function ready() {
+		this.fetchData('/api/user/', this.success);
+	},
+
+	methods: {
+		success: function success(response) {
+			var result = response.data;
+
+			//this.data = result;
+
+			this.users = result.data;
+
+			this.setPagination(result);
+		}
 	},
 
 	events: {
@@ -15114,12 +15131,12 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<component :is=\"currentView\"></component>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<component :is=\"currentView\" :users=\"users\" :pagination=\"pagination\">\n</component>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/var/www/Loan/resources/views/components/user_account.vue"
+  var id = "/var/www/Loan/resources/views/components/user/user_account.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["\n"] = false
     document.head.removeChild(__vueify_style__)

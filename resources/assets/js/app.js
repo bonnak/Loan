@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import grid_mixin from './mixins/grid'
 import Dashboard from '../../views/components/dashboard.vue'
-import UserAccount from '../../views/components/user_account.vue'
+import UserAccount from '../../views/components/user/user_account.vue'
 
 
 Vue.use(VueRouter);
