@@ -3,7 +3,7 @@
 		<div class="panel-body">
 			<div class="dataTables_wrapper no-footer">	
 				<div class="dataTables_length">
-					<button class="btn btn-primary" v-on:click="showForm">New</button>
+					<button class="btn btn-primary" v-on:click="showNewForm">New</button>
 				</div>	
 				<div class="dataTables_filter">
 					<label>Search:<input class="form-control " type="search"></label>
@@ -61,22 +61,30 @@
 </template>
 
 <script>
+import grid_mixin from '../../mixins/grid'
+
 export default{
-	props: {
-    users: Array,
-    pagination: Object
+
+  mixins:[grid_mixin],
+
+  data() {
+  	return {
+  		users: []  		
+  	}
   },
 
-	methods: {
-  	showForm: function(){
-  		this.$dispatch('show-form-msg');
-  	},
+	ready: function(){
+		this.fetchData('/api/user/', this.success);
+	},
 
-  	success: function(response){ 
+	methods: {
+  	showNewForm(){
+  		this.$dispatch('switch-view', 'user_form');
+  	},  	
+
+  	success(response){ 
 			var result = response.data;
 
-			//this.data = result;
-  		
   		this.users = result.data;
 
   		this.setPagination(result);
@@ -84,8 +92,8 @@ export default{
 	},
 
 	events: {
-		'add-new-user-msg': function(){
-			console.log('form grid');
+		'parent-add-new-user': function(user){
+			this.users.push(user);
 		}
 	}
 }

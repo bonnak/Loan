@@ -1,10 +1,10 @@
 <?php
 
-Auth::loginUsingId(1);
+//Auth::loginUsingId(1);
 
-Route::group(['middleware' => 'auth'], function(){
-	Route::get('/', 'DashboardController@index');
+//Route::group(['middleware' => 'auth'], function(){
+	//Route::get('/', 'DashboardController@index');
 
-	Route::get('auth/user', 'Auth\AuthController@index');
-});
+	//Route::get('auth/user', 'Auth\AuthController@index');
+//});
 
