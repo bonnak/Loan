@@ -4,7 +4,7 @@
 			<div class="panel-heading">
         <h3 class="panel-title">User Form</h3>
         <ul class="panel-controls">
-            <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+            <li><a @click.stop.prevent="showGrid" class="panel-remove"><span class="fa fa-times"></span></a></li>
         </ul>
       </div>
 			<div class="panel-body">							
@@ -73,20 +73,14 @@ export default{
 			var resource = this.$resource('/api/user');
 
 			resource.save(this.user).then(function(response){
-				console.log(response);
-
 				var user = response.data;
-
 				
+        this.$dispatch('add-new-user', { user : user, view: 'user_grid'});
 			});
-
-			this.$dispatch('add-new-user-msg');
-
-			this.showGrid();
 		},
 
   	showGrid: function(){
-  		this.$dispatch('show-grid-msg');
+  		this.$dispatch('switch-view', 'user_grid');
   	}
 	} 
 }

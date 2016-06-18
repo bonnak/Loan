@@ -14826,24 +14826,18 @@ var _vueRouter = require('vue-router');
 
 var _vueRouter2 = _interopRequireDefault(_vueRouter);
 
-var _grid = require('./mixins/grid');
-
-var _grid2 = _interopRequireDefault(_grid);
-
-var _dashboard = require('../../views/components/dashboard.vue');
+var _dashboard = require('./components/dashboard.vue');
 
 var _dashboard2 = _interopRequireDefault(_dashboard);
 
-var _user_account = require('../../views/components/user/user_account.vue');
+var _user_view = require('./components/user/user_view.vue');
 
-var _user_account2 = _interopRequireDefault(_user_account);
+var _user_view2 = _interopRequireDefault(_user_view);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.use(_vueRouter2.default);
 _vue2.default.use(require('vue-resource'));
-
-_vue2.default.mixin(_grid2.default);
 
 var App = _vue2.default.extend({});
 
@@ -14854,78 +14848,13 @@ router.map({
     component: _dashboard2.default
   },
   '/auth/user': {
-    component: _user_account2.default
+    component: _user_view2.default
   }
 });
 
 router.start(App, 'body');
 
-},{"../../views/components/dashboard.vue":9,"../../views/components/user/user_account.vue":12,"./mixins/grid":8,"vue":5,"vue-resource":3,"vue-router":4}],8:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = {
-  data: function data() {
-    return {
-
-      check_all: false,
-      checked_list: []
-    };
-  },
-
-  methods: {
-    onSelectAll: function onSelectAll(data_set) {
-      if (this.check_all === true) {
-        data_set.forEach(function (data) {
-          this.checked_list.push(data.id + '');
-        }.bind(this));
-      } else {
-        this.checked_list.splice(0);
-      }
-    },
-
-    onSelectItems: function onSelectItems() {
-      this.check_all = false;
-    },
-
-    setPagination: function setPagination(pagination) {
-      this.pagination.current_page = pagination.current_page;
-      this.pagination.from = pagination.from;
-      this.pagination.to = pagination.to;
-      this.pagination.per_page = pagination.per_page;
-      this.pagination.total = pagination.total;
-      this.pagination.last_page = pagination.last_page;
-      this.pagination.next_page_url = pagination.next_page_url;
-      this.pagination.prev_page_url = pagination.prev_page_url;
-    },
-
-    fetchData: function fetchData(api_url, success) {
-      var resource = this.$resource(api_url);
-
-      resource.get().then(success);
-    },
-
-    previous: function previous() {
-      if (this.pagination.current_page === 1) return;
-
-      this.fetchData(this.pagination.prev_page_url, this.success);
-    },
-
-    next: function next() {
-      if (this.pagination.current_page === this.pagination.last_page) return;
-
-      this.fetchData(this.pagination.next_page_url, this.success);
-    },
-
-    goTo: function goTo(page) {
-      this.fetchData('/api/user/?page=' + page, this.success);
-    }
-  }
-};
-
-},{}],9:[function(require,module,exports){
+},{"./components/dashboard.vue":8,"./components/user/user_view.vue":11,"vue":5,"vue-resource":3,"vue-router":4}],8:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("\n")
 "use strict";
 
@@ -14939,7 +14868,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/var/www/Loan/resources/views/components/dashboard.vue"
+  var id = "/var/www/Loan/resources/assets/js/components/dashboard.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -14950,7 +14879,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2,"vueify-insert-css":6}],10:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2,"vueify-insert-css":6}],9:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("\n")
 'use strict';
 
@@ -14975,28 +14904,24 @@ exports.default = {
 			var resource = this.$resource('/api/user');
 
 			resource.save(this.user).then(function (response) {
-				console.log(response);
-
 				var user = response.data;
+
+				this.$dispatch('add-new-user', { user: user, view: 'user_grid' });
 			});
-
-			this.$dispatch('add-new-user-msg');
-
-			this.showGrid();
 		},
 
 		showGrid: function showGrid() {
-			this.$dispatch('show-grid-msg');
+			this.$dispatch('switch-view', 'user_grid');
 		}
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<form class=\"form-horizontal\">\n\t\t<div class=\"panel panel-default\">\n\t\t\t<div class=\"panel-heading\">\n        <h3 class=\"panel-title\">User Form</h3>\n        <ul class=\"panel-controls\">\n            <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n        </ul>\n      </div>\n\t\t\t<div class=\"panel-body\">\t\t\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">User Account</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.user_name\">\n                  </div>                                            \n                  <span class=\"help-block\">This is sample of text field</span>\n              </div>\n          </div>\n          <div class=\"form-group\">                                        \n            <label class=\"col-md-3 col-xs-12 control-label\">Email</label>\n            <div class=\"col-md-6 col-xs-12\">\n                <div>\n                    <input type=\"email\" class=\"form-control\" v-model=\"user.email\">\n                </div>            \n                <span class=\"help-block\">Email field sample</span>\n            </div>\n        \t</div>\n          <div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">Full Name</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.full_name\">\n                  </div>                                            \n                  <span class=\"help-block\">This is sample of text field</span>\n              </div>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"col-md-3 col-xs-12 control-label\">Role</label>\n            <div class=\"col-md-6 col-xs-12\">                                                                                            \n                <select class=\"form-control\" v-model=\"user.role_id\">\n                    <option value=\"1\">Adminstrator</option>\n                    <option value=\"2\">Accountant</option>\n                </select>\n                <span class=\"help-block\">Select box example</span>\n            </div>\n        \t</div>\t\t\t\t\t\t\n\t\t\t</div>\n\t\t\t<div class=\"panel-footer\">\n        <button class=\"btn btn-default\">Clear</button>                                    \n        <button class=\"btn btn-primary pull-right\" v-on:click.stop.prevent=\"saveUser\">Save</button>\n      </div>\n\t\t</div>\n\t</form>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<form class=\"form-horizontal\">\n\t\t<div class=\"panel panel-default\">\n\t\t\t<div class=\"panel-heading\">\n        <h3 class=\"panel-title\">User Form</h3>\n        <ul class=\"panel-controls\">\n            <li><a @click.stop.prevent=\"showGrid\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n        </ul>\n      </div>\n\t\t\t<div class=\"panel-body\">\t\t\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">User Account</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.user_name\">\n                  </div>                                            \n                  <span class=\"help-block\">This is sample of text field</span>\n              </div>\n          </div>\n          <div class=\"form-group\">                                        \n            <label class=\"col-md-3 col-xs-12 control-label\">Email</label>\n            <div class=\"col-md-6 col-xs-12\">\n                <div>\n                    <input type=\"email\" class=\"form-control\" v-model=\"user.email\">\n                </div>            \n                <span class=\"help-block\">Email field sample</span>\n            </div>\n        \t</div>\n          <div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">Full Name</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.full_name\">\n                  </div>                                            \n                  <span class=\"help-block\">This is sample of text field</span>\n              </div>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"col-md-3 col-xs-12 control-label\">Role</label>\n            <div class=\"col-md-6 col-xs-12\">                                                                                            \n                <select class=\"form-control\" v-model=\"user.role_id\">\n                    <option value=\"1\">Adminstrator</option>\n                    <option value=\"2\">Accountant</option>\n                </select>\n                <span class=\"help-block\">Select box example</span>\n            </div>\n        \t</div>\t\t\t\t\t\t\n\t\t\t</div>\n\t\t\t<div class=\"panel-footer\">\n        <button class=\"btn btn-default\">Clear</button>                                    \n        <button class=\"btn btn-primary pull-right\" v-on:click.stop.prevent=\"saveUser\">Save</button>\n      </div>\n\t\t</div>\n\t</form>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/var/www/Loan/resources/views/components/user/user-form.vue"
+  var id = "/var/www/Loan/resources/assets/js/components/user/user_form.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -15007,28 +14932,41 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2,"vueify-insert-css":6}],11:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2,"vueify-insert-css":6}],10:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("\n.dataTables_Footer{\n\tfont-size: 12px;\n\tpadding: 0px 0px 5px; \n}\n\n.dataTables_Footer .footer_left{\n  float: left;     \n}\n\n.dataTables_Footer .footer_left label{\n\tpadding: 0px;  \n  height: auto; \n  margin: 0px; \n  font-weight: normal; \n}\n\n.dataTables_Footer .footer_left select{\n\twidth: auto;\n  display: inline;\n  margin: 0px 5px;\n}\n\n.dataTables_Footer .footer_right{\n\tfloat: right;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _grid = require('../../mixins/grid');
+
+var _grid2 = _interopRequireDefault(_grid);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 exports.default = {
-  props: {
-    users: Array,
-    pagination: Object
+
+  mixins: [_grid2.default],
+
+  data: function data() {
+    return {
+      users: []
+    };
+  },
+
+
+  ready: function ready() {
+    this.fetchData('/api/user/', this.success);
   },
 
   methods: {
-    showForm: function showForm() {
-      this.$dispatch('show-form-msg');
+    showNewForm: function showNewForm() {
+      this.$dispatch('switch-view', 'user_form');
     },
-
     success: function success(response) {
       var result = response.data;
-
-      //this.data = result;
 
       this.users = result.data;
 
@@ -15037,18 +14975,18 @@ exports.default = {
   },
 
   events: {
-    'add-new-user-msg': function addNewUserMsg() {
-      console.log('form grid');
+    'parent-add-new-user': function parentAddNewUser(user) {
+      this.users.push(user);
     }
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"panel panel-default\">\n\t<div class=\"panel-body\">\n\t\t<div class=\"dataTables_wrapper no-footer\">\t\n\t\t\t<div class=\"dataTables_length\">\n\t\t\t\t<button class=\"btn btn-primary\" v-on:click=\"showForm\">New</button>\n\t\t\t</div>\t\n\t\t\t<div class=\"dataTables_filter\">\n\t\t\t\t<label>Search:<input class=\"form-control \" type=\"search\"></label>\n\t\t\t</div>\n\t\t\t<table class=\"table datatable dataTable no-footer\">\n\t\t    <thead>\n\t\t      <tr>\n\t\t      \t<th style=\"width: 30px; text-align: center;\"><input type=\"checkbox\" v-model=\"check_all\" v-on:change=\"onSelectAll(users)\"></th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting_desc\">User Account</th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting\">Full Name</th>\n\t\t      \t<th style=\"width: 250px;\" class=\"sorting\">Email</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Role</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Status</th>\n\t\t      </tr>\n\t\t    </thead>\n\t\t    <tbody>\n\t\t      <tr v-for=\"user in users\">\n\t\t      \t\t<td style=\"text-align: center;\">\n\t\t      \t\t\t<input type=\"checkbox\" value=\"{{ user.id }}\" v-model=\"checked_list\" v-on:change=\"onSelectItems\">\n\t\t      \t\t</td>\n\t\t          <td>{{ user.user_name }}</td>\n\t\t          <td>{{ user.full_name }}</td>\n\t\t          <td>{{ user.email }}</td>\n\t\t          <td>{{ user.role.name }}</td>\n\t\t          <td>{{ user.status }}</td>\n\t\t      </tr>\n\t\t    </tbody>\n\t\t\t</table>\n\t\t\t<div class=\"dataTables_Footer clearfix\" v-if=\"pagination.last_page > 1\">\n\t\t\t\t<div class=\"footer_left\">\n\t\t\t\t\t<label>Show \n\t\t\t\t\t\t<select class=\"form-control\">\n\t\t\t\t\t\t\t<option value=\"10\">10</option>\n\t\t\t\t\t\t\t<option value=\"25\">25</option>\n\t\t\t\t\t\t\t<option value=\"50\">50</option>\n\t\t\t\t\t\t\t<option value=\"100\">100</option>\n\t\t\t\t\t\t</select> \n\t\t\t\t\t\trecords ({{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }})\n\t\t\t\t\t</label>\n\t\t\t\t</div>\t\t\t\t\n\t\t\t\t<div class=\"dataTables_paginate paging_simple_numbers\">\n\t\t\t\t\t<a v-on:click.stop.prevent=\"previous\" class=\"paginate_button previous\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === 1}\"><i class=\"fa fa-angle-left\"></i></a>\n\t\t\t\t\t<span v-for=\"page in pagination.last_page\">\n\t\t\t\t\t\t<a v-on:click.stop.prevent=\"goTo(page + 1)\" class=\"paginate_button\" v-bind:class=\"{ 'current': pagination.current_page === page + 1}\">{{ page + 1 }}</a>\n\t\t\t\t\t</span>\n\t\t\t\t\t<a v-on:click.stop.prevent=\"next\" class=\"paginate_button next\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === pagination.last_page}\"><i class=\"fa fa-angle-right\"></i></a>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"panel panel-default\">\n\t<div class=\"panel-body\">\n\t\t<div class=\"dataTables_wrapper no-footer\">\t\n\t\t\t<div class=\"dataTables_length\">\n\t\t\t\t<button class=\"btn btn-primary\" v-on:click=\"showNewForm\">New</button>\n\t\t\t</div>\t\n\t\t\t<div class=\"dataTables_filter\">\n\t\t\t\t<label>Search:<input class=\"form-control \" type=\"search\"></label>\n\t\t\t</div>\n\t\t\t<table class=\"table datatable dataTable no-footer\">\n\t\t    <thead>\n\t\t      <tr>\n\t\t      \t<th style=\"width: 30px; text-align: center;\"><input type=\"checkbox\" v-model=\"check_all\" v-on:change=\"onSelectAll(users)\"></th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting_desc\">User Account</th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting\">Full Name</th>\n\t\t      \t<th style=\"width: 250px;\" class=\"sorting\">Email</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Role</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Status</th>\n\t\t      </tr>\n\t\t    </thead>\n\t\t    <tbody>\n\t\t      <tr v-for=\"user in users\">\n\t\t      \t\t<td style=\"text-align: center;\">\n\t\t      \t\t\t<input type=\"checkbox\" value=\"{{ user.id }}\" v-model=\"checked_list\" v-on:change=\"onSelectItems\">\n\t\t      \t\t</td>\n\t\t          <td>{{ user.user_name }}</td>\n\t\t          <td>{{ user.full_name }}</td>\n\t\t          <td>{{ user.email }}</td>\n\t\t          <td>{{ user.role.name }}</td>\n\t\t          <td>{{ user.status }}</td>\n\t\t      </tr>\n\t\t    </tbody>\n\t\t\t</table>\n\t\t\t<div class=\"dataTables_Footer clearfix\" v-if=\"pagination.last_page > 1\">\n\t\t\t\t<div class=\"footer_left\">\n\t\t\t\t\t<label>Show \n\t\t\t\t\t\t<select class=\"form-control\">\n\t\t\t\t\t\t\t<option value=\"10\">10</option>\n\t\t\t\t\t\t\t<option value=\"25\">25</option>\n\t\t\t\t\t\t\t<option value=\"50\">50</option>\n\t\t\t\t\t\t\t<option value=\"100\">100</option>\n\t\t\t\t\t\t</select> \n\t\t\t\t\t\trecords ({{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }})\n\t\t\t\t\t</label>\n\t\t\t\t</div>\t\t\t\t\n\t\t\t\t<div class=\"dataTables_paginate paging_simple_numbers\">\n\t\t\t\t\t<a v-on:click.stop.prevent=\"previous\" class=\"paginate_button previous\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === 1}\"><i class=\"fa fa-angle-left\"></i></a>\n\t\t\t\t\t<span v-for=\"page in pagination.last_page\">\n\t\t\t\t\t\t<a v-on:click.stop.prevent=\"goTo(page + 1)\" class=\"paginate_button\" v-bind:class=\"{ 'current': pagination.current_page === page + 1}\">{{ page + 1 }}</a>\n\t\t\t\t\t</span>\n\t\t\t\t\t<a v-on:click.stop.prevent=\"next\" class=\"paginate_button next\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === pagination.last_page}\"><i class=\"fa fa-angle-right\"></i></a>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/var/www/Loan/resources/views/components/user/user-grid.vue"
+  var id = "/var/www/Loan/resources/assets/js/components/user/user_list.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["\n.dataTables_Footer{\n\tfont-size: 12px;\n\tpadding: 0px 0px 5px; \n}\n\n.dataTables_Footer .footer_left{\n  float: left;     \n}\n\n.dataTables_Footer .footer_left label{\n\tpadding: 0px;  \n  height: auto; \n  margin: 0px; \n  font-weight: normal; \n}\n\n.dataTables_Footer .footer_left select{\n\twidth: auto;\n  display: inline;\n  margin: 0px 5px;\n}\n\n.dataTables_Footer .footer_right{\n\tfloat: right;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -15059,94 +14997,133 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2,"vueify-insert-css":6}],12:[function(require,module,exports){
-var __vueify_style__ = require("vueify-insert-css").insert("\n")
+},{"../../mixins/grid":12,"vue":5,"vue-hot-reload-api":2,"vueify-insert-css":6}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 
-var _userGrid = require('./user-grid.vue');
+var _user_list = require('./user_list.vue');
 
-var _userGrid2 = _interopRequireDefault(_userGrid);
+var _user_list2 = _interopRequireDefault(_user_list);
 
-var _userForm = require('./user-form.vue');
+var _user_form = require('./user_form.vue');
 
-var _userForm2 = _interopRequireDefault(_userForm);
+var _user_form2 = _interopRequireDefault(_user_form);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-	data: function data() {
-		return {
-			currentView: 'user_grid',
-			users: [],
-			pagination: {
-				current_page: '',
-				from: '',
-				to: '',
-				per_page: '',
-				last_page: '',
-				total: '',
-				next_page_url: '',
-				prev_page_url: ''
-			}
-		};
-	},
+  data: function data() {
+    return {
+      currentView: 'user_grid'
+    };
+  },
 
-	components: {
-		user_grid: _userGrid2.default,
-		user_form: _userForm2.default
-	},
+  components: {
+    user_grid: _user_list2.default,
+    user_form: _user_form2.default
+  },
 
-	ready: function ready() {
-		this.fetchData('/api/user/', this.success);
-	},
+  ready: function ready() {},
 
-	methods: {
-		success: function success(response) {
-			var result = response.data;
+  methods: {
+    onSwitchView: function onSwitchView(view) {
+      this.currentView = view;
+    },
+    onAddNewUser: function onAddNewUser(data) {
+      this.currentView = data.view;
 
-			//this.data = result;
-
-			this.users = result.data;
-
-			this.setPagination(result);
-		}
-	},
-
-	events: {
-		'show-form-msg': function showFormMsg() {
-			this.currentView = 'user_form';
-		},
-
-		'show-grid-msg': function showGridMsg() {
-			this.currentView = 'user_grid';
-		},
-
-		'add-new-user-msg': function addNewUserMsg() {
-			console.log('parent');
-		}
-	}
+      this.$broadcast('parent-add-new-user', data.user);
+    }
+  }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<component :is=\"currentView\" :users=\"users\" :pagination=\"pagination\">\n</component>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<component :is=\"currentView\" @switch-view=\"onSwitchView\" @add-new-user=\"onAddNewUser\" keep-alive=\"\">\t\t\t\t\t\t\n</component>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "/var/www/Loan/resources/views/components/user/user_account.vue"
-  module.hot.dispose(function () {
-    require("vueify-insert-css").cache["\n"] = false
-    document.head.removeChild(__vueify_style__)
-  })
+  var id = "/var/www/Loan/resources/assets/js/components/user/user_view.vue"
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./user-form.vue":10,"./user-grid.vue":11,"vue":5,"vue-hot-reload-api":2,"vueify-insert-css":6}]},{},[7]);
+},{"./user_form.vue":9,"./user_list.vue":10,"vue":5,"vue-hot-reload-api":2}],12:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  data: function data() {
+    return {
+      pagination: {
+        current_page: '',
+        from: '',
+        to: '',
+        per_page: '',
+        last_page: '',
+        total: '',
+        next_page_url: '',
+        prev_page_url: ''
+      },
+      check_all: false,
+      checked_list: []
+    };
+  },
+
+  methods: {
+    onSelectAll: function onSelectAll(data_set) {
+      if (this.check_all === true) {
+        data_set.forEach(function (data) {
+          this.checked_list.push(data.id + '');
+        }.bind(this));
+      } else {
+        this.checked_list.splice(0);
+      }
+    },
+    onSelectItems: function onSelectItems() {
+      this.check_all = false;
+    },
+    setPagination: function setPagination(pagination) {
+      this.pagination.current_page = pagination.current_page;
+      this.pagination.from = pagination.from;
+      this.pagination.to = pagination.to;
+      this.pagination.per_page = pagination.per_page;
+      this.pagination.total = pagination.total;
+      this.pagination.last_page = pagination.last_page;
+      this.pagination.next_page_url = pagination.next_page_url;
+      this.pagination.prev_page_url = pagination.prev_page_url;
+    },
+    fetchData: function fetchData(api_url, success) {
+      var resource = this.$resource(api_url);
+
+      resource.get().then(success);
+    },
+    previous: function previous() {
+      if (this.pagination.current_page === 1) return;
+
+      this.fetchData(this.pagination.prev_page_url, this.success);
+    },
+    next: function next() {
+      if (this.pagination.current_page === this.pagination.last_page) return;
+
+      this.fetchData(this.pagination.next_page_url, this.success);
+    },
+    goTo: function goTo(page) {
+      var api = this.pagination.next_page_url !== null ? this.pagination.next_page_url : this.pagination.prev_page_url;
+
+      api = api.substr(0, api.indexOf('?'));
+
+      this.fetchData(api + '?page=' + page, this.success);
+    }
+  }
+};
+
+},{}]},{},[7]);
 
 //# sourceMappingURL=app.js.map
