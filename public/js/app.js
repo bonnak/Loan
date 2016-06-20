@@ -14839,17 +14839,78 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _vue2.default.use(_vueRouter2.default);
 _vue2.default.use(require('vue-resource'));
 
-var App = _vue2.default.extend({});
+_vue2.default.http.interceptors.push({
+		request: function request(_request) {
+				_request.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+				_request.headers['Accept'] = 'application/vnd.mob.v1+json';
+				_request.emulateJSON = true;
+
+				return _request;
+		},
+		response: function response(_response) {
+				return _response;
+		}
+});
+
+var App = _vue2.default.extend({
+		data: function data() {
+				return {
+						auth: {
+								user: {
+										user_name: '',
+										password: ''
+								},
+								authenticated: false,
+								response_text: ''
+						}
+				};
+		},
+
+
+		methods: {
+				login: function login() {
+						var _this = this;
+
+						this.$http.post('/api/authenticate', this.auth.user).then(function (response) {
+								localStorage.setItem('token', response.data.token);
+
+								_this.setRosponse(response);
+
+								window.location.href = '/';
+						}, function (err) {
+								_this.setRosponse(err);
+						});
+				},
+				setRosponse: function setRosponse(response) {
+						switch (response.status) {
+								case 401:
+										this.auth.authenticated = false;
+										this.auth.response_text = 'Username/Password is invalid.';
+										break;
+
+								case 500:
+										this.auth.authenticated = false;
+										this.auth.response_text = 'Something went wrong while authenticating.';
+										break;
+
+								case 200:
+										this.auth.authenticated = true;
+										this.auth.response_text = 'Login successfully.';
+										break;
+						}
+				}
+		}
+});
 
 var router = new _vueRouter2.default();
 
 router.map({
-  '/': {
-    component: _dashboard2.default
-  },
-  '/auth/user': {
-    component: _user_view2.default
-  }
+		'/': {
+				component: _dashboard2.default
+		},
+		'/auth/user': {
+				component: _user_view2.default
+		}
 });
 
 router.start(App, 'body');
@@ -15100,9 +15161,7 @@ exports.default = {
       this.pagination.prev_page_url = pagination.prev_page_url;
     },
     fetchData: function fetchData(api_url, success) {
-      var resource = this.$resource(api_url);
-
-      resource.get().then(success);
+      this.$http.get(api_url).then(success);
     },
     previous: function previous() {
       if (this.pagination.current_page === 1) return;

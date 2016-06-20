@@ -47,9 +47,9 @@ export default {
   	},
 
   	fetchData(api_url, success){
-  		var resource = this.$resource(api_url);
-
-			resource.get().then(success);
+      this.$http.get(
+        api_url
+      ).then(success);
   	},
   	
 		previous(){

@@ -16,6 +16,7 @@
                 <div class="profile-data">
                     <div class="profile-data-name">John Doe</div>
                     <div class="profile-data-title">Web Developer/Designer</div>
+                    <div><a href="#" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span></a></div>
                 </div>
                 <div class="profile-controls">
                     <a href="pages-profile.html" class="profile-control-left"><span class="fa fa-info"></span></a>

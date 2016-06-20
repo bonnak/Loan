@@ -9,6 +9,11 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthenticateController extends Controller
 {
+    public function getLogin()
+    {
+      return view('auth.login'); 
+    }
+
     /**
      *  API Login, on success return JWT Auth token
      *
@@ -30,7 +35,9 @@ class AuthenticateController extends Controller
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
         // all good so return the token
-        return response()->json(compact('token'));
+        return response()
+                  ->json(compact('token'))
+                  ->withCookie(cookie('token', $token));            
     }
     /**
      * Log out
@@ -41,10 +48,12 @@ class AuthenticateController extends Controller
      */
     public function logout(Request $request)
     {
-        $this->validate($request, [
-            'token' => 'required'
-        ]);
-        JWTAuth::invalidate($request->input('token'));
+        // $this->validate($request, [
+        //     'token' => 'required'
+        // ]);
+        // JWTAuth::invalidate($request->input('token'));
+        
+        JWTAuth::invalidate($request->cookie('token'));
     }
     /**
      * Returns the authenticated user

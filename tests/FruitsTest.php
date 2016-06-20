@@ -8,19 +8,6 @@ class FruitsTest extends TestCase
 {
 	use DatabaseMigrations;
 
-  /**
-	 * @test
-	 *
-	 * Test: GET /api.
-	 */
-	public function it_praises_the_fruits()
-	{
-    $this->get('/api')
-        ->seeJson([
-            'Fruits' => 'Delicious and healthy!'
-        ]);
-	}
-
 	/**
 	 * @test
 	 *

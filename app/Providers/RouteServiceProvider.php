@@ -57,11 +57,5 @@ class RouteServiceProvider extends ServiceProvider
         ], function ($router) {
             require app_path('Http/routes.php');
         });
-
-        $router->group([
-            'namespace' => $this->namespace . '\Api'
-        ], function ($router) {
-            require app_path('Http/api.php');
-        });
     }
 }
