@@ -48,12 +48,9 @@ class AuthenticateController extends Controller
      */
     public function logout(Request $request)
     {
-        // $this->validate($request, [
-        //     'token' => 'required'
-        // ]);
-        // JWTAuth::invalidate($request->input('token'));
-        
         JWTAuth::invalidate($request->cookie('token'));
+
+        return redirect('login')->withCookie(cookie()->forget('token'));
     }
     /**
      * Returns the authenticated user
