@@ -14945,39 +14945,63 @@ var __vueify_style__ = require("vueify-insert-css").insert("\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 exports.default = {
-	data: function data() {
-		return {
-			user: {
-				user_name: '',
-				email: '',
-				full_name: '',
-				role_id: ''
-			},
-			token: ''
-		};
-	},
+  data: function data() {
+    return {
+      user: {
+        user_name: '',
+        email: '',
+        full_name: '',
+        role_id: ''
+      },
+      validation: {
+        user_exist: false
+      }
+    };
+  },
 
-	methods: {
-		saveUser: function saveUser() {
-			var resource = this.$resource('/api/user');
+  methods: {
+    saveUser: function saveUser() {
+      var resource = this.$resource('/api/user');
 
-			resource.save(this.user).then(function (response) {
-				var user = response.data;
+      resource.save(this.user).then(function (response) {
+        var user = response.data.user;
 
-				this.$dispatch('add-new-user', { user: user, view: 'user_grid' });
-			});
-		},
+        this.$dispatch('add-new-user', { user: user, view: 'user_grid' });
 
-		showGrid: function showGrid() {
-			this.$dispatch('switch-view', 'user_grid');
-		}
-	}
+        this.clearInput();
+      });
+    },
+    clearInput: function clearInput() {
+      this.user.user_name = '';
+      this.user.email = '';
+      this.user.full_name = '';
+      this.user.role_id = '';
+    },
+    closeForm: function closeForm() {
+      this.$dispatch('switch-view', 'user_grid');
+
+      this.clearInput();
+    },
+    checkUserNameExist: function checkUserNameExist(user_name) {
+      var _this = this;
+
+      this.$http.get('/api/user/' + user_name).then(function (response) {
+        _this.validation.user_exist = response.data;
+      });
+    }
+  },
+
+  watch: {
+    'user.user_name': function userUser_name(val) {
+      this.checkUserNameExist(val);
+    }
+  }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<form class=\"form-horizontal\">\n\t\t<div class=\"panel panel-default\">\n\t\t\t<div class=\"panel-heading\">\n        <h3 class=\"panel-title\">User Form</h3>\n        <ul class=\"panel-controls\">\n            <li><a @click.stop.prevent=\"showGrid\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n        </ul>\n      </div>\n\t\t\t<div class=\"panel-body\">\t\t\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">User Account</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.user_name\">\n                  </div>                                            \n                  <span class=\"help-block\">This is sample of text field</span>\n              </div>\n          </div>\n          <div class=\"form-group\">                                        \n            <label class=\"col-md-3 col-xs-12 control-label\">Email</label>\n            <div class=\"col-md-6 col-xs-12\">\n                <div>\n                    <input type=\"email\" class=\"form-control\" v-model=\"user.email\">\n                </div>            \n                <span class=\"help-block\">Email field sample</span>\n            </div>\n        \t</div>\n          <div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">Full Name</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.full_name\">\n                  </div>                                            \n                  <span class=\"help-block\">This is sample of text field</span>\n              </div>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"col-md-3 col-xs-12 control-label\">Role</label>\n            <div class=\"col-md-6 col-xs-12\">                                                                                            \n                <select class=\"form-control\" v-model=\"user.role_id\">\n                    <option value=\"1\">Adminstrator</option>\n                    <option value=\"2\">Accountant</option>\n                </select>\n                <span class=\"help-block\">Select box example</span>\n            </div>\n        \t</div>\t\t\t\t\t\t\n\t\t\t</div>\n\t\t\t<div class=\"panel-footer\">\n        <button class=\"btn btn-default\">Clear</button>                                    \n        <button class=\"btn btn-primary pull-right\" v-on:click.stop.prevent=\"saveUser\">Save</button>\n      </div>\n\t\t</div>\n\t</form>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<form class=\"form-horizontal\">\n\t\t<div class=\"panel panel-default\">\n\t\t\t<div class=\"panel-heading\">\n        <h3 class=\"panel-title\">User Form</h3>\n        <ul class=\"panel-controls\">\n            <li><a @click.stop.prevent=\"closeForm\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n        </ul>\n      </div>\n\t\t\t<div class=\"panel-body\">\t\t\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">User Account</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.user_name\" debounce=\"500\">\n                  </div>                                            \n                  <span class=\"help-block text-danger\" v-show=\"validation.user_exist\">This user name already exist.</span>\n              </div>\n          </div>\n          <div class=\"form-group\">                                        \n            <label class=\"col-md-3 col-xs-12 control-label\">Email</label>\n            <div class=\"col-md-6 col-xs-12\">\n                <div>\n                    <input type=\"email\" class=\"form-control\" v-model=\"user.email\">\n                </div>            \n            </div>\n        \t</div>\n          <div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">Full Name</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.full_name\">\n                  </div>                                            \n              </div>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"col-md-3 col-xs-12 control-label\">Role</label>\n            <div class=\"col-md-6 col-xs-12\">                                                                                            \n                <select class=\"form-control\" v-model=\"user.role_id\">\n                    <option value=\"1\">Adminstrator</option>\n                    <option value=\"2\">Accountant</option>\n                </select>\n            </div>\n        \t</div>\t\t\t\t\t\t\n\t\t\t</div>\n\t\t\t<div class=\"panel-footer\">\n        <button class=\"btn btn-default\" @click.stop.prevent=\"clearInput\">Clear</button>                                    \n        <button class=\"btn btn-primary pull-right\" v-on:click.stop.prevent=\"saveUser\">Save</button>\n      </div>\n\t\t</div>\n\t</form>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -15013,7 +15037,8 @@ exports.default = {
 
   data: function data() {
     return {
-      users: []
+      users: [],
+      paginate_options: [{ text: 5, value: 5 }, { text: 10, value: 10 }, { text: 20, value: 20 }, { text: 50, value: 50 }, { text: 100, value: 100 }]
     };
   },
 
@@ -15032,17 +15057,20 @@ exports.default = {
       this.users = result.data;
 
       this.setPagination(result);
+    },
+    showByNumRecords: function showByNumRecords() {
+      this.fetchData('/api/user', this.success);
     }
   },
 
   events: {
-    'parent-add-new-user': function parentAddNewUser(user) {
-      this.users.push(user);
+    'reload-users': function reloadUsers() {
+      this.fetchData('/api/user?page=' + this.pagination.current_page, this.success);
     }
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"panel panel-default\">\n\t<div class=\"panel-body\">\n\t\t<div class=\"dataTables_wrapper no-footer\">\t\n\t\t\t<div class=\"dataTables_length\">\n\t\t\t\t<button class=\"btn btn-primary\" v-on:click=\"showNewForm\">New</button>\n\t\t\t</div>\t\n\t\t\t<div class=\"dataTables_filter\">\n\t\t\t\t<label>Search:<input class=\"form-control \" type=\"search\"></label>\n\t\t\t</div>\n\t\t\t<table class=\"table datatable dataTable no-footer\">\n\t\t    <thead>\n\t\t      <tr>\n\t\t      \t<th style=\"width: 30px; text-align: center;\"><input type=\"checkbox\" v-model=\"check_all\" v-on:change=\"onSelectAll(users)\"></th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting_desc\">User Account</th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting\">Full Name</th>\n\t\t      \t<th style=\"width: 250px;\" class=\"sorting\">Email</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Role</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Status</th>\n\t\t      </tr>\n\t\t    </thead>\n\t\t    <tbody>\n\t\t      <tr v-for=\"user in users\">\n\t\t      \t\t<td style=\"text-align: center;\">\n\t\t      \t\t\t<input type=\"checkbox\" value=\"{{ user.id }}\" v-model=\"checked_list\" v-on:change=\"onSelectItems\">\n\t\t      \t\t</td>\n\t\t          <td>{{ user.user_name }}</td>\n\t\t          <td>{{ user.full_name }}</td>\n\t\t          <td>{{ user.email }}</td>\n\t\t          <td>{{ user.role.name }}</td>\n\t\t          <td>{{ user.status }}</td>\n\t\t      </tr>\n\t\t    </tbody>\n\t\t\t</table>\n\t\t\t<div class=\"dataTables_Footer clearfix\" v-if=\"pagination.last_page > 1\">\n\t\t\t\t<div class=\"footer_left\">\n\t\t\t\t\t<label>Show \n\t\t\t\t\t\t<select class=\"form-control\">\n\t\t\t\t\t\t\t<option value=\"10\">10</option>\n\t\t\t\t\t\t\t<option value=\"25\">25</option>\n\t\t\t\t\t\t\t<option value=\"50\">50</option>\n\t\t\t\t\t\t\t<option value=\"100\">100</option>\n\t\t\t\t\t\t</select> \n\t\t\t\t\t\trecords ({{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }})\n\t\t\t\t\t</label>\n\t\t\t\t</div>\t\t\t\t\n\t\t\t\t<div class=\"dataTables_paginate paging_simple_numbers\">\n\t\t\t\t\t<a v-on:click.stop.prevent=\"previous\" class=\"paginate_button previous\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === 1}\"><i class=\"fa fa-angle-left\"></i></a>\n\t\t\t\t\t<span v-for=\"page in pagination.last_page\">\n\t\t\t\t\t\t<a v-on:click.stop.prevent=\"goTo(page + 1)\" class=\"paginate_button\" v-bind:class=\"{ 'current': pagination.current_page === page + 1}\">{{ page + 1 }}</a>\n\t\t\t\t\t</span>\n\t\t\t\t\t<a v-on:click.stop.prevent=\"next\" class=\"paginate_button next\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === pagination.last_page}\"><i class=\"fa fa-angle-right\"></i></a>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"panel panel-default\">\n\t<div class=\"panel-body\">\n\t\t<div class=\"dataTables_wrapper no-footer\">\t\n\t\t\t<div class=\"dataTables_length\">\n\t\t\t\t<button class=\"btn btn-primary\" v-on:click=\"showNewForm\">New</button>\n\t\t\t</div>\t\n\t\t\t<div class=\"dataTables_filter\">\n\t\t\t\t<label>Search:<input class=\"form-control \" type=\"search\"></label>\n\t\t\t</div>\n\t\t\t<table class=\"table datatable dataTable no-footer\">\n\t\t    <thead>\n\t\t      <tr>\n\t\t      \t<th style=\"width: 30px; text-align: center;\"><input type=\"checkbox\" v-model=\"check_all\" v-on:change=\"onSelectAll(users)\"></th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting_desc\">User Account</th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting\">Full Name</th>\n\t\t      \t<th style=\"width: 250px;\" class=\"sorting\">Email</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Role</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Status</th>\n\t\t      </tr>\n\t\t    </thead>\n\t\t    <tbody>\n\t\t      <tr v-for=\"user in users\">\n\t\t      \t\t<td style=\"text-align: center;\">\n\t\t      \t\t\t<input type=\"checkbox\" value=\"{{ user.id }}\" v-model=\"checked_list\" v-on:change=\"onSelectItems\">\n\t\t      \t\t</td>\n\t\t          <td>{{ user.user_name }}</td>\n\t\t          <td>{{ user.full_name }}</td>\n\t\t          <td>{{ user.email }}</td>\n\t\t          <td>{{ user.role.name }}</td>\n\t\t          <td>{{ user.status }}</td>\n\t\t      </tr>\n\t\t    </tbody>\n\t\t\t</table>\n\t\t\t<div class=\"dataTables_Footer clearfix\">\n\t\t\t\t<div class=\"footer_left\">\n\t\t\t\t\t<label>Show \n\t\t\t\t\t\t<select class=\"form-control\" v-model=\"pagination.per_page\" @change=\"showByNumRecords\">\n\t\t\t\t\t\t\t<option v-for=\"option in paginate_options\" v-bind:value=\"option.value\">\n\t\t\t\t\t\t    {{ option.text }}\n\t\t\t\t\t\t  </option>\n\t\t\t\t\t\t</select> \n\t\t\t\t\t\trecords ({{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }})\n\t\t\t\t\t</label>\n\t\t\t\t</div>\t\t\t\t\n\t\t\t\t<div class=\"dataTables_paginate paging_simple_numbers\" v-if=\"pagination.last_page > 1\">\n\t\t\t\t\t<a v-on:click.stop.prevent=\"previous\" class=\"paginate_button previous\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === 1}\"><i class=\"fa fa-angle-left\"></i></a>\n\t\t\t\t\t<span v-for=\"page in pagination.last_page\">\n\t\t\t\t\t\t<a v-on:click.stop.prevent=\"goTo(page + 1)\" class=\"paginate_button\" v-bind:class=\"{ 'current': pagination.current_page === page + 1}\">{{ page + 1 }}</a>\n\t\t\t\t\t</span>\n\t\t\t\t\t<a v-on:click.stop.prevent=\"next\" class=\"paginate_button next\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === pagination.last_page}\"><i class=\"fa fa-angle-right\"></i></a>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -15096,12 +15124,12 @@ exports.default = {
     onAddNewUser: function onAddNewUser(data) {
       this.currentView = data.view;
 
-      this.$broadcast('parent-add-new-user', data.user);
+      this.$broadcast('reload-users');
     }
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<component :is=\"currentView\" @switch-view=\"onSwitchView\" @add-new-user=\"onAddNewUser\" keep-alive=\"\">\t\t\t\t\t\t\n</component>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<component :is=\"currentView\" :users.sync=\"users\" @switch-view=\"onSwitchView\" @add-new-user=\"onAddNewUser\" keep-alive=\"\">\t\t\t\t\t\t\n</component>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -15161,7 +15189,7 @@ exports.default = {
       this.pagination.prev_page_url = pagination.prev_page_url;
     },
     fetchData: function fetchData(api_url, success) {
-      this.$http.get(api_url).then(success);
+      this.$http.get(api_url, { paginate_amount: this.pagination.per_page }).then(success);
     },
     previous: function previous() {
       if (this.pagination.current_page === 1) return;

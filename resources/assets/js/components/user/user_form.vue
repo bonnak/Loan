@@ -4,7 +4,7 @@
 			<div class="panel-heading">
         <h3 class="panel-title">User Form</h3>
         <ul class="panel-controls">
-            <li><a @click.stop.prevent="showGrid" class="panel-remove"><span class="fa fa-times"></span></a></li>
+            <li><a @click.stop.prevent="closeForm" class="panel-remove"><span class="fa fa-times"></span></a></li>
         </ul>
       </div>
 			<div class="panel-body">							
@@ -12,9 +12,9 @@
               <label class="col-md-3 col-xs-12 control-label">User Account</label>
               <div class="col-md-6 col-xs-12">                                            
                   <div>
-                      <input type="text" class="form-control" v-model="user.user_name"/>
+                      <input type="text" class="form-control" v-model="user.user_name" debounce="500"/>
                   </div>                                            
-                  <span class="help-block">This is sample of text field</span>
+                  <span class="help-block text-danger" v-show="validation.user_exist">This user name already exist.</span>
               </div>
           </div>
           <div class="form-group">                                        
@@ -23,7 +23,6 @@
                 <div>
                     <input type="email" class="form-control" v-model="user.email"/>
                 </div>            
-                <span class="help-block">Email field sample</span>
             </div>
         	</div>
           <div class="form-group">
@@ -32,7 +31,6 @@
                   <div>
                       <input type="text" class="form-control" v-model="user.full_name"/>
                   </div>                                            
-                  <span class="help-block">This is sample of text field</span>
               </div>
           </div>
           <div class="form-group">
@@ -42,12 +40,11 @@
                     <option value="1">Adminstrator</option>
                     <option value="2">Accountant</option>
                 </select>
-                <span class="help-block">Select box example</span>
             </div>
         	</div>						
 			</div>
 			<div class="panel-footer">
-        <button class="btn btn-default">Clear</button>                                    
+        <button class="btn btn-default" @click.stop.prevent="clearInput">Clear</button>                                    
         <button class="btn btn-primary pull-right" v-on:click.stop.prevent="saveUser">Save</button>
       </div>
 		</div>
@@ -64,25 +61,51 @@ export default{
 				full_name: '',
 				role_id: ''
 			},
-			token: ''	
+      validation: {
+        user_exist: false
+      }
 		}
 	},
 
 	methods: {
-		saveUser: function(){			
+		saveUser(){			
 			var resource = this.$resource('/api/user');
 
 			resource.save(this.user).then(function(response){
-				var user = response.data;
+				var user = response.data.user;
 				
         this.$dispatch('add-new-user', { user : user, view: 'user_grid'});
+
+        this.clearInput();
 			});
 		},
 
-  	showGrid: function(){
+    clearInput(){
+      this.user.user_name = '';
+      this.user.email = '';
+      this.user.full_name = '';
+      this.user.role_id = '';
+    },
+
+  	closeForm(){
   		this.$dispatch('switch-view', 'user_grid');
-  	}
-	} 
+
+      this.clearInput();
+  	},
+
+    checkUserNameExist(user_name){
+      this.$http.get('/api/user/' + user_name)
+      .then((response) => {
+        this.validation.user_exist = response.data;
+      });
+    }
+	},
+
+  watch: {
+    'user.user_name' : function(val){
+      this.checkUserNameExist(val);
+    }
+  } 
 }
 </script>
 

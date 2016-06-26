@@ -35,19 +35,18 @@
 			      </tr>
 			    </tbody>
 				</table>
-				<div class="dataTables_Footer clearfix" v-if="pagination.last_page > 1">
+				<div class="dataTables_Footer clearfix">
 					<div class="footer_left">
 						<label>Show 
-							<select class="form-control">
-								<option value="10">10</option>
-								<option value="25">25</option>
-								<option value="50">50</option>
-								<option value="100">100</option>
+							<select class="form-control" v-model="pagination.per_page" @change="showByNumRecords">
+								<option v-for="option in paginate_options" v-bind:value="option.value">
+							    {{ option.text }}
+							  </option>
 							</select> 
 							records ({{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }})
 						</label>
 					</div>				
-					<div class="dataTables_paginate paging_simple_numbers">
+					<div class="dataTables_paginate paging_simple_numbers" v-if="pagination.last_page > 1">
 						<a v-on:click.stop.prevent="previous" class="paginate_button previous" v-bind:class="{ 'paginate_button_disabled': pagination.current_page === 1}"><i class="fa fa-angle-left"></i></a>
 						<span v-for="page in pagination.last_page">
 							<a v-on:click.stop.prevent="goTo(page + 1)" class="paginate_button" v-bind:class="{ 'current': pagination.current_page === page + 1}">{{ page + 1 }}</a>
@@ -69,7 +68,14 @@ export default{
 
   data() {
   	return {
-  		users: []  		
+  		users: [],
+  		paginate_options: [
+	      { text: 5, value: 5 },
+	      { text: 10, value: 10 },
+	      { text: 20, value: 20 },
+	      { text: 50, value: 50 },
+	      { text: 100, value: 100 },
+	    ]  		
   	}
   },
 
@@ -88,12 +94,16 @@ export default{
   		this.users = result.data;
 
   		this.setPagination(result);
+  	},
+
+  	showByNumRecords(){
+  		this.fetchData('/api/user', this.success);
   	}
 	},
 
 	events: {
-		'parent-add-new-user': function(user){
-			this.users.push(user);
+		'reload-users': function(){
+			this.fetchData('/api/user?page=' + this.pagination.current_page, this.success);
 		}
 	}
 }

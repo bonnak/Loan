@@ -58,7 +58,9 @@ class Authenticate
       } 
       catch (JWTException $exception) 
       {
-        return redirect()->to('login');
+        return redirect()
+                  ->to('login')
+                  ->withCookie(cookie()->forget('token'));
       } 
 
       return $next($request);

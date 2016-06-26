@@ -1,5 +1,6 @@
 <template>
 	<component :is="currentView" 
+						 :users.sync="users"
 						 @switch-view="onSwitchView"
 						 @add-new-user="onAddNewUser"
 						 keep-alive>						
@@ -13,7 +14,7 @@ import user_form from './user_form.vue'
 export default{
 	data: function () {
 		return {	
-			currentView: 'user_grid',
+			currentView: 'user_grid'
 		}
 	},
 
@@ -33,7 +34,7 @@ export default{
   	onAddNewUser(data){
   		this.currentView = data.view;
 
-  		this.$broadcast('parent-add-new-user', data.user);
+  		this.$broadcast('reload-users');
   	}
   }
 }

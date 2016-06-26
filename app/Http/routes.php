@@ -23,6 +23,7 @@ $api->version('v1', function ($api) {
     $api->get('token', 'App\Http\Controllers\AuthenticateController@getToken');
 
     $api->get('user', 'App\Http\Controllers\UserController@getUsers');
+    $api->get('user/{user_name}', 'App\Http\Controllers\UserController@getUserName');
     $api->post('user', 'App\Http\Controllers\UserController@store');
   });
 });

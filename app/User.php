@@ -56,6 +56,10 @@ class User extends Authenticatable
     {
         $data['password'] = $password;
         
-        return $this->create($data);
+        $user = $this->create($data);
+
+        return static::with('role')
+                        ->where('id', '=', $user->id)
+                        ->first();
     }
 }
