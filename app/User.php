@@ -35,6 +35,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Convert user name to lowercase.
+     * 
+     * @param string $value
+     */
+    protected function setUserNameAttribute($value)
+    {
+        $this->attributes['user_name'] = strtolower(trim($value));
+    }
+
+    /**
+     * Convert email to lowercase.
+     * 
+     * @param string $value
+     */
+    protected function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = strtolower(trim($value));
+    }
+
+    /**
      * A user has a role.
      * 
      * @return Illuminate\Database\Eloquent\Builder

@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueValidator from 'vue-validator'
 import Dashboard from './components/dashboard.vue'
 import UserAccount from './components/user/user_view.vue'
 
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 Vue.use(require('vue-resource'))
+Vue.use(VueValidator)
 
 Vue.http.interceptors.push({
   request(request){

@@ -1,54 +1,63 @@
 <template>
-	<form class="form-horizontal">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-        <h3 class="panel-title">User Form</h3>
-        <ul class="panel-controls">
-            <li><a @click.stop.prevent="closeForm" class="panel-remove"><span class="fa fa-times"></span></a></li>
-        </ul>
-      </div>
-			<div class="panel-body">							
-					<div class="form-group">
-              <label class="col-md-3 col-xs-12 control-label">User Account</label>
-              <div class="col-md-6 col-xs-12">                                            
-                  <div>
-                      <input type="text" class="form-control" v-model="user.user_name" debounce="500"/>
-                  </div>                                            
-                  <span class="help-block text-danger" v-show="validation.user_exist">This user name already exist.</span>
-              </div>
-          </div>
-          <div class="form-group">                                        
-            <label class="col-md-3 col-xs-12 control-label">Email</label>
-            <div class="col-md-6 col-xs-12">
-                <div>
-                    <input type="email" class="form-control" v-model="user.email"/>
-                </div>            
+  <validator name="validation">
+  	<form class="form-horizontal" novalidate>
+  		<div class="panel panel-default">
+  			<div class="panel-heading">
+          <h3 class="panel-title">User Form</h3>
+          <ul class="panel-controls">
+              <li><a @click.stop.prevent="closeForm" class="panel-remove"><span class="fa fa-times"></span></a></li>
+          </ul>
+        </div>
+  			<div class="panel-body">							
+  					<div class="form-group">
+                <label class="col-md-3 col-xs-12 control-label">User Account</label>
+                <div class="col-md-6 col-xs-12">                                            
+                    <div>
+                        <input type="text" 
+                              class="form-control" 
+                              v-model="user.user_name" 
+                              debounce="500" 
+                              v-validate:user_name="['required', 'exist']"
+                              initial="off"/>
+                    </div>  
+                    <span class="help-block text-danger" v-for="error in $validation.errors" v-show="$validation.invalid">
+                      {{ error.message }}
+                    </span>
+                </div>
             </div>
-        	</div>
-          <div class="form-group">
-              <label class="col-md-3 col-xs-12 control-label">Full Name</label>
-              <div class="col-md-6 col-xs-12">                                            
+            <div class="form-group">                                        
+              <label class="col-md-3 col-xs-12 control-label">Email</label>
+              <div class="col-md-6 col-xs-12">
                   <div>
-                      <input type="text" class="form-control" v-model="user.full_name"/>
-                  </div>                                            
+                      <input type="email" class="form-control" v-model="user.email"/>
+                  </div>            
               </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-3 col-xs-12 control-label">Role</label>
-            <div class="col-md-6 col-xs-12">                                                                                            
-                <select class="form-control"  v-model="user.role_id">
-                    <option value="1">Adminstrator</option>
-                    <option value="2">Accountant</option>
-                </select>
+          	</div>
+            <div class="form-group">
+                <label class="col-md-3 col-xs-12 control-label">Full Name</label>
+                <div class="col-md-6 col-xs-12">                                            
+                    <div>
+                        <input type="text" class="form-control" v-model="user.full_name"/>
+                    </div>                                            
+                </div>
             </div>
-        	</div>						
-			</div>
-			<div class="panel-footer">
-        <button class="btn btn-default" @click.stop.prevent="clearInput">Clear</button>                                    
-        <button class="btn btn-primary pull-right" v-on:click.stop.prevent="saveUser">Save</button>
-      </div>
-		</div>
-	</form>
+            <div class="form-group">
+              <label class="col-md-3 col-xs-12 control-label">Role</label>
+              <div class="col-md-6 col-xs-12">                                                                                            
+                  <select class="form-control"  v-model="user.role_id">
+                      <option value="1">Adminstrator</option>
+                      <option value="2">Accountant</option>
+                  </select>
+              </div>
+          	</div>						
+  			</div>
+  			<div class="panel-footer">
+          <button class="btn btn-default" @click.stop.prevent="clearInput">Clear</button>                                    
+          <button class="btn btn-primary pull-right" v-on:click.stop.prevent="saveUser">Save</button>
+        </div>
+  		</div>
+  	</form>
+  </validator>
 </template>
 
 <script>
@@ -60,10 +69,7 @@ export default{
 				email: '',
 				full_name: '',
 				role_id: ''
-			},
-      validation: {
-        user_exist: false
-      }
+			}
 		}
 	},
 
@@ -71,39 +77,50 @@ export default{
 		saveUser(){			
 			var resource = this.$resource('/api/user');
 
-			resource.save(this.user).then(function(response){
-				var user = response.data.user;
-				
-        this.$dispatch('add-new-user', { user : user, view: 'user_grid'});
-
-        this.clearInput();
-			});
+			resource.save(this.user).
+      then((response) => {          
+          // this.$dispatch('add-new-user', { view: 'user_grid' });
+          this.clearInput();
+  		});
 		},
 
     clearInput(){
+      // Clear input fields.
       this.user.user_name = '';
       this.user.email = '';
       this.user.full_name = '';
       this.user.role_id = '';
+
+      // Reset validation.
+      this.$resetValidation();
+      this.$validation.user_name.required = false;
     },
 
   	closeForm(){
   		this.$dispatch('switch-view', 'user_grid');
-
       this.clearInput();
   	},
 
     checkUserNameExist(user_name){
-      this.$http.get('/api/user/' + user_name)
-      .then((response) => {
-        this.validation.user_exist = response.data;
-      });
+      return this.$http.get('/api/user/' + user_name)
+      .then(
+        (response) => {
+          return response.data > 0 ? Promise.reject('User already exist') : Promise.resolve();
+        },
+        (error) => {
+          return Promise.reject('unexpected error');
+        }
+      );
     }
 	},
 
-  watch: {
-    'user.user_name' : function(val){
-      this.checkUserNameExist(val);
+  validators: {
+    exist (user_name){
+      return user_name == '' ? true : this.vm.checkUserNameExist(user_name);
+    },
+
+    required(val){
+      return val == '' ? Promise.reject('Cannot blank field') : true;
     }
   } 
 }

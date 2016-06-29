@@ -80,7 +80,7 @@ export default{
   },
 
 	ready: function(){
-		this.fetchData('/api/user/', this.success);
+		this.fetchData('/api/users', this.success);
 	},
 
 	methods: {
@@ -97,13 +97,13 @@ export default{
   	},
 
   	showByNumRecords(){
-  		this.fetchData('/api/user', this.success);
+  		this.fetchData('/api/users', this.success);
   	}
 	},
 
 	events: {
 		'reload-users': function(){
-			this.fetchData('/api/user?page=' + this.pagination.current_page, this.success);
+			this.fetchData('/api/users?page=' + this.pagination.current_page, this.success);
 		}
 	}
 }

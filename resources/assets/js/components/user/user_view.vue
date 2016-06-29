@@ -1,6 +1,5 @@
 <template>
 	<component :is="currentView" 
-						 :users.sync="users"
 						 @switch-view="onSwitchView"
 						 @add-new-user="onAddNewUser"
 						 keep-alive>						

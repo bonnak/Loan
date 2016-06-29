@@ -43,6 +43,14 @@ class UserController extends Controller
      */
     public function store(Request $request, User $user)
     {   	
+        $validator = \Validator::make($request->all(), [
+            'user_name' => 'required|unique:users|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['failed' => true, 'validator' => $validator->errors()], 422);
+        }
+
     	return $user->createUser($request->all());
     }
 }
