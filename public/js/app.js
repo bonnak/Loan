@@ -18692,85 +18692,80 @@ _vue2.default.use(_vueRouter2.default);
 _vue2.default.use(require('vue-resource'));
 _vue2.default.use(_vueValidator2.default);
 
-_vue2.default.validator('email', function (val) {
-	if (val == '') return true;
-
-	return (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
-	);
-});
+_vue2.default.validator('email', _email_validation2.default);
 
 _vue2.default.http.interceptors.push({
-	request: function request(_request) {
-		_request.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-		_request.headers['Accept'] = 'application/vnd.mob.v1+json';
-		_request.emulateJSON = true;
+		request: function request(_request) {
+				_request.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+				_request.headers['Accept'] = 'application/vnd.mob.v1+json';
+				_request.emulateJSON = true;
 
-		return _request;
-	},
-	response: function response(_response) {
-		return _response;
-	}
+				return _request;
+		},
+		response: function response(_response) {
+				return _response;
+		}
 });
 
 var App = _vue2.default.extend({
-	data: function data() {
-		return {
-			auth: {
-				user: {
-					user_name: '',
-					password: ''
-				},
-				authenticated: false,
-				response_text: ''
-			}
-		};
-	},
-
-
-	methods: {
-		login: function login() {
-			var _this = this;
-
-			this.$http.post('/api/authenticate', this.auth.user).then(function (response) {
-				localStorage.setItem('token', response.data.token);
-
-				_this.setRosponse(response);
-
-				window.location.href = '/';
-			}, function (err) {
-				_this.setRosponse(err);
-			});
+		data: function data() {
+				return {
+						auth: {
+								user: {
+										user_name: '',
+										password: ''
+								},
+								authenticated: false,
+								response_text: ''
+						}
+				};
 		},
-		setRosponse: function setRosponse(response) {
-			switch (response.status) {
-				case 401:
-					this.auth.authenticated = false;
-					this.auth.response_text = 'Username/Password is invalid.';
-					break;
 
-				case 500:
-					this.auth.authenticated = false;
-					this.auth.response_text = 'Something went wrong while authenticating.';
-					break;
 
-				case 200:
-					this.auth.authenticated = true;
-					this.auth.response_text = 'Login successfully.';
-					break;
-			}
+		methods: {
+				login: function login() {
+						var _this = this;
+
+						this.$http.post('/api/authenticate', this.auth.user).then(function (response) {
+								localStorage.setItem('token', response.data.token);
+
+								_this.setRosponse(response);
+
+								window.location.href = '/';
+						}, function (err) {
+								_this.setRosponse(err);
+						});
+				},
+				setRosponse: function setRosponse(response) {
+						switch (response.status) {
+								case 401:
+										this.auth.authenticated = false;
+										this.auth.response_text = 'Username/Password is invalid.';
+										break;
+
+								case 500:
+										this.auth.authenticated = false;
+										this.auth.response_text = 'Something went wrong while authenticating.';
+										break;
+
+								case 200:
+										this.auth.authenticated = true;
+										this.auth.response_text = 'Login successfully.';
+										break;
+						}
+				}
 		}
-	}
 });
 
 var router = new _vueRouter2.default();
 
 router.map({
-	'/': {
-		component: _dashboard2.default
-	},
-	'/auth/user': {
-		component: _user_view2.default
-	}
+		'/': {
+				component: _dashboard2.default
+		},
+		'/auth/user': {
+				component: _user_view2.default
+		}
 });
 
 router.start(App, 'body');
