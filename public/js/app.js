@@ -18674,6 +18674,10 @@ var _vueValidator = require('vue-validator');
 
 var _vueValidator2 = _interopRequireDefault(_vueValidator);
 
+var _email_validation = require('./email_validation');
+
+var _email_validation2 = _interopRequireDefault(_email_validation);
+
 var _dashboard = require('./components/dashboard.vue');
 
 var _dashboard2 = _interopRequireDefault(_dashboard);
@@ -18688,83 +18692,90 @@ _vue2.default.use(_vueRouter2.default);
 _vue2.default.use(require('vue-resource'));
 _vue2.default.use(_vueValidator2.default);
 
-_vue2.default.http.interceptors.push({
-		request: function request(_request) {
-				_request.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-				_request.headers['Accept'] = 'application/vnd.mob.v1+json';
-				_request.emulateJSON = true;
+_vue2.default.validator('email', function (val) {
+	if (val == '') return true;
 
-				return _request;
-		},
-		response: function response(_response) {
-				return _response;
-		}
+	return (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
+	);
+});
+
+_vue2.default.http.interceptors.push({
+	request: function request(_request) {
+		_request.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+		_request.headers['Accept'] = 'application/vnd.mob.v1+json';
+		_request.emulateJSON = true;
+
+		return _request;
+	},
+	response: function response(_response) {
+		return _response;
+	}
 });
 
 var App = _vue2.default.extend({
-		data: function data() {
-				return {
-						auth: {
-								user: {
-										user_name: '',
-										password: ''
-								},
-								authenticated: false,
-								response_text: ''
-						}
-				};
-		},
-
-
-		methods: {
-				login: function login() {
-						var _this = this;
-
-						this.$http.post('/api/authenticate', this.auth.user).then(function (response) {
-								localStorage.setItem('token', response.data.token);
-
-								_this.setRosponse(response);
-
-								window.location.href = '/';
-						}, function (err) {
-								_this.setRosponse(err);
-						});
+	data: function data() {
+		return {
+			auth: {
+				user: {
+					user_name: '',
+					password: ''
 				},
-				setRosponse: function setRosponse(response) {
-						switch (response.status) {
-								case 401:
-										this.auth.authenticated = false;
-										this.auth.response_text = 'Username/Password is invalid.';
-										break;
+				authenticated: false,
+				response_text: ''
+			}
+		};
+	},
 
-								case 500:
-										this.auth.authenticated = false;
-										this.auth.response_text = 'Something went wrong while authenticating.';
-										break;
 
-								case 200:
-										this.auth.authenticated = true;
-										this.auth.response_text = 'Login successfully.';
-										break;
-						}
-				}
+	methods: {
+		login: function login() {
+			var _this = this;
+
+			this.$http.post('/api/authenticate', this.auth.user).then(function (response) {
+				localStorage.setItem('token', response.data.token);
+
+				_this.setRosponse(response);
+
+				window.location.href = '/';
+			}, function (err) {
+				_this.setRosponse(err);
+			});
+		},
+		setRosponse: function setRosponse(response) {
+			switch (response.status) {
+				case 401:
+					this.auth.authenticated = false;
+					this.auth.response_text = 'Username/Password is invalid.';
+					break;
+
+				case 500:
+					this.auth.authenticated = false;
+					this.auth.response_text = 'Something went wrong while authenticating.';
+					break;
+
+				case 200:
+					this.auth.authenticated = true;
+					this.auth.response_text = 'Login successfully.';
+					break;
+			}
 		}
+	}
 });
 
 var router = new _vueRouter2.default();
 
 router.map({
-		'/': {
-				component: _dashboard2.default
-		},
-		'/auth/user': {
-				component: _user_view2.default
-		}
+	'/': {
+		component: _dashboard2.default
+	},
+	'/auth/user': {
+		component: _user_view2.default
+	}
 });
 
 router.start(App, 'body');
 
-},{"./components/dashboard.vue":77,"./components/user/user_view.vue":80,"vue":74,"vue-resource":71,"vue-router":72,"vue-validator":73}],77:[function(require,module,exports){
+},{"./components/dashboard.vue":77,"./components/user/user_view.vue":80,"./email_validation":81,"vue":74,"vue-resource":71,"vue-router":72,"vue-validator":73}],77:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("\n")
 "use strict";
 
@@ -18832,10 +18843,6 @@ exports.default = {
       this.user.email = '';
       this.user.full_name = '';
       this.user.role_id = '';
-
-      // Reset validation.
-      this.$resetValidation();
-      this.$validation.user_name.required = false;
     },
     closeForm: function closeForm() {
       this.$dispatch('switch-view', 'user_grid');
@@ -18853,14 +18860,11 @@ exports.default = {
   validators: {
     exist: function exist(user_name) {
       return user_name == '' ? true : this.vm.checkUserNameExist(user_name);
-    },
-    required: function required(val) {
-      return val == '' ? _promise2.default.reject('Cannot blank field') : true;
     }
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<validator name=\"validation\">\n\t<form class=\"form-horizontal\" novalidate=\"\">\n\t\t<div class=\"panel panel-default\">\n\t\t\t<div class=\"panel-heading\">\n        <h3 class=\"panel-title\">User Form</h3>\n        <ul class=\"panel-controls\">\n            <li><a @click.stop.prevent=\"closeForm\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n        </ul>\n      </div>\n\t\t\t<div class=\"panel-body\">\t\t\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">User Account</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.user_name\" debounce=\"500\" v-validate:user_name=\"['required', 'exist']\" initial=\"off\">\n                  </div>  \n                  <span class=\"help-block text-danger\" v-for=\"error in $validation.errors\" v-show=\"$validation.invalid\">\n                    {{ error.message }}\n                  </span>\n              </div>\n          </div>\n          <div class=\"form-group\">                                        \n            <label class=\"col-md-3 col-xs-12 control-label\">Email</label>\n            <div class=\"col-md-6 col-xs-12\">\n                <div>\n                    <input type=\"email\" class=\"form-control\" v-model=\"user.email\">\n                </div>            \n            </div>\n        \t</div>\n          <div class=\"form-group\">\n              <label class=\"col-md-3 col-xs-12 control-label\">Full Name</label>\n              <div class=\"col-md-6 col-xs-12\">                                            \n                  <div>\n                      <input type=\"text\" class=\"form-control\" v-model=\"user.full_name\">\n                  </div>                                            \n              </div>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"col-md-3 col-xs-12 control-label\">Role</label>\n            <div class=\"col-md-6 col-xs-12\">                                                                                            \n                <select class=\"form-control\" v-model=\"user.role_id\">\n                    <option value=\"1\">Adminstrator</option>\n                    <option value=\"2\">Accountant</option>\n                </select>\n            </div>\n        \t</div>\t\t\t\t\t\t\n\t\t\t</div>\n\t\t\t<div class=\"panel-footer\">\n        <button class=\"btn btn-default\" @click.stop.prevent=\"clearInput\">Clear</button>                                    \n        <button class=\"btn btn-primary pull-right\" v-on:click.stop.prevent=\"saveUser\">Save</button>\n      </div>\n\t\t</div>\n\t</form>\n</validator>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<validator name=\"validation\">\n\t<form class=\"form-horizontal\" novalidate=\"\">\n\t\t<div class=\"panel panel-default\">\n\t\t\t<div class=\"panel-heading\">\n        <h3 class=\"panel-title\">User Form</h3>\n        <ul class=\"panel-controls\">\n            <li><a @click.stop.prevent=\"closeForm\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n        </ul>\n      </div>\n\t\t\t<div class=\"panel-body\">\t\t\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\n            <label class=\"col-md-3 col-xs-12 control-label\">User Account</label>\n            <div class=\"col-md-6 col-xs-12\">                                            \n                <div>\n                    <input type=\"text\" class=\"form-control\" v-model=\"user.user_name\" debounce=\"500\" v-validate:user_name=\"{\n                            required: {rule: true, message: 'Required' }, \n                            exist: { rule: true }\n                          }\" initial=\"off\">\n                </div> \n                <div v-if=\"$validation.user_name.invalid\">\n                  <span class=\"help-block text-danger\" v-for=\"error in $validation.user_name.errors\">\n                    {{ error.message }}\n                  </span>\n                </div>\n            </div>\n          </div>\n          <div class=\"form-group\">                                        \n            <label class=\"col-md-3 col-xs-12 control-label\">Email</label>\n            <div class=\"col-md-6 col-xs-12\">\n                <div>\n                    <input type=\"email\" class=\"form-control\" v-model=\"user.email\" v-validate:email=\"{\n                            required: {rule: true, message: 'Required' },\n                            email: { rule: true, message: 'Invalid email address'}\n                          }\" initial=\"off\">\n                </div>  \n                <div v-if=\"$validation.email.invalid\">\n                  <span class=\"help-block text-danger\" v-for=\"error in $validation.email.errors\">\n                    {{ error.message }}\n                  </span>\n                </div>          \n            </div>\n        \t</div>\n          <div class=\"form-group\">\n            <label class=\"col-md-3 col-xs-12 control-label\">Full Name</label>\n            <div class=\"col-md-6 col-xs-12\">                                            \n                <div>\n                    <input type=\"text\" class=\"form-control\" v-model=\"user.full_name\" v-validate:full_name=\"{\n                            required: {rule: true, message: 'Required' }\n                          }\" initial=\"off\">\n                </div>\n                <div v-if=\"$validation.full_name.invalid\">\n                  <span class=\"help-block text-danger\" v-for=\"error in $validation.full_name.errors\">\n                    {{ error.message }}\n                  </span>\n                </div>                                            \n            </div>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"col-md-3 col-xs-12 control-label\">Role</label>\n            <div class=\"col-md-6 col-xs-12\">  \n              <div>                                                                                         \n                <select class=\"form-control\" v-model=\"user.role_id\" v-validate:role=\"{\n                          required: {rule: true, message: 'Required' }\n                        }\" initial=\"off\">\n                    <option value=\"1\">Adminstrator</option>\n                    <option value=\"2\">Accountant</option>\n                </select>\n              </div>  \n              <div v-if=\"$validation.role.invalid\">\n                <span class=\"help-block text-danger\" v-for=\"error in $validation.role.errors\">\n                  {{ error.message }}\n                </span>\n              </div> \n            </div>              \n        \t</div>\t\t\t\t\t\t\n\t\t\t</div>\n\t\t\t<div class=\"panel-footer\">\n        <button class=\"btn btn-default\" @click.stop.prevent=\"clearInput\">Clear</button>                                    \n        <button class=\"btn btn-primary pull-right\" v-on:click.stop.prevent=\"saveUser\">Save</button>\n      </div>\n\t\t</div>\n\t</form>\n</validator>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -18945,7 +18949,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../../mixins/grid":81,"vue":74,"vue-hot-reload-api":70,"vueify-insert-css":75}],80:[function(require,module,exports){
+},{"../../mixins/grid":82,"vue":74,"vue-hot-reload-api":70,"vueify-insert-css":75}],80:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19001,6 +19005,21 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./user_form.vue":78,"./user_list.vue":79,"vue":74,"vue-hot-reload-api":70}],81:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var email_validation = function email_validation(val) {
+	if (val == '') return true;
+
+	return (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
+	);
+};
+
+exports.default = email_validation;
+
+},{}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

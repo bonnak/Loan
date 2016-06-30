@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueValidator from 'vue-validator'
+import EmailValidation from './email_validation'
 import Dashboard from './components/dashboard.vue'
 import UserAccount from './components/user/user_view.vue'
 
@@ -8,6 +9,12 @@ import UserAccount from './components/user/user_view.vue'
 Vue.use(VueRouter)
 Vue.use(require('vue-resource'))
 Vue.use(VueValidator)
+
+Vue.validator('email', function (val) {
+	if(val == '') return true;
+	
+  return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
+});
 
 Vue.http.interceptors.push({
   request(request){

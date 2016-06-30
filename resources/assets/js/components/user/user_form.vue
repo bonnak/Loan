@@ -10,45 +10,85 @@
         </div>
   			<div class="panel-body">							
   					<div class="form-group">
-                <label class="col-md-3 col-xs-12 control-label">User Account</label>
-                <div class="col-md-6 col-xs-12">                                            
-                    <div>
-                        <input type="text" 
-                              class="form-control" 
-                              v-model="user.user_name" 
-                              debounce="500" 
-                              v-validate:user_name="['required', 'exist']"
-                              initial="off"/>
-                    </div>  
-                    <span class="help-block text-danger" v-for="error in $validation.errors" v-show="$validation.invalid">
+              <label class="col-md-3 col-xs-12 control-label">User Account</label>
+              <div class="col-md-6 col-xs-12">                                            
+                  <div>
+                      <input type="text" 
+                            class="form-control" 
+                            v-model="user.user_name" 
+                            debounce="500" 
+                            v-validate:user_name="{
+                              required: {rule: true, message: 'Required' }, 
+                              exist: { rule: true }
+                            }"
+                            initial="off"/>
+                  </div> 
+                  <div v-if="$validation.user_name.invalid">
+                    <span class="help-block text-danger" v-for="error in $validation.user_name.errors">
                       {{ error.message }}
                     </span>
-                </div>
+                  </div>
+              </div>
             </div>
             <div class="form-group">                                        
               <label class="col-md-3 col-xs-12 control-label">Email</label>
               <div class="col-md-6 col-xs-12">
                   <div>
-                      <input type="email" class="form-control" v-model="user.email"/>
-                  </div>            
+                      <input type="email" 
+                            class="form-control" 
+                            v-model="user.email"
+                            v-validate:email="{
+                              required: {rule: true, message: 'Required' },
+                              email: { rule: true, message: 'Invalid email address'}
+                            }"
+                            initial="off"/>
+                  </div>  
+                  <div v-if="$validation.email.invalid">
+                    <span class="help-block text-danger" v-for="error in $validation.email.errors">
+                      {{ error.message }}
+                    </span>
+                  </div>          
               </div>
           	</div>
             <div class="form-group">
-                <label class="col-md-3 col-xs-12 control-label">Full Name</label>
-                <div class="col-md-6 col-xs-12">                                            
-                    <div>
-                        <input type="text" class="form-control" v-model="user.full_name"/>
-                    </div>                                            
-                </div>
+              <label class="col-md-3 col-xs-12 control-label">Full Name</label>
+              <div class="col-md-6 col-xs-12">                                            
+                  <div>
+                      <input type="text" 
+                            class="form-control" 
+                            v-model="user.full_name"
+                            v-validate:full_name="{
+                              required: {rule: true, message: 'Required' }
+                            }"
+                            initial="off"/>
+                  </div>
+                  <div v-if="$validation.full_name.invalid">
+                    <span class="help-block text-danger" v-for="error in $validation.full_name.errors">
+                      {{ error.message }}
+                    </span>
+                  </div>                                            
+              </div>
             </div>
             <div class="form-group">
               <label class="col-md-3 col-xs-12 control-label">Role</label>
-              <div class="col-md-6 col-xs-12">                                                                                            
-                  <select class="form-control"  v-model="user.role_id">
+              <div class="col-md-6 col-xs-12">  
+                <div>                                                                                         
+                  <select class="form-control" 
+                          v-model="user.role_id" 
+                          v-validate:role="{
+                            required: {rule: true, message: 'Required' }
+                          }" 
+                          initial="off">
                       <option value="1">Adminstrator</option>
                       <option value="2">Accountant</option>
                   </select>
-              </div>
+                </div>  
+                <div v-if="$validation.role.invalid">
+                  <span class="help-block text-danger" v-for="error in $validation.role.errors">
+                    {{ error.message }}
+                  </span>
+                </div> 
+              </div>              
           	</div>						
   			</div>
   			<div class="panel-footer">
@@ -80,7 +120,7 @@ export default{
 			resource.save(this.user).
       then((response) => {          
           // this.$dispatch('add-new-user', { view: 'user_grid' });
-          this.clearInput();
+          this.clearInput();          
   		});
 		},
 
@@ -90,10 +130,6 @@ export default{
       this.user.email = '';
       this.user.full_name = '';
       this.user.role_id = '';
-
-      // Reset validation.
-      this.$resetValidation();
-      this.$validation.user_name.required = false;
     },
 
   	closeForm(){
@@ -117,10 +153,6 @@ export default{
   validators: {
     exist (user_name){
       return user_name == '' ? true : this.vm.checkUserNameExist(user_name);
-    },
-
-    required(val){
-      return val == '' ? Promise.reject('Cannot blank field') : true;
     }
   } 
 }

@@ -1,1 +1,1 @@
-{"version":3,"sources":["app.css"],"names":[],"mappings":"AAAA","file":"app.css","sourceRoot":"/source/","sourcesContent":[]}
+{"version":3,"sources":["app.scss"],"names":[],"mappings":"AAEA;EACE,sBAAsB,EACvB","file":"app.css","sourcesContent":["// @import \"node_modules/bootstrap-sass/assets/stylesheets/bootstrap\";\n\n.form-control.required{\n  border-color: #E04B4A;\n}"],"sourceRoot":"/source/"}

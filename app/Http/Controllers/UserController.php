@@ -28,7 +28,7 @@ class UserController extends Controller
      * 
      * @return int
      */
-    public function getUserName($user_name)
+    public function userExist($user_name)
     {
         return (int) User::where('user_name', '=', $user_name)->exists();
     }

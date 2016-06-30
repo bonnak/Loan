@@ -12,6 +12,7 @@
 
     <!-- CSS INCLUDE -->
     <link rel="stylesheet" type="text/css" id="theme" href="{{ url('joli/css/theme-default.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url('css/app.css') }}"/>    
     <!-- EOF CSS INCLUDE -->
 </head>
 <body>
