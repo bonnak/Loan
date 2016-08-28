@@ -7,19 +7,19 @@
 </template>
 
 <script>
-import user_grid from './user_list.vue'
-import user_form from './user_form.vue'
+import UserList from './UserList.vue'
+import UserNew from './UserNew.vue'
 
 export default{
 	data: function () {
 		return {	
-			currentView: 'user_grid'
+			currentView: 'UserList'
 		}
 	},
 
 	components: {
-		user_grid,
-		user_form
+		UserList,
+		UserNew
 	},
 
 	ready: function() {  	

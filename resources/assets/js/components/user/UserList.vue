@@ -85,7 +85,7 @@ export default{
 
 	methods: {
   	showNewForm(){
-  		this.$dispatch('switch-view', 'user_form');
+  		this.$dispatch('switch-view', 'UserNew');
   	},  	
 
   	success(response){ 

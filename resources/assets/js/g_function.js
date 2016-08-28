@@ -14,10 +14,10 @@ export function getCookie(cname) {
 }
 
 
-const lazyLoading = (path, ext = '.vue') => {
-  return (resolve) => {
-    require([`${path}${ext}`], resolve)
-  }
-};
+// const lazyLoading = (path) => {
+//   return (resolve) => {
+//     require([`${path}`], resolve)
+//   }
+// };
 
-export { lazyLoading };
+//export { lazyLoading };

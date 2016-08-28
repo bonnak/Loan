@@ -1,4 +1,4 @@
-import { getCookie, lazyLoading } from './g_function'
+import { getCookie } from './g_function'
 
 
 
@@ -15,7 +15,7 @@ Vue.use(VueValidator)
 import App from './App.vue'
 import EmailValidation from './email_validation'
 import Dashboard from './components/dashboard.vue'
-import UserAccount from './components/user/user_view.vue'
+import UserAccount from './components/user/User.vue'
 
 // Vue.http.headers.common['Authorization'] = 'Bearer ' + getCookie('token');
 

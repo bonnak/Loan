@@ -119,7 +119,7 @@ export default{
 
 			resource.save(this.user).
       then((response) => {          
-          // this.$dispatch('add-new-user', { view: 'user_grid' });
+          // this.$dispatch('add-new-user', { view: 'UserList' });
           this.clearInput();          
   		});
 		},
@@ -133,7 +133,7 @@ export default{
     },
 
   	closeForm(){
-  		this.$dispatch('switch-view', 'user_grid');
+  		this.$dispatch('switch-view', 'UserList');
       this.clearInput();
   	},
 
