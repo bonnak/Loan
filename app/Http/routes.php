@@ -13,7 +13,7 @@ $api->version('v1', function ($api) {
   $api->post('authenticate', 'App\Http\Controllers\AuthenticateController@authenticate');
 
   // Api route with authentication
-  $api->group(['middleware' => 'api.auth'], function($api){
+  $api->group(['middleware' => 'jwt.auth'], function($api){
     $api->get('authenticated_user', 'App\Http\Controllers\AuthenticateController@authenticatedUser');
 
     $api->post('fruits', 'App\Http\Controllers\FruitsController@store');

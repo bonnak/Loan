@@ -36,7 +36,7 @@
                 <li><a href="pages-profile.html">Chart of Account</a></li>
                 <li><a href="pages-gallery.html">Exchange Rate</a></li>
                 <li><a href="pages-gallery.html">Identity Type</a></li>
-                <li><a v-link="{ path: '/auth/user' }">User Account</a></li>
+                <li><a v-link="{ path: '/user' }">User Account</a></li>
                 <li><a href="pages-profile.html">User Role</a></li>
                 <li><a href="pages-profile.html">Location</a></li>
             </ul>
