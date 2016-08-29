@@ -1,8 +1,8 @@
 <template>
 	<component :is="currentView" 
-						 @switch-view="onSwitchView"
-						 @add-new-user="onAddNewUser"
-						 keep-alive>						
+		 @switch-view="onSwitchView"
+		 @add-new-user="onAddNewUser"
+		 keep-alive>						
 	</component>
 </template>
 
@@ -21,9 +21,6 @@ export default{
 		UserList,
 		UserNew
 	},
-
-	ready: function() {  	
-  },
 
   methods: {
   	onSwitchView(view){

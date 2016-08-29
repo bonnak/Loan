@@ -16,8 +16,8 @@ class FruitsController extends Controller
 	{
     $fruits = Fruit::all();
 
-    //return $this->response->array(['data' => $fruits], 200);
-    return $this->collection($fruits, new FruitsTransformer);
+    return $this->response->array(['data' => $fruits], 200);
+    //return $this->collection($fruits, new FruitsTransformer);
 	}
 
 	public function show($id)

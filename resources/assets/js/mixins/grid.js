@@ -48,7 +48,7 @@ export default {
 
   	fetchData(api_url, success){
       this.$http.get(
-        api_url, {paginate_amount: this.pagination.per_page}
+        api_url
       ).then(success);
   	},
   	

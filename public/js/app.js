@@ -19017,8 +19017,6 @@ exports.default = {
     UserNew: _UserNew2.default
   },
 
-  ready: function ready() {},
-
   methods: {
     onSwitchView: function onSwitchView(view) {
       this.currentView = view;
@@ -19044,7 +19042,7 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"./UserList.vue":78,"./UserNew.vue":79,"vue":72,"vue-hot-reload-api":68}],78:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.dataTables_Footer{\n\tfont-size: 12px;\n\tpadding: 0px 0px 5px; \n}\n\n.dataTables_Footer .footer_left{\n  float: left;     \n}\n\n.dataTables_Footer .footer_left label{\n\tpadding: 0px;  \n  height: auto; \n  margin: 0px; \n  font-weight: normal; \n}\n\n.dataTables_Footer .footer_left select{\n\twidth: auto;\n  display: inline;\n  margin: 0px 5px;\n}\n\n.dataTables_Footer .footer_right{\n\tfloat: right;\n}\n")
+var __vueify_style__ = __vueify_insert__.insert("\n.inner-content-wapper{\n\tpadding: 10px;\n}\n\n.dataTables_Footer{\n\tfont-size: 12px;\n\tpadding: 0px 0px 5px; \n}\n\n.dataTables_Footer .footer_left{\n  float: left;     \n}\n\n.dataTables_Footer .footer_left label{\n\tpadding: 0px;  \n  height: auto; \n  margin: 0px; \n  font-weight: normal; \n}\n\n.dataTables_Footer .footer_left select{\n\twidth: auto;\n  display: inline;\n  margin: 0px 5px;\n}\n\n.dataTables_Footer .footer_right{\n\tfloat: right;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19078,6 +19076,9 @@ exports.default = {
       this.$dispatch('switch-view', 'UserNew');
     },
     success: function success(response) {
+
+      console.log(response);
+
       var result = response.data;
 
       this.users = result.data;
@@ -19085,7 +19086,7 @@ exports.default = {
       this.setPagination(result);
     },
     showByNumRecords: function showByNumRecords() {
-      this.fetchData('/api/users', this.success);
+      this.fetchData('/api/users?paginate_amount=' + this.pagination.per_page, this.success);
     }
   },
 
@@ -19096,13 +19097,13 @@ exports.default = {
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"panel panel-default\">\n\t<div class=\"panel-body\">\n\t\t<div class=\"dataTables_wrapper no-footer\">\t\n\t\t\t<div class=\"dataTables_length\">\n\t\t\t\t<button class=\"btn btn-primary\" v-on:click=\"showNewForm\">New</button>\n\t\t\t</div>\t\n\t\t\t<div class=\"dataTables_filter\">\n\t\t\t\t<label>Search:<input class=\"form-control \" type=\"search\"></label>\n\t\t\t</div>\n\t\t\t<table class=\"table datatable dataTable no-footer\">\n\t\t    <thead>\n\t\t      <tr>\n\t\t      \t<th style=\"width: 30px; text-align: center;\"><input type=\"checkbox\" v-model=\"check_all\" v-on:change=\"onSelectAll(users)\"></th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting_desc\">User Account</th>\n\t\t      \t<th style=\"width: 200px;\" class=\"sorting\">Full Name</th>\n\t\t      \t<th style=\"width: 250px;\" class=\"sorting\">Email</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Role</th>\n\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Status</th>\n\t\t      </tr>\n\t\t    </thead>\n\t\t    <tbody>\n\t\t      <tr v-for=\"user in users\">\n\t\t      \t\t<td style=\"text-align: center;\">\n\t\t      \t\t\t<input type=\"checkbox\" value=\"{{ user.id }}\" v-model=\"checked_list\" v-on:change=\"onSelectItems\">\n\t\t      \t\t</td>\n\t\t          <td>{{ user.user_name }}</td>\n\t\t          <td>{{ user.full_name }}</td>\n\t\t          <td>{{ user.email }}</td>\n\t\t          <td>{{ user.role.name }}</td>\n\t\t          <td>{{ user.status }}</td>\n\t\t      </tr>\n\t\t    </tbody>\n\t\t\t</table>\n\t\t\t<div class=\"dataTables_Footer clearfix\">\n\t\t\t\t<div class=\"footer_left\">\n\t\t\t\t\t<label>Show \n\t\t\t\t\t\t<select class=\"form-control\" v-model=\"pagination.per_page\" @change=\"showByNumRecords\">\n\t\t\t\t\t\t\t<option v-for=\"option in paginate_options\" v-bind:value=\"option.value\">\n\t\t\t\t\t\t    {{ option.text }}\n\t\t\t\t\t\t  </option>\n\t\t\t\t\t\t</select> \n\t\t\t\t\t\trecords ({{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }})\n\t\t\t\t\t</label>\n\t\t\t\t</div>\t\t\t\t\n\t\t\t\t<div class=\"dataTables_paginate paging_simple_numbers\" v-if=\"pagination.last_page > 1\">\n\t\t\t\t\t<a v-on:click.stop.prevent=\"previous\" class=\"paginate_button previous\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === 1}\"><i class=\"fa fa-angle-left\"></i></a>\n\t\t\t\t\t<span v-for=\"page in pagination.last_page\">\n\t\t\t\t\t\t<a v-on:click.stop.prevent=\"goTo(page + 1)\" class=\"paginate_button\" v-bind:class=\"{ 'current': pagination.current_page === page + 1}\">{{ page + 1 }}</a>\n\t\t\t\t\t</span>\n\t\t\t\t\t<a v-on:click.stop.prevent=\"next\" class=\"paginate_button next\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === pagination.last_page}\"><i class=\"fa fa-angle-right\"></i></a>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"inner-content-wapper\">\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-body\">\n\t\t\t<div class=\"dataTables_wrapper no-footer\">\t\n\t\t\t\t<div class=\"dataTables_length\">\n\t\t\t\t\t<button class=\"btn btn-primary\" v-on:click=\"showNewForm\">New</button>\n\t\t\t\t</div>\t\n\t\t\t\t<div class=\"dataTables_filter\">\n\t\t\t\t\t<label>Search:<input class=\"form-control \" type=\"search\"></label>\n\t\t\t\t</div>\n\t\t\t\t<table class=\"table datatable dataTable no-footer\">\n\t\t\t    <thead>\n\t\t\t      <tr>\n\t\t\t      \t<th style=\"width: 30px; text-align: center;\"><input type=\"checkbox\" v-model=\"check_all\" v-on:change=\"onSelectAll(users)\"></th>\n\t\t\t      \t<th style=\"width: 200px;\" class=\"sorting_desc\">User Account</th>\n\t\t\t      \t<th style=\"width: 200px;\" class=\"sorting\">Full Name</th>\n\t\t\t      \t<th style=\"width: 250px;\" class=\"sorting\">Email</th>\n\t\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Role</th>\n\t\t\t      \t<th style=\"width: 69px;\" class=\"sorting\">Status</th>\n\t\t\t      </tr>\n\t\t\t    </thead>\n\t\t\t    <tbody>\n\t\t\t      <tr v-for=\"user in users\">\n\t\t\t      \t\t<td style=\"text-align: center;\">\n\t\t\t      \t\t\t<input type=\"checkbox\" value=\"{{ user.id }}\" v-model=\"checked_list\" v-on:change=\"onSelectItems\">\n\t\t\t      \t\t</td>\n\t\t\t          <td>{{ user.user_name }}</td>\n\t\t\t          <td>{{ user.full_name }}</td>\n\t\t\t          <td>{{ user.email }}</td>\n\t\t\t          <td>{{ user.role.name }}</td>\n\t\t\t          <td>{{ user.status }}</td>\n\t\t\t      </tr>\n\t\t\t    </tbody>\n\t\t\t\t</table>\n\t\t\t\t<div class=\"dataTables_Footer clearfix\">\n\t\t\t\t\t<div class=\"footer_left\">\n\t\t\t\t\t\t<label>Show \n\t\t\t\t\t\t\t<select class=\"form-control\" v-model=\"pagination.per_page\" @change=\"showByNumRecords\">\n\t\t\t\t\t\t\t\t<option v-for=\"option in paginate_options\" v-bind:value=\"option.value\">\n\t\t\t\t\t\t\t    {{ option.text }}\n\t\t\t\t\t\t\t  </option>\n\t\t\t\t\t\t\t</select> \n\t\t\t\t\t\t\trecords ({{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }})\n\t\t\t\t\t\t</label>\n\t\t\t\t\t</div>\t\t\t\t\n\t\t\t\t\t<div class=\"dataTables_paginate paging_simple_numbers\" v-if=\"pagination.last_page > 1\">\n\t\t\t\t\t\t<a v-on:click.stop.prevent=\"previous\" class=\"paginate_button previous\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === 1}\"><i class=\"fa fa-angle-left\"></i></a>\n\t\t\t\t\t\t<span v-for=\"page in pagination.last_page\">\n\t\t\t\t\t\t\t<a v-on:click.stop.prevent=\"goTo(page + 1)\" class=\"paginate_button\" v-bind:class=\"{ 'current': pagination.current_page === page + 1}\">{{ page + 1 }}</a>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t\t<a v-on:click.stop.prevent=\"next\" class=\"paginate_button next\" v-bind:class=\"{ 'paginate_button_disabled': pagination.current_page === pagination.last_page}\"><i class=\"fa fa-angle-right\"></i></a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.dataTables_Footer{\n\tfont-size: 12px;\n\tpadding: 0px 0px 5px; \n}\n\n.dataTables_Footer .footer_left{\n  float: left;     \n}\n\n.dataTables_Footer .footer_left label{\n\tpadding: 0px;  \n  height: auto; \n  margin: 0px; \n  font-weight: normal; \n}\n\n.dataTables_Footer .footer_left select{\n\twidth: auto;\n  display: inline;\n  margin: 0px 5px;\n}\n\n.dataTables_Footer .footer_right{\n\tfloat: right;\n}\n"] = false
+    __vueify_insert__.cache["\n.inner-content-wapper{\n\tpadding: 10px;\n}\n\n.dataTables_Footer{\n\tfont-size: 12px;\n\tpadding: 0px 0px 5px; \n}\n\n.dataTables_Footer .footer_left{\n  float: left;     \n}\n\n.dataTables_Footer .footer_left label{\n\tpadding: 0px;  \n  height: auto; \n  margin: 0px; \n  font-weight: normal; \n}\n\n.dataTables_Footer .footer_left select{\n\twidth: auto;\n  display: inline;\n  margin: 0px 5px;\n}\n\n.dataTables_Footer .footer_right{\n\tfloat: right;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
@@ -19365,7 +19366,7 @@ exports.default = {
       this.pagination.prev_page_url = pagination.prev_page_url;
     },
     fetchData: function fetchData(api_url, success) {
-      this.$http.get(api_url, { paginate_amount: this.pagination.per_page }).then(success);
+      this.$http.get(api_url).then(success);
     },
     previous: function previous() {
       if (this.pagination.current_page === 1) return;
