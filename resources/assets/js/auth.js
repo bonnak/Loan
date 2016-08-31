@@ -1,60 +1,61 @@
 export default {
-	data(){
-		return {
-			auth: {
-				user: {
-					user_name: '',
-					password: ''
-				},
-				authenticated: false,
-				response_text: ''			
-			}
-		}
-	},
 
-	methods: {
-		login(){
-			this.$http.post('/api/authenticate', this.auth.user)
-			.then(
-				(response) => {
-		      //localStorage.setItem('token', response.data.token);
+  // User object will let us check authentication status
+  user: {
+    authenticated: false
+  },
 
-		      this.setCookie("token", response.data.token, 30);
+  response: {
+    text: '',
+    code: ''
+  },
 
-		      this.setRosponse(response);	
+  // Send a request to the login URL and save the returned JWT
+  login(context, creds, redirect) {
+    context.$http.post('/api/authenticate', creds)
+    .then(
+      (response) => {
+        localStorage.setItem('token', response.data.token);
 
-		      window.location.href = '/';
-		    }, 
-		    (err) => {
-		    	this.setRosponse(err);		      
-		    }
-	    );
-		},
+        this.user.authenticated = true;
 
-		setRosponse(response){
-			switch(response.status){
-    		case 401:
-    			this.auth.authenticated = false;
-    			this.auth.response_text = 'Username/Password is invalid.';
-    			break;
+        this.response = { text: response.data.text, code: response.status};
 
-    		case 500:
-    			this.auth.authenticated = false;
-    			this.auth.response_text = 'Something went wrong while authenticating.';
-    			break;
+        // Redirect to a specified route
+        if(redirect) {
+          context.$route.router.go(redirect);       
+        }
+      }, 
+      (err) => {
+        context.error = err; 
 
-    		case 200:
-    			this.auth.authenticated = true;
-    			this.auth.response_text = 'Login successfully.';
-    			break;
-    	}
-		},
+        this.response = { text: err.data.error, code: err.status};
+      }
+    );
+  },
 
-		setCookie(cname, cvalue, exdays) {
-	    var d = new Date();
-	    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-	    var expires = "expires="+d.toUTCString();
-	    document.cookie = cname + "=" + cvalue + "; " + expires;
-		}
-	}
+  // To log out, we just need to remove the token
+  logout() {
+    localStorage.removeItem('token');
+    this.user.authenticated = false;
+  },
+
+  checkAuth() {
+    var jwt = localStorage.getItem('token');
+    if(jwt) {
+      this.user.authenticated = true
+    }
+    else {
+      this.user.authenticated = false      
+    }
+
+    return this.user.authenticated;
+  },
+
+  // The object to be passed as a header for authenticated requests
+  getAuthHeader() {
+    return {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+  }
 }

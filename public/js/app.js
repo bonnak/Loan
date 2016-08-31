@@ -18873,79 +18873,744 @@ exports.insert = function (css) {
 }
 
 },{}],74:[function(require,module,exports){
-'use strict';
+/*!
+ * Vuex v1.0.0-rc.2
+ * (c) 2016 Evan You
+ * Released under the MIT License.
+ */
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global.Vuex = factory());
+}(this, function () { 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.default = {
-	data: function data() {
-		return {
-			auth: {
-				user: {
-					user_name: '',
-					password: ''
-				},
-				authenticated: false,
-				response_text: ''
-			}
-		};
-	},
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+  };
+
+  var classCallCheck = function (instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  };
+
+  var createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
+  var toConsumableArray = function (arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+      return arr2;
+    } else {
+      return Array.from(arr);
+    }
+  };
+
+  /**
+   * Merge an array of objects into one.
+   *
+   * @param {Array<Object>} arr
+   * @return {Object}
+   */
+
+  function mergeObjects(arr) {
+    return arr.reduce(function (prev, obj) {
+      Object.keys(obj).forEach(function (key) {
+        var existing = prev[key];
+        if (existing) {
+          // allow multiple mutation objects to contain duplicate
+          // handlers for the same mutation type
+          if (Array.isArray(existing)) {
+            prev[key] = existing.concat(obj[key]);
+          } else {
+            prev[key] = [existing].concat(obj[key]);
+          }
+        } else {
+          prev[key] = obj[key];
+        }
+      });
+      return prev;
+    }, {});
+  }
+
+  /**
+   * Check whether the given value is Object or not
+   *
+   * @param {*} obj
+   * @return {Boolean}
+   */
+
+  function isObject(obj) {
+    return obj !== null && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object';
+  }
+
+  /**
+   * Get state sub tree by given keys.
+   *
+   * @param {Object} state
+   * @param {Array<String>} nestedKeys
+   * @return {Object}
+   */
+  function getNestedState(state, nestedKeys) {
+    return nestedKeys.reduce(function (state, key) {
+      return state[key];
+    }, state);
+  }
+
+  /**
+   * Hacks to get access to Vue internals.
+   * Maybe we should expose these...
+   */
+
+  var Watcher = void 0;
+  function getWatcher(vm) {
+    if (!Watcher) {
+      var noop = function noop() {};
+      var unwatch = vm.$watch(noop, noop);
+      Watcher = vm._watchers[0].constructor;
+      unwatch();
+    }
+    return Watcher;
+  }
+
+  var Dep = void 0;
+  function getDep(vm) {
+    if (!Dep) {
+      Dep = vm._data.__ob__.dep.constructor;
+    }
+    return Dep;
+  }
+
+  var hook = typeof window !== 'undefined' && window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
+
+  function devtoolPlugin(store) {
+    if (!hook) return;
+
+    hook.emit('vuex:init', store);
+
+    hook.on('vuex:travel-to-state', function (targetState) {
+      store.replaceState(targetState);
+    });
+
+    store.subscribe(function (mutation, state) {
+      hook.emit('vuex:mutation', mutation, state);
+    });
+  }
+
+  function override (Vue) {
+    var version = Number(Vue.version.split('.')[0]);
+
+    if (version >= 2) {
+      var usesInit = Vue.config._lifecycleHooks.indexOf('init') > -1;
+      Vue.mixin(usesInit ? { init: vuexInit } : { beforeCreate: vuexInit });
+    } else {
+      (function () {
+        // override init and inject vuex init procedure
+        // for 1.x backwards compatibility.
+        var _init = Vue.prototype._init;
+        Vue.prototype._init = function () {
+          var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+          options.init = options.init ? [vuexInit].concat(options.init) : vuexInit;
+          _init.call(this, options);
+        };
+      })();
+    }
+
+    /**
+     * Vuex init hook, injected into each instances init hooks list.
+     */
+
+    function vuexInit() {
+      var options = this.$options;
+      var store = options.store;
+      var vuex = options.vuex;
+      // store injection
+
+      if (store) {
+        this.$store = store;
+      } else if (options.parent && options.parent.$store) {
+        this.$store = options.parent.$store;
+      }
+      // vuex option handling
+      if (vuex) {
+        if (!this.$store) {
+          console.warn('[vuex] store not injected. make sure to ' + 'provide the store option in your root component.');
+        }
+        var state = vuex.state;
+        var actions = vuex.actions;
+        var getters = vuex.getters;
+        // handle deprecated state option
+
+        if (state && !getters) {
+          console.warn('[vuex] vuex.state option will been deprecated in 1.0. ' + 'Use vuex.getters instead.');
+          getters = state;
+        }
+        // getters
+        if (getters) {
+          options.computed = options.computed || {};
+          for (var key in getters) {
+            defineVuexGetter(this, key, getters[key]);
+          }
+        }
+        // actions
+        if (actions) {
+          options.methods = options.methods || {};
+          for (var _key in actions) {
+            options.methods[_key] = makeBoundAction(this.$store, actions[_key], _key);
+          }
+        }
+      }
+    }
+
+    /**
+     * Setter for all getter properties.
+     */
+
+    function setter() {
+      throw new Error('vuex getter properties are read-only.');
+    }
+
+    /**
+     * Define a Vuex getter on an instance.
+     *
+     * @param {Vue} vm
+     * @param {String} key
+     * @param {Function} getter
+     */
+
+    function defineVuexGetter(vm, key, getter) {
+      if (typeof getter !== 'function') {
+        console.warn('[vuex] Getter bound to key \'vuex.getters.' + key + '\' is not a function.');
+      } else {
+        Object.defineProperty(vm, key, {
+          enumerable: true,
+          configurable: true,
+          get: makeComputedGetter(vm.$store, getter),
+          set: setter
+        });
+      }
+    }
+
+    /**
+     * Make a computed getter, using the same caching mechanism of computed
+     * properties. In addition, it is cached on the raw getter function using
+     * the store's unique cache id. This makes the same getter shared
+     * across all components use the same underlying watcher, and makes
+     * the getter evaluated only once during every flush.
+     *
+     * @param {Store} store
+     * @param {Function} getter
+     */
+
+    function makeComputedGetter(store, getter) {
+      var id = store._getterCacheId;
+
+      // cached
+      if (getter[id]) {
+        return getter[id];
+      }
+      var vm = store._vm;
+      var Watcher = getWatcher(vm);
+      var Dep = getDep(vm);
+      var watcher = new Watcher(vm, function (vm) {
+        return getter(vm.state);
+      }, null, { lazy: true });
+      var computedGetter = function computedGetter() {
+        if (watcher.dirty) {
+          watcher.evaluate();
+        }
+        if (Dep.target) {
+          watcher.depend();
+        }
+        return watcher.value;
+      };
+      getter[id] = computedGetter;
+      return computedGetter;
+    }
+
+    /**
+     * Make a bound-to-store version of a raw action function.
+     *
+     * @param {Store} store
+     * @param {Function} action
+     * @param {String} key
+     */
+
+    function makeBoundAction(store, action, key) {
+      if (typeof action !== 'function') {
+        console.warn('[vuex] Action bound to key \'vuex.actions.' + key + '\' is not a function.');
+      }
+      return function vuexBoundAction() {
+        for (var _len = arguments.length, args = Array(_len), _key2 = 0; _key2 < _len; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        return action.call.apply(action, [this, store].concat(args));
+      };
+    }
+
+    // option merging
+    var merge = Vue.config.optionMergeStrategies.computed;
+    Vue.config.optionMergeStrategies.vuex = function (toVal, fromVal) {
+      if (!toVal) return fromVal;
+      if (!fromVal) return toVal;
+      return {
+        getters: merge(toVal.getters, fromVal.getters),
+        state: merge(toVal.state, fromVal.state),
+        actions: merge(toVal.actions, fromVal.actions)
+      };
+    };
+  }
+
+  var Vue = void 0;
+  var uid = 0;
+
+  var Store = function () {
+
+    /**
+     * @param {Object} options
+     *        - {Object} state
+     *        - {Object} actions
+     *        - {Object} mutations
+     *        - {Array} plugins
+     *        - {Boolean} strict
+     */
+
+    function Store() {
+      var _this = this;
+
+      var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+      var _ref$state = _ref.state;
+      var state = _ref$state === undefined ? {} : _ref$state;
+      var _ref$mutations = _ref.mutations;
+      var mutations = _ref$mutations === undefined ? {} : _ref$mutations;
+      var _ref$modules = _ref.modules;
+      var modules = _ref$modules === undefined ? {} : _ref$modules;
+      var _ref$plugins = _ref.plugins;
+      var plugins = _ref$plugins === undefined ? [] : _ref$plugins;
+      var _ref$strict = _ref.strict;
+      var strict = _ref$strict === undefined ? false : _ref$strict;
+      classCallCheck(this, Store);
+
+      this._getterCacheId = 'vuex_store_' + uid++;
+      this._dispatching = false;
+      this._rootMutations = this._mutations = mutations;
+      this._modules = modules;
+      this._subscribers = [];
+      // bind dispatch to self
+      var dispatch = this.dispatch;
+      this.dispatch = function () {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        dispatch.apply(_this, args);
+      };
+      // use a Vue instance to store the state tree
+      // suppress warnings just in case the user has added
+      // some funky global mixins
+      if (!Vue) {
+        throw new Error('[vuex] must call Vue.use(Vuex) before creating a store instance.');
+      }
+      var silent = Vue.config.silent;
+      Vue.config.silent = true;
+      this._vm = new Vue({
+        data: {
+          state: state
+        }
+      });
+      Vue.config.silent = silent;
+      this._setupModuleState(state, modules);
+      this._setupModuleMutations(modules);
+      // add extra warnings in strict mode
+      if (strict) {
+        this._setupMutationCheck();
+      }
+      // apply plugins
+      devtoolPlugin(this);
+      plugins.forEach(function (plugin) {
+        return plugin(_this);
+      });
+    }
+
+    /**
+     * Getter for the entire state tree.
+     * Read only.
+     *
+     * @return {Object}
+     */
+
+    createClass(Store, [{
+      key: 'replaceState',
 
 
-	methods: {
-		login: function login() {
-			var _this = this;
+      /**
+       * Replace root state.
+       *
+       * @param {Object} state
+       */
 
-			this.$http.post('/api/authenticate', this.auth.user).then(function (response) {
-				//localStorage.setItem('token', response.data.token);
+      value: function replaceState(state) {
+        this._dispatching = true;
+        this._vm.state = state;
+        this._dispatching = false;
+      }
 
-				_this.setCookie("token", response.data.token, 30);
+      /**
+       * Dispatch an action.
+       *
+       * @param {String} type
+       */
 
-				_this.setRosponse(response);
+    }, {
+      key: 'dispatch',
+      value: function dispatch(type) {
+        var _this2 = this;
 
-				window.location.href = '/';
-			}, function (err) {
-				_this.setRosponse(err);
-			});
-		},
-		setRosponse: function setRosponse(response) {
-			switch (response.status) {
-				case 401:
-					this.auth.authenticated = false;
-					this.auth.response_text = 'Username/Password is invalid.';
-					break;
+        for (var _len2 = arguments.length, payload = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+          payload[_key2 - 1] = arguments[_key2];
+        }
 
-				case 500:
-					this.auth.authenticated = false;
-					this.auth.response_text = 'Something went wrong while authenticating.';
-					break;
+        var silent = false;
+        var isObjectStyleDispatch = false;
+        // compatibility for object actions, e.g. FSA
+        if ((typeof type === 'undefined' ? 'undefined' : _typeof(type)) === 'object' && type.type && arguments.length === 1) {
+          isObjectStyleDispatch = true;
+          payload = type;
+          if (type.silent) silent = true;
+          type = type.type;
+        }
+        var handler = this._mutations[type];
+        var state = this.state;
+        if (handler) {
+          this._dispatching = true;
+          // apply the mutation
+          if (Array.isArray(handler)) {
+            handler.forEach(function (h) {
+              isObjectStyleDispatch ? h(state, payload) : h.apply(undefined, [state].concat(toConsumableArray(payload)));
+            });
+          } else {
+            isObjectStyleDispatch ? handler(state, payload) : handler.apply(undefined, [state].concat(toConsumableArray(payload)));
+          }
+          this._dispatching = false;
+          if (!silent) {
+            (function () {
+              var mutation = isObjectStyleDispatch ? payload : { type: type, payload: payload };
+              _this2._subscribers.forEach(function (sub) {
+                return sub(mutation, state);
+              });
+            })();
+          }
+        } else {
+          console.warn('[vuex] Unknown mutation: ' + type);
+        }
+      }
 
-				case 200:
-					this.auth.authenticated = true;
-					this.auth.response_text = 'Login successfully.';
-					break;
-			}
-		},
-		setCookie: function setCookie(cname, cvalue, exdays) {
-			var d = new Date();
-			d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-			var expires = "expires=" + d.toUTCString();
-			document.cookie = cname + "=" + cvalue + "; " + expires;
-		}
-	}
-};
+      /**
+       * Watch state changes on the store.
+       * Same API as Vue's $watch, except when watching a function,
+       * the function gets the state as the first argument.
+       *
+       * @param {Function} fn
+       * @param {Function} cb
+       * @param {Object} [options]
+       */
 
+    }, {
+      key: 'watch',
+      value: function watch(fn, cb, options) {
+        var _this3 = this;
+
+        if (typeof fn !== 'function') {
+          console.error('Vuex store.watch only accepts function.');
+          return;
+        }
+        return this._vm.$watch(function () {
+          return fn(_this3.state);
+        }, cb, options);
+      }
+
+      /**
+       * Subscribe to state changes. Fires after every mutation.
+       */
+
+    }, {
+      key: 'subscribe',
+      value: function subscribe(fn) {
+        var subs = this._subscribers;
+        if (subs.indexOf(fn) < 0) {
+          subs.push(fn);
+        }
+        return function () {
+          var i = subs.indexOf(fn);
+          if (i > -1) {
+            subs.splice(i, 1);
+          }
+        };
+      }
+
+      /**
+       * Hot update mutations & modules.
+       *
+       * @param {Object} options
+       *        - {Object} [mutations]
+       *        - {Object} [modules]
+       */
+
+    }, {
+      key: 'hotUpdate',
+      value: function hotUpdate() {
+        var _ref2 = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+        var mutations = _ref2.mutations;
+        var modules = _ref2.modules;
+
+        this._rootMutations = this._mutations = mutations || this._rootMutations;
+        this._setupModuleMutations(modules || this._modules);
+      }
+
+      /**
+       * Attach sub state tree of each module to the root tree.
+       *
+       * @param {Object} state
+       * @param {Object} modules
+       */
+
+    }, {
+      key: '_setupModuleState',
+      value: function _setupModuleState(state, modules) {
+        var _this4 = this;
+
+        if (!isObject(modules)) return;
+
+        Object.keys(modules).forEach(function (key) {
+          var module = modules[key];
+
+          // set this module's state
+          Vue.set(state, key, module.state || {});
+
+          // retrieve nested modules
+          _this4._setupModuleState(state[key], module.modules);
+        });
+      }
+
+      /**
+       * Bind mutations for each module to its sub tree and
+       * merge them all into one final mutations map.
+       *
+       * @param {Object} updatedModules
+       */
+
+    }, {
+      key: '_setupModuleMutations',
+      value: function _setupModuleMutations(updatedModules) {
+        var modules = this._modules;
+        Object.keys(updatedModules).forEach(function (key) {
+          modules[key] = updatedModules[key];
+        });
+        var updatedMutations = this._createModuleMutations(modules, []);
+        this._mutations = mergeObjects([this._rootMutations].concat(toConsumableArray(updatedMutations)));
+      }
+
+      /**
+       * Helper method for _setupModuleMutations.
+       * The method retrieve nested sub modules and
+       * bind each mutations to its sub tree recursively.
+       *
+       * @param {Object} modules
+       * @param {Array<String>} nestedKeys
+       * @return {Array<Object>}
+       */
+
+    }, {
+      key: '_createModuleMutations',
+      value: function _createModuleMutations(modules, nestedKeys) {
+        var _this5 = this;
+
+        if (!isObject(modules)) return [];
+
+        return Object.keys(modules).map(function (key) {
+          var module = modules[key];
+          var newNestedKeys = nestedKeys.concat(key);
+
+          // retrieve nested modules
+          var nestedMutations = _this5._createModuleMutations(module.modules, newNestedKeys);
+
+          if (!module || !module.mutations) {
+            return mergeObjects(nestedMutations);
+          }
+
+          // bind mutations to sub state tree
+          var mutations = {};
+          Object.keys(module.mutations).forEach(function (name) {
+            var original = module.mutations[name];
+            mutations[name] = function (state) {
+              for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+                args[_key3 - 1] = arguments[_key3];
+              }
+
+              original.apply(undefined, [getNestedState(state, newNestedKeys)].concat(args));
+            };
+          });
+
+          // merge mutations of this module and nested modules
+          return mergeObjects([mutations].concat(toConsumableArray(nestedMutations)));
+        });
+      }
+
+      /**
+       * Setup mutation check: if the vuex instance's state is mutated
+       * outside of a mutation handler, we throw en error. This effectively
+       * enforces all mutations to the state to be trackable and hot-reloadble.
+       * However, this comes at a run time cost since we are doing a deep
+       * watch on the entire state tree, so it is only enalbed with the
+       * strict option is set to true.
+       */
+
+    }, {
+      key: '_setupMutationCheck',
+      value: function _setupMutationCheck() {
+        var _this6 = this;
+
+        var Watcher = getWatcher(this._vm);
+        /* eslint-disable no-new */
+        new Watcher(this._vm, 'state', function () {
+          if (!_this6._dispatching) {
+            throw new Error('[vuex] Do not mutate vuex store state outside mutation handlers.');
+          }
+        }, { deep: true, sync: true });
+        /* eslint-enable no-new */
+      }
+    }, {
+      key: 'state',
+      get: function get() {
+        return this._vm.state;
+      },
+      set: function set(v) {
+        throw new Error('[vuex] Use store.replaceState() to explicit replace store state.');
+      }
+    }]);
+    return Store;
+  }();
+
+  function install(_Vue) {
+    if (Vue) {
+      console.warn('[vuex] already installed. Vue.use(Vuex) should be called only once.');
+      return;
+    }
+    Vue = _Vue;
+    override(Vue);
+  }
+
+  // auto install in dist mode
+  if (typeof window !== 'undefined' && window.Vue) {
+    install(window.Vue);
+  }
+
+  var index = {
+    Store: Store,
+    install: install
+  };
+
+  return index;
+
+}));
 },{}],75:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+
+  // User object will let us check authentication status
+  user: {
+    authenticated: false
+  },
+
+  response: {
+    text: '',
+    code: ''
+  },
+
+  // Send a request to the login URL and save the returned JWT
+  login: function login(context, creds, redirect) {
+    var _this = this;
+
+    context.$http.post('/api/authenticate', creds).then(function (response) {
+      localStorage.setItem('token', response.data.token);
+
+      _this.user.authenticated = true;
+
+      _this.response = { text: response.data.text, code: response.status };
+
+      // Redirect to a specified route
+      if (redirect) {
+        context.$route.router.go(redirect);
+      }
+    }, function (err) {
+      context.error = err;
+
+      _this.response = { text: err.data.error, code: err.status };
+    });
+  },
+
+
+  // To log out, we just need to remove the token
+  logout: function logout() {
+    localStorage.removeItem('token');
+    this.user.authenticated = false;
+  },
+  checkAuth: function checkAuth() {
+    var jwt = localStorage.getItem('token');
+    if (jwt) {
+      this.user.authenticated = true;
+    } else {
+      this.user.authenticated = false;
+    }
+
+    return this.user.authenticated;
+  },
+
+
+  // The object to be passed as a header for authenticated requests
+  getAuthHeader: function getAuthHeader() {
+    return {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    };
+  }
+};
+
+},{}],76:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _auth = require('../auth');
+var _store = require('../vuex/store');
 
-var _auth2 = _interopRequireDefault(_auth);
+var _store2 = _interopRequireDefault(_store);
 
 var _Sidebar = require('./Sidebar.vue');
 
@@ -18954,7 +19619,8 @@ var _Sidebar2 = _interopRequireDefault(_Sidebar);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-	mixins: [_auth2.default],
+
+	store: _store2.default,
 
 	components: {
 		Sidebar: _Sidebar2.default
@@ -18972,7 +19638,78 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-03f639de", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../auth":74,"./Sidebar.vue":76,"vue":72,"vue-hot-reload-api":68}],76:[function(require,module,exports){
+},{"../vuex/store":88,"./Sidebar.vue":78,"vue":72,"vue-hot-reload-api":68}],77:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _auth = require('../auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  data: function data() {
+    return {
+      credentials: {
+        user_name: '',
+        password: ''
+      },
+
+      auth: _auth2.default
+    };
+  },
+
+
+  methods: {
+    submit: function submit() {
+      _auth2.default.login(this, this.credentials, '/');
+    }
+  },
+
+  route: {
+    // three options:
+    // 1. return a boolean
+    // 2. return a promise that resolves to a boolean
+    // 3. explicitly call transition.next() or abort()
+    canActivate: function canActivate(transition) {
+      console.log('login' + !_auth2.default.user.authenticated);
+      return !_auth2.default.user.authenticated;
+    }
+  }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"message-box animated fadeIn open\" data-sound=\"alert\" id=\"mb-signout\">\n  <form class=\"form-horizontal\" v-on:submit.prevent=\"submit\">  \n    <div class=\"mb-container\" style=\"top: 25%\">\n        <div class=\"mb-middle\">\n            <div class=\"mb-title\"><span class=\"fa fa-sign-in\"></span> User <strong>Authentication</strong></div>\n            <div class=\"mb-content\">\n                <div class=\"form-group\">\n                  <span class=\"col-md-12 help-block\" :class=\"auth.user.authenticated ? 'text-success' : 'text-danger'\" style=\"text-align: center;\">{{ auth.response.text }}</span>\n                </div>\n                <div class=\"form-group\">                      \n                    <label class=\"col-md-3 control-label\">User Account</label>\n                    <div class=\"col-md-6\">                                            \n                        <div>\n                            <input type=\"text\" class=\"form-control\" v-model=\"credentials.user_name\">\n                        </div>                                            \n                    </div>\n                </div>               \n                <div class=\"form-group\">\n                    <label class=\"col-md-3 control-label\">Password</label>\n                    <div class=\"col-md-6\">                                            \n                        <div>\n                            <input type=\"password\" class=\"form-control\" v-model=\"credentials.password\">\n                        </div>                                            \n                    </div>\n                </div>\n            </div>\n            <div class=\"mb-footer\">\n                <div style=\"margin-left: 400px;\">\n                    <button type=\"submit\" class=\"btn btn-success btn-lg\">Log in</button>\n                </div>\n            </div>\n        </div>\n    </div>\n  </form>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-5e63f5e6", module.exports)
+  } else {
+    hotAPI.update("_v-5e63f5e6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"../auth":75,"vue":72,"vue-hot-reload-api":68}],78:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  vuex: {
+    getters: {
+      menu: function menu(state) {
+        return state.menu;
+      }
+    }
+  }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-sidebar\">\n    <!-- START X-NAVIGATION -->\n    <ul class=\"x-navigation\">\n        <li class=\"xn-logo\">\n            <a href=\"index.html\">Joli Admin</a>\n            <a href=\"#\" class=\"x-navigation-control\"></a>\n        </li>\n        <li class=\"xn-profile\">\n            <a href=\"#\" class=\"profile-mini\">\n                <img src=\"/joli/assets/images/users/avatar.jpg\" alt=\"John Doe\">\n            </a>\n            <div class=\"profile\">\n                <div class=\"profile-image\">\n                    <img src=\"/joli/assets/images/users/avatar.jpg\" alt=\"John Doe\">\n                </div>\n                <div class=\"profile-data\">\n                    <div class=\"profile-data-name\">John Doe</div>\n                    <div class=\"profile-data-title\">Web Developer/Designer</div>\n                    <div><a href=\"#\" class=\"mb-control\" data-box=\"#mb-signout\"><span class=\"fa fa-sign-out\"></span></a></div>\n                </div>\n                <div class=\"profile-controls\">\n                    <a href=\"pages-profile.html\" class=\"profile-control-left\"><span class=\"fa fa-info\"></span></a>\n                    <a href=\"pages-messages.html\" class=\"profile-control-right\"><span class=\"fa fa-envelope\"></span></a>\n                </div>\n            </div>                                                                        \n        </li>\n        <li class=\"xn-title\">Navigation</li>\n        <li class=\"active\">\n            <a v-link=\"{ path: '/' }\"><span class=\"fa fa-desktop\"></span> <span class=\"xn-text\">Dashboard</span></a>                        \n        </li>                    \n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-files-o\"></span> <span class=\"xn-text\">Setup</span></a>\n            <ul>                \n                <li><a href=\"pages-profile.html\">Customer</a></li>\n                <li><a href=\"pages-profile.html\">Loan Group</a></li>\n                <li><a href=\"pages-profile.html\">Chart of Account</a></li>\n                <li><a href=\"pages-gallery.html\">Exchange Rate</a></li>\n                <li><a href=\"pages-gallery.html\">Identity Type</a></li>\n                <li><a v-link=\"{ path: '/user' }\">User Account</a></li>\n                <li><a href=\"pages-profile.html\">User Role</a></li>\n                <li><a href=\"pages-profile.html\">Location</a></li>\n            </ul>\n        </li>\n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-file-text-o\"></span> <span class=\"xn-text\">Layouts</span></a>\n            <ul>\n                <li><a href=\"layout-boxed.html\">Boxed</a></li>\n                <li><a href=\"layout-nav-toggled.html\">Navigation Toggled</a></li>\n                <li><a href=\"layout-nav-top.html\">Navigation Top</a></li>\n                <li><a href=\"layout-nav-right.html\">Navigation Right</a></li>\n                <li><a href=\"layout-nav-top-fixed.html\">Top Navigation Fixed</a></li>                            \n                <li><a href=\"layout-nav-custom.html\">Custom Navigation</a></li>\n                <li><a href=\"layout-frame-left.html\">Frame Left Column</a></li>\n                <li><a href=\"layout-frame-right.html\">Frame Right Column</a></li>\n                <li><a href=\"layout-search-left.html\">Search Left Side</a></li>\n                <li><a href=\"blank.html\">Blank Page</a></li>\n            </ul>\n        </li>        \n    </ul>\n    <!-- END X-NAVIGATION -->\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
@@ -18984,7 +19721,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2d585b19", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":72,"vue-hot-reload-api":68}],77:[function(require,module,exports){
+},{"vue":72,"vue-hot-reload-api":68}],79:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 "use strict";
@@ -19009,7 +19746,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-06097931", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],78:[function(require,module,exports){
+},{"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],80:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19061,7 +19798,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-69e477f9", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./UserList.vue":79,"./UserNew.vue":80,"vue":72,"vue-hot-reload-api":68}],79:[function(require,module,exports){
+},{"./UserList.vue":81,"./UserNew.vue":82,"vue":72,"vue-hot-reload-api":68}],81:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.inner-content-wapper{\n\tpadding: 10px;\n}\n\n.dataTables_Footer{\n\tfont-size: 12px;\n\tpadding: 0px 0px 5px; \n}\n\n.dataTables_Footer .footer_left{\n  float: left;     \n}\n\n.dataTables_Footer .footer_left label{\n\tpadding: 0px;  \n  height: auto; \n  margin: 0px; \n  font-weight: normal; \n}\n\n.dataTables_Footer .footer_left select{\n\twidth: auto;\n  display: inline;\n  margin: 0px 5px;\n}\n\n.dataTables_Footer .footer_right{\n\tfloat: right;\n}\n")
 'use strict';
@@ -19133,7 +19870,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-268f1592", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../../mixins/grid":84,"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],80:[function(require,module,exports){
+},{"../../mixins/grid":87,"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],82:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -19213,7 +19950,22 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-51ef5717", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"babel-runtime/core-js/promise":1,"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],81:[function(require,module,exports){
+},{"babel-runtime/core-js/promise":1,"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],83:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = [{
+	label: 'Navigation',
+	class: 'xn-title'
+}, {
+	link: '/',
+	label: 'Dashboard',
+	icon: 'fa fa-desktop'
+}];
+
+},{}],84:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19228,7 +19980,7 @@ var email_validation = function email_validation(val) {
 
 exports.default = email_validation;
 
-},{}],82:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19258,7 +20010,7 @@ function getCookie(cname) {
 
 //export { lazyLoading };
 
-},{}],83:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 
 var _g_function = require('./g_function');
@@ -19287,6 +20039,14 @@ var _App = require('./components/App.vue');
 
 var _App2 = _interopRequireDefault(_App);
 
+var _Login = require('./components/Login.vue');
+
+var _Login2 = _interopRequireDefault(_Login);
+
+var _auth = require('./auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
 var _email_validation = require('./email_validation');
 
 var _email_validation2 = _interopRequireDefault(_email_validation);
@@ -19309,8 +20069,9 @@ _vue2.default.use(_vueValidator2.default);
 
 //Vue.validator('email', EmailValidation);
 
+
 _vue2.default.http.interceptors.push(function (request, next) {
-  request.headers['Authorization'] = 'Bearer ' + (0, _g_function.getCookie)('token');
+  request.headers['Authorization'] = _auth2.default.getAuthHeader().Authorization;
   request.headers['Accept'] = 'application/vnd.mob.v1+json';
   request.emulateJSON = true;
 
@@ -19324,13 +20085,32 @@ _vue2.default.http.interceptors.push(function (request, next) {
 
 var router = new _vueRouter2.default();
 
+router.beforeEach(function (transition) {
+  if (transition.to.adminOnly && !_auth2.default.checkAuth()) {
+    transition.redirect('/login');
+  } else {
+    transition.next();
+  }
+});
+
 router.map({
+  '/login': {
+    component: _Login2.default
+  },
+
   '/': {
-    component: _dashboard2.default
+    component: _dashboard2.default,
+    adminOnly: true
   },
   '/user': {
-    component: _User2.default
+    component: _User2.default,
+    adminOnly: true
   }
+
+  // not found handler
+  // '*': {
+  //   component: require('./components/not-found.vue')
+  // }
 });
 
 router.redirect({
@@ -19339,7 +20119,7 @@ router.redirect({
 
 router.start(_App2.default, 'app');
 
-},{"./components/App.vue":75,"./components/dashboard.vue":77,"./components/user/User.vue":78,"./email_validation":81,"./g_function":82,"nprogress":66,"vue":72,"vue-resource":69,"vue-router":70,"vue-validator":71}],84:[function(require,module,exports){
+},{"./auth":75,"./components/App.vue":76,"./components/Login.vue":77,"./components/dashboard.vue":79,"./components/user/User.vue":80,"./email_validation":84,"./g_function":85,"nprogress":66,"vue":72,"vue-resource":69,"vue-router":70,"vue-validator":71}],87:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19409,6 +20189,53 @@ exports.default = {
   }
 };
 
-},{}]},{},[83]);
+},{}],88:[function(require,module,exports){
+(function (process){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _vue = require('vue');
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _vuex = require('vuex');
+
+var _vuex2 = _interopRequireDefault(_vuex);
+
+var _menu = require('../config/menu');
+
+var _menu2 = _interopRequireDefault(_menu);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_vue2.default.use(_vuex2.default);
+_vue2.default.config.debug = true;
+
+var debug = process.env.NODE_ENV !== 'production';
+
+// export default new Vuex.Store({
+//   modules: {
+//     cart,
+//     products
+//   },
+//   strict: debug,
+//   plugins: debug ? [createLogger()] : []
+// })
+
+
+exports.default = new _vuex2.default.Store({
+
+  state: {
+    menu: _menu2.default
+  },
+
+  mutations: {}
+});
+
+}).call(this,require('_process'))
+},{"../config/menu":83,"_process":67,"vue":72,"vuex":74}]},{},[86]);
 
 //# sourceMappingURL=app.js.map

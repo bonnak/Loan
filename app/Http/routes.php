@@ -2,7 +2,7 @@
 
 Route::get('/login', 'AuthenticateController@getLogin')->middleware('guest');
 Route::get('/logout', 'AuthenticateController@logout')->middleware('auth');
-Route::get('/', 'DashboardController@index')->middleware('auth');
+Route::get('/', 'DashboardController@index');
 
 
 $api = app('Dingo\Api\Routing\Router');

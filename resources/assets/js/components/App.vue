@@ -24,11 +24,12 @@
 </template>
 
 <script>
-import auth from '../auth'
+import store from '../vuex/store'
 import Sidebar from './Sidebar.vue'
 
 export default {
-	mixins:[auth],
+
+	store,
 
 	components: {
 		Sidebar

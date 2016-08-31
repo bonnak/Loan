@@ -1,7 +1,5 @@
 import { getCookie } from './g_function'
 
-
-
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
@@ -13,6 +11,8 @@ Vue.use(VueResource)
 Vue.use(VueValidator)
 
 import App from './components/App.vue'
+import Login from './components/Login.vue'
+import auth from './auth'
 import EmailValidation from './email_validation'
 import Dashboard from './components/dashboard.vue'
 import UserAccount from './components/user/User.vue'
@@ -21,8 +21,9 @@ import UserAccount from './components/user/User.vue'
 
 //Vue.validator('email', EmailValidation);
 
+
 Vue.http.interceptors.push((request, next) => { 
-  request.headers['Authorization'] = 'Bearer ' + getCookie('token');
+  request.headers['Authorization'] = auth.getAuthHeader().Authorization;
   request.headers['Accept'] = 'application/vnd.mob.v1+json';
   request.emulateJSON = true;
 
@@ -36,13 +37,32 @@ Vue.http.interceptors.push((request, next) => {
 
 var router = new VueRouter();
 
+router.beforeEach(function (transition) {
+  if (transition.to.adminOnly && !auth.checkAuth()) {
+    transition.redirect('/login');
+  } else {  
+    transition.next();
+  }
+});
+
 router.map({
+  '/login': {
+    component: Login
+  },
+  
   '/': {
-    component: Dashboard
+    component: Dashboard,
+    adminOnly: true
   },
   '/user': {
-    component: UserAccount
+    component: UserAccount,
+    adminOnly: true
   }
+
+  // not found handler
+  // '*': {
+  //   component: require('./components/not-found.vue')
+  // }
 });
 
 router.redirect({

@@ -61,3 +61,13 @@
 	    <!-- END X-NAVIGATION -->
 	</div>
 </template>
+
+<script>
+export default{
+	vuex: {
+    getters: {
+      menu: state => state.menu
+    }
+  },
+}
+</script>
