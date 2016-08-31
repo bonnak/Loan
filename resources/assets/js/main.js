@@ -12,7 +12,7 @@ Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(VueValidator)
 
-import App from './App.vue'
+import App from './components/App.vue'
 import EmailValidation from './email_validation'
 import Dashboard from './components/dashboard.vue'
 import UserAccount from './components/user/User.vue'
@@ -49,4 +49,4 @@ router.redirect({
   '*': '/'
 });
 
-router.start(App, 'body');
+router.start(App, 'app');

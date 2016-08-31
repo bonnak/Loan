@@ -16,7 +16,19 @@
     <!-- EOF CSS INCLUDE -->
 </head>
 <body>
-  <app></app>  
+
+  <!-- START PAGE CONTAINER -->
+  <div class="page-container">    
+
+    <!-- START PAGE SIDEBAR -->
+    @include('_partials.sidebar')
+    <!-- END PAGE SIDEBAR -->
+
+    <!-- PAGE CONTENT -->
+    @include('_partials.page_content')
+    <!-- END PAGE CONTENT -->
+  </div>
+  <!-- END PAGE CONTAINER -->
 
   <!-- MESSAGE BOX-->
   @include('_partials.message_box')
