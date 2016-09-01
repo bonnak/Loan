@@ -1,3 +1,5 @@
+import { getCookie, setCookie, deleteCookie } from './g_function';
+
 export default {
 
   // User object will let us check authentication status
@@ -15,7 +17,7 @@ export default {
     context.$http.post('/api/authenticate', creds)
     .then(
       (response) => {
-        localStorage.setItem('token', response.data.token);
+        setCookie('token', response.data.token);
 
         this.user.authenticated = true;
 
@@ -36,12 +38,12 @@ export default {
 
   // To log out, we just need to remove the token
   logout() {
-    localStorage.removeItem('token');
+    deleteCookie('token');
     this.user.authenticated = false;
   },
 
   checkAuth() {
-    var jwt = localStorage.getItem('token');
+    var jwt = getCookie('token');
     if(jwt) {
       this.user.authenticated = true
     }
@@ -55,7 +57,7 @@ export default {
   // The object to be passed as a header for authenticated requests
   getAuthHeader() {
     return {
-      'Authorization': 'Bearer ' + localStorage.getItem('token')
+      'Authorization': 'Bearer ' + getCookie('token')
     }
   }
 }

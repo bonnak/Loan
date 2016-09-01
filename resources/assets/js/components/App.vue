@@ -1,5 +1,5 @@
 <template>
-<!-- START PAGE CONTAINER -->
+	<!-- START PAGE CONTAINER -->
   <div class="page-container">    
 
     <!-- START PAGE SIDEBAR -->
@@ -21,18 +21,24 @@
     <!-- END PAGE CONTENT -->
   </div>
   <!-- END PAGE CONTAINER -->
+
+  <!-- LOGOUT BOX-->
+  <Logout></Logout>
+  <!-- END LOGOUT BOX-->
 </template>
 
 <script>
 import store from '../vuex/store'
 import Sidebar from './Sidebar.vue'
+import Logout from './Logout.vue'
 
 export default {
 
 	store,
 
 	components: {
-		Sidebar
+		Sidebar,
+		Logout
 	}
 }
 </script>

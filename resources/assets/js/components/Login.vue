@@ -58,13 +58,14 @@ export default {
   },
 
   route: {
-    // three options:
-    // 1. return a boolean
-    // 2. return a promise that resolves to a boolean
-    // 3. explicitly call transition.next() or abort()
-    canActivate (transition) {
-      console.log('login' + !auth.user.authenticated);
-      return !auth.user.authenticated;
+    activate: function (transition) {
+      if(auth.checkAuth()){
+        var path = transition.from.path === undefined ? '/' : transition.from.path; 
+        transition.redirect(path);
+      }  
+      else{
+        transition.next();
+      }    
     }
   }
 

@@ -14,6 +14,19 @@ export function getCookie(cname) {
 }
 
 
+export function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+export function deleteCookie(name) {
+  if (getCookie(name))
+    setCookie(name, "", -1);
+}
+
+
 // const lazyLoading = (path) => {
 //   return (resolve) => {
 //     require([`${path}`], resolve)

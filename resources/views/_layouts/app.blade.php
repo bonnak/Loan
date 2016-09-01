@@ -19,10 +19,6 @@
 
   <app></app>  
 
-  <!-- MESSAGE BOX-->
-  @include('_partials.message_box')
-  <!-- END MESSAGE BOX-->
-
   <!-- START SCRIPTS -->
   @include('_scripts.joli_script')
   <script type="text/javascript" src="/js/app.js"></script>

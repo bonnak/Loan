@@ -19541,6 +19541,9 @@ exports.insert = function (css) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _g_function = require('./g_function');
+
 exports.default = {
 
   // User object will let us check authentication status
@@ -19558,7 +19561,7 @@ exports.default = {
     var _this = this;
 
     context.$http.post('/api/authenticate', creds).then(function (response) {
-      localStorage.setItem('token', response.data.token);
+      (0, _g_function.setCookie)('token', response.data.token);
 
       _this.user.authenticated = true;
 
@@ -19578,11 +19581,11 @@ exports.default = {
 
   // To log out, we just need to remove the token
   logout: function logout() {
-    localStorage.removeItem('token');
+    (0, _g_function.deleteCookie)('token');
     this.user.authenticated = false;
   },
   checkAuth: function checkAuth() {
-    var jwt = localStorage.getItem('token');
+    var jwt = (0, _g_function.getCookie)('token');
     if (jwt) {
       this.user.authenticated = true;
     } else {
@@ -19596,12 +19599,12 @@ exports.default = {
   // The object to be passed as a header for authenticated requests
   getAuthHeader: function getAuthHeader() {
     return {
-      'Authorization': 'Bearer ' + localStorage.getItem('token')
+      'Authorization': 'Bearer ' + (0, _g_function.getCookie)('token')
     };
   }
 };
 
-},{}],76:[function(require,module,exports){
+},{"./g_function":86}],76:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19616,6 +19619,10 @@ var _Sidebar = require('./Sidebar.vue');
 
 var _Sidebar2 = _interopRequireDefault(_Sidebar);
 
+var _Logout = require('./Logout.vue');
+
+var _Logout2 = _interopRequireDefault(_Logout);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
@@ -19623,22 +19630,23 @@ exports.default = {
 	store: _store2.default,
 
 	components: {
-		Sidebar: _Sidebar2.default
+		Sidebar: _Sidebar2.default,
+		Logout: _Logout2.default
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<!-- START PAGE CONTAINER -->\n  <div class=\"page-container\">    \n\n    <!-- START PAGE SIDEBAR -->\n    <sidebar></sidebar>\n    <!-- END PAGE SIDEBAR -->\n\n    <!-- PAGE CONTENT -->\n    <div class=\"page-content\">\n\t\t  <!-- START BREADCRUMB -->\n\t\t  <ul class=\"breadcrumb\">\n\t\t      <li><a href=\"#\">Home</a></li>                    \n\t\t      <li class=\"active\">Dashboard</li>      \n\t\t  </ul>\n\t\t  <!-- END BREADCRUMB -->  \n\n\t\t  <router-view></router-view>\n\n\t\t</div>\n    <!-- END PAGE CONTENT -->\n  </div>\n  <!-- END PAGE CONTAINER -->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<!-- START PAGE CONTAINER -->\n  <div class=\"page-container\">    \n\n    <!-- START PAGE SIDEBAR -->\n    <sidebar></sidebar>\n    <!-- END PAGE SIDEBAR -->\n\n    <!-- PAGE CONTENT -->\n    <div class=\"page-content\">\n\t\t  <!-- START BREADCRUMB -->\n\t\t  <ul class=\"breadcrumb\">\n\t\t      <li><a href=\"#\">Home</a></li>                    \n\t\t      <li class=\"active\">Dashboard</li>      \n\t\t  </ul>\n\t\t  <!-- END BREADCRUMB -->  \n\n\t\t  <router-view></router-view>\n\n\t\t</div>\n    <!-- END PAGE CONTENT -->\n  </div>\n  <!-- END PAGE CONTAINER -->\n\n  <!-- LOGOUT BOX-->\n  <logout></logout>\n  <!-- END LOGOUT BOX-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-03f639de", module.exports)
+    hotAPI.createRecord("_v-7817bbce", module.exports)
   } else {
-    hotAPI.update("_v-03f639de", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-7817bbce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../vuex/store":88,"./Sidebar.vue":78,"vue":72,"vue-hot-reload-api":68}],77:[function(require,module,exports){
+},{"../vuex/store":89,"./Logout.vue":78,"./Sidebar.vue":79,"vue":72,"vue-hot-reload-api":68}],77:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19671,13 +19679,13 @@ exports.default = {
   },
 
   route: {
-    // three options:
-    // 1. return a boolean
-    // 2. return a promise that resolves to a boolean
-    // 3. explicitly call transition.next() or abort()
-    canActivate: function canActivate(transition) {
-      console.log('login' + !_auth2.default.user.authenticated);
-      return !_auth2.default.user.authenticated;
+    activate: function activate(transition) {
+      if (_auth2.default.checkAuth()) {
+        var path = transition.from.path === undefined ? '/' : transition.from.path;
+        transition.redirect(path);
+      } else {
+        transition.next();
+      }
     }
   }
 
@@ -19689,12 +19697,55 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-5e63f5e6", module.exports)
+    hotAPI.createRecord("_v-502cbbd6", module.exports)
   } else {
-    hotAPI.update("_v-5e63f5e6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-502cbbd6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../auth":75,"vue":72,"vue-hot-reload-api":68}],78:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _auth = require('../auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+	data: function data() {
+		return {
+			is_open: false
+		};
+	},
+
+
+	methods: {
+		logout: function logout() {
+			//auth.logout();
+
+			this.is_open = false;
+
+			//this.$route.router.go('login');
+		}
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"message-box animated fadeIn\" v-bind:class=\"{ 'open': is_open }\" data-sound=\"alert\" id=\"mb-signout\">\n    <div class=\"mb-container\">\n\t    <div class=\"mb-middle\">\n\t        <div class=\"mb-title\"><span class=\"fa fa-sign-out\"></span> Log <strong>Out</strong> ?</div>\n\t        <div class=\"mb-content\">\n\t            <p>Are you sure you want to log out?</p>                    \n\t            <p>Press No if youwant to continue work. Press Yes to logout current user.</p>\n\t        </div>\n\t        <div class=\"mb-footer\">\n\t            <div class=\"pull-right\">\n\t                <a class=\"btn btn-success btn-lg\" @click.stop.prevent=\"logout()\">Yes</a>\n\t                <button class=\"btn btn-default btn-lg mb-control-close\">No</button>\n\t            </div>\n\t        </div>\n\t    </div>\n\t\t</div>\n\t</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-027bc76d", module.exports)
+  } else {
+    hotAPI.update("_v-027bc76d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"../auth":75,"vue":72,"vue-hot-reload-api":68}],79:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19716,12 +19767,12 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-2d585b19", module.exports)
+    hotAPI.createRecord("_v-5ff135ee", module.exports)
   } else {
-    hotAPI.update("_v-2d585b19", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-5ff135ee", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":72,"vue-hot-reload-api":68}],79:[function(require,module,exports){
+},{"vue":72,"vue-hot-reload-api":68}],80:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 "use strict";
@@ -19741,12 +19792,12 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-06097931", module.exports)
+    hotAPI.createRecord("_v-8dc471be", module.exports)
   } else {
-    hotAPI.update("_v-06097931", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-8dc471be", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],80:[function(require,module,exports){
+},{"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],81:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19793,12 +19844,12 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-69e477f9", module.exports)
+    hotAPI.createRecord("_v-0cf142bc", module.exports)
   } else {
-    hotAPI.update("_v-69e477f9", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-0cf142bc", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./UserList.vue":81,"./UserNew.vue":82,"vue":72,"vue-hot-reload-api":68}],81:[function(require,module,exports){
+},{"./UserList.vue":82,"./UserNew.vue":83,"vue":72,"vue-hot-reload-api":68}],82:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.inner-content-wapper{\n\tpadding: 10px;\n}\n\n.dataTables_Footer{\n\tfont-size: 12px;\n\tpadding: 0px 0px 5px; \n}\n\n.dataTables_Footer .footer_left{\n  float: left;     \n}\n\n.dataTables_Footer .footer_left label{\n\tpadding: 0px;  \n  height: auto; \n  margin: 0px; \n  font-weight: normal; \n}\n\n.dataTables_Footer .footer_left select{\n\twidth: auto;\n  display: inline;\n  margin: 0px 5px;\n}\n\n.dataTables_Footer .footer_right{\n\tfloat: right;\n}\n")
 'use strict';
@@ -19865,12 +19916,12 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-268f1592", module.exports)
+    hotAPI.createRecord("_v-530c267a", module.exports)
   } else {
-    hotAPI.update("_v-268f1592", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-530c267a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../../mixins/grid":87,"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],82:[function(require,module,exports){
+},{"../../mixins/grid":88,"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],83:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -19945,12 +19996,12 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-51ef5717", module.exports)
+    hotAPI.createRecord("_v-c0e21d18", module.exports)
   } else {
-    hotAPI.update("_v-51ef5717", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-c0e21d18", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"babel-runtime/core-js/promise":1,"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],83:[function(require,module,exports){
+},{"babel-runtime/core-js/promise":1,"vue":72,"vue-hot-reload-api":68,"vueify/lib/insert-css":73}],84:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19965,7 +20016,7 @@ exports.default = [{
 	icon: 'fa fa-desktop'
 }];
 
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19980,13 +20031,15 @@ var email_validation = function email_validation(val) {
 
 exports.default = email_validation;
 
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.getCookie = getCookie;
+exports.setCookie = setCookie;
+exports.deleteCookie = deleteCookie;
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -20002,6 +20055,17 @@ function getCookie(cname) {
     return "";
 }
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function deleteCookie(name) {
+    if (getCookie(name)) setCookie(name, "", -1);
+}
+
 // const lazyLoading = (path) => {
 //   return (resolve) => {
 //     require([`${path}`], resolve)
@@ -20010,10 +20074,8 @@ function getCookie(cname) {
 
 //export { lazyLoading };
 
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 'use strict';
-
-var _g_function = require('./g_function');
 
 var _vue = require('vue');
 
@@ -20119,7 +20181,7 @@ router.redirect({
 
 router.start(_App2.default, 'app');
 
-},{"./auth":75,"./components/App.vue":76,"./components/Login.vue":77,"./components/dashboard.vue":79,"./components/user/User.vue":80,"./email_validation":84,"./g_function":85,"nprogress":66,"vue":72,"vue-resource":69,"vue-router":70,"vue-validator":71}],87:[function(require,module,exports){
+},{"./auth":75,"./components/App.vue":76,"./components/Login.vue":77,"./components/dashboard.vue":80,"./components/user/User.vue":81,"./email_validation":85,"nprogress":66,"vue":72,"vue-resource":69,"vue-router":70,"vue-validator":71}],88:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20189,7 +20251,7 @@ exports.default = {
   }
 };
 
-},{}],88:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -20236,6 +20298,6 @@ exports.default = new _vuex2.default.Store({
 });
 
 }).call(this,require('_process'))
-},{"../config/menu":83,"_process":67,"vue":72,"vuex":74}]},{},[86]);
+},{"../config/menu":84,"_process":67,"vue":72,"vuex":74}]},{},[87]);
 
 //# sourceMappingURL=app.js.map
