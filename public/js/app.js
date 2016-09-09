@@ -13263,22 +13263,25 @@ var _Sidebar = require('./Sidebar.vue');
 
 var _Sidebar2 = _interopRequireDefault(_Sidebar);
 
+var _VNav = require('./VNav.vue');
+
+var _VNav2 = _interopRequireDefault(_VNav);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
   components: {
-    Sidebar: _Sidebar2.default
+    Sidebar: _Sidebar2.default,
+    VNav: _VNav2.default
   },
 
   ready: function ready() {
     (0, _plugins.initJoliPlugins)();
     (0, _actions.initJoliActions)();
-
-    console.log('App ready');
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-container\">\n\t<sidebar></sidebar>\n\t<div class=\"page-content\">\n\t\t<router-view></router-view>\n\t</div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-container\">\n\t<sidebar></sidebar>\n\t<div class=\"page-content\">\n\t\t<v-nav></v-nav>\n\t\t<router-view></router-view>\n\t</div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -13289,7 +13292,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7817bbce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../ui/actions.js":9,"../ui/plugins.js":10,"./Sidebar.vue":6,"vue":4,"vue-hot-reload-api":2}],6:[function(require,module,exports){
+},{"../ui/actions.js":10,"../ui/plugins.js":11,"./Sidebar.vue":6,"./VNav.vue":7,"vue":4,"vue-hot-reload-api":2}],6:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-sidebar page-sidebar-fixed scroll\">\n    <!-- START X-NAVIGATION -->\n    <ul class=\"x-navigation x-navigation-custom\">\n        <li class=\"xn-logo\">\n            <a href=\"index.html\">Joli Admin</a>\n            <a href=\"#\" class=\"x-navigation-control\"></a>\n        </li>\n        <li class=\"xn-profile\">\n            <a href=\"#\" class=\"profile-mini\">\n                <img src=\"/joli/assets/images/users/avatar.jpg\" alt=\"John Doe\">\n            </a>\n            <div class=\"profile\">\n                <div class=\"profile-image\">\n                    <img src=\"/joli/assets/images/users/avatar.jpg\" alt=\"John Doe\">\n                </div>\n                <div class=\"profile-data\">\n                    <div class=\"profile-data-name\">John Doe</div>\n                    <div class=\"profile-data-title\">Web Developer/Designer</div>\n                    <div><a href=\"#\" class=\"mb-control\" data-box=\"#mb-signout\"><span class=\"fa fa-sign-out\"></span></a></div>\n                </div>\n                <div class=\"profile-controls\">\n                    <a href=\"pages-profile.html\" class=\"profile-control-left\"><span class=\"fa fa-info\"></span></a>\n                    <a href=\"pages-messages.html\" class=\"profile-control-right\"><span class=\"fa fa-envelope\"></span></a>\n                </div>\n            </div>                                                                        \n        </li>\n        <li class=\"xn-title\">Navigation</li>\n        <li class=\"active\">\n            <a v-link=\"{ path: '/' }\"><span class=\"fa fa-desktop\"></span> <span class=\"xn-text\">Dashboard</span></a>                        \n        </li>                    \n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-files-o\"></span> <span class=\"xn-text\">Setup</span></a>\n            <ul>                \n                <li><a href=\"pages-profile.html\">Customer</a></li>\n                <li><a href=\"pages-profile.html\">Loan Group</a></li>\n                <li><a href=\"pages-profile.html\">Chart of Account</a></li>\n                <li><a href=\"pages-gallery.html\">Exchange Rate</a></li>\n                <li><a href=\"pages-gallery.html\">Identity Type</a></li>\n                <li><a v-link=\"{ path: '/user' }\">User Account</a></li>\n                <li><a href=\"pages-profile.html\">User Role</a></li>\n                <li><a href=\"pages-profile.html\">Location</a></li>\n            </ul>\n        </li>\n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-file-text-o\"></span> <span class=\"xn-text\">Layouts</span></a>\n            <ul>\n                <li><a href=\"layout-boxed.html\">Boxed</a></li>\n                <li><a href=\"layout-nav-toggled.html\">Navigation Toggled</a></li>\n                <li><a href=\"layout-nav-top.html\">Navigation Top</a></li>\n                <li><a href=\"layout-nav-right.html\">Navigation Right</a></li>\n                <li><a href=\"layout-nav-top-fixed.html\">Top Navigation Fixed</a></li>                            \n                <li><a href=\"layout-nav-custom.html\">Custom Navigation</a></li>\n                <li><a href=\"layout-frame-left.html\">Frame Left Column</a></li>\n                <li><a href=\"layout-frame-right.html\">Frame Right Column</a></li>\n                <li><a href=\"layout-search-left.html\">Search Left Side</a></li>\n                <li><a href=\"blank.html\">Blank Page</a></li>\n            </ul>\n        </li>        \n    </ul>\n    <!-- END X-NAVIGATION -->\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
@@ -13302,6 +13305,18 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":4,"vue-hot-reload-api":2}],7:[function(require,module,exports){
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<!-- START X-NAVIGATION VERTICAL -->\n  <ul class=\"x-navigation x-navigation-horizontal x-navigation-panel\">\n      <!-- TOGGLE NAVIGATION -->\n      <li class=\"xn-icon-button\">\n          <a href=\"#\" class=\"x-navigation-minimize\"><span class=\"fa fa-dedent\"></span></a>\n      </li>\n      <!-- END TOGGLE NAVIGATION -->\n      <!-- SEARCH -->\n      <li class=\"xn-search\">\n          <form role=\"form\">\n              <input type=\"text\" name=\"search\" placeholder=\"Search...\">\n          </form>\n      </li>   \n      <!-- END SEARCH -->\n      <!-- SIGN OUT -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\" class=\"mb-control\" data-box=\"#mb-signout\"><span class=\"fa fa-sign-out\"></span></a>                        \n      </li> \n      <!-- END SIGN OUT -->\n      <!-- MESSAGES -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\"><span class=\"fa fa-comments\"></span></a>\n          <div class=\"informer informer-danger\">4</div>\n          <div class=\"panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging\">\n              <div class=\"panel-heading\">\n                  <h3 class=\"panel-title\"><span class=\"fa fa-comments\"></span> Messages</h3>                                \n                  <div class=\"pull-right\">\n                      <span class=\"label label-danger\">4 new</span>\n                  </div>\n              </div>\n              <div class=\"panel-body list-group list-group-contacts scroll\" style=\"height: 200px;\">\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-online\"></div>\n                      <img src=\"assets/images/users/user2.jpg\" class=\"pull-left\" alt=\"John Doe\">\n                      <span class=\"contacts-title\">John Doe</span>\n                      <p>Praesent placerat tellus id augue condimentum</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-away\"></div>\n                      <img src=\"assets/images/users/user.jpg\" class=\"pull-left\" alt=\"Dmitry Ivaniuk\">\n                      <span class=\"contacts-title\">Dmitry Ivaniuk</span>\n                      <p>Donec risus sapien, sagittis et magna quis</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-away\"></div>\n                      <img src=\"assets/images/users/user3.jpg\" class=\"pull-left\" alt=\"Nadia Ali\">\n                      <span class=\"contacts-title\">Nadia Ali</span>\n                      <p>Mauris vel eros ut nunc rhoncus cursus sed</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-offline\"></div>\n                      <img src=\"assets/images/users/user6.jpg\" class=\"pull-left\" alt=\"Darth Vader\">\n                      <span class=\"contacts-title\">Darth Vader</span>\n                      <p>I want my money back!</p>\n                  </a>\n              </div>     \n              <div class=\"panel-footer text-center\">\n                  <a href=\"pages-messages.html\">Show all messages</a>\n              </div>                            \n          </div>                        \n      </li>\n      <!-- END MESSAGES -->\n      <!-- TASKS -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\"><span class=\"fa fa-tasks\"></span></a>\n          <div class=\"informer informer-warning\">3</div>\n          <div class=\"panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging\">\n              <div class=\"panel-heading\">\n                  <h3 class=\"panel-title\"><span class=\"fa fa-tasks\"></span> Tasks</h3>                                \n                  <div class=\"pull-right\">\n                      <span class=\"label label-warning\">3 active</span>\n                  </div>\n              </div>\n              <div class=\"panel-body list-group scroll\" style=\"height: 200px;\">                                \n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Phasellus augue arcu, elementum</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-danger\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 50%;\">50%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 25 Sep 2014 / 50%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Aenean ac cursus</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-warning\" role=\"progressbar\" aria-valuenow=\"80\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 80%;\">80%</div>\n                      </div>\n                      <small class=\"text-muted\">Dmitry Ivaniuk, 24 Sep 2014 / 80%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Lorem ipsum dolor</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-success\" role=\"progressbar\" aria-valuenow=\"95\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 95%;\">95%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 23 Sep 2014 / 95%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Cras suscipit ac quam at tincidunt.</strong>\n                      <div class=\"progress progress-small\">\n                          <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\">100%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 21 Sep 2014 /</small><small class=\"text-success\"> Done</small>\n                  </a>                                \n              </div>     \n              <div class=\"panel-footer text-center\">\n                  <a href=\"pages-tasks.html\">Show all tasks</a>\n              </div>                            \n          </div>                        \n      </li>\n      <!-- END TASKS -->\n  </ul>\n  <!-- END X-NAVIGATION VERTICAL -->\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-17fc7820", module.exports)
+  } else {
+    hotAPI.update("_v-17fc7820", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":4,"vue-hot-reload-api":2}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13324,7 +13339,7 @@ function currency(value, currency, decimals) {
   return sign + currency + head + _int.slice(i).replace(digitsRE, '$1,') + _float;
 }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -13365,7 +13380,7 @@ router.map({
 
 router.start(_App2.default, '#app');
 
-},{"./components/App.vue":5,"./currency":7,"vue":4,"vue-router":3}],9:[function(require,module,exports){
+},{"./components/App.vue":5,"./currency":8,"vue":4,"vue-router":3}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13900,7 +13915,7 @@ Object.size = function (obj) {
 };
 /* EOF NEW OBJECT(GET SIZE OF ARRAY) */
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14512,6 +14527,6 @@ Object.size = function (obj) {
     return size;
 };
 
-},{}]},{},[8]);
+},{}]},{},[9]);
 
 //# sourceMappingURL=app.js.map
