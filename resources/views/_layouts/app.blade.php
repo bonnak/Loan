@@ -16,11 +16,21 @@
     <!-- EOF CSS INCLUDE -->
 </head>
 <body>
-
-  <app></app>  
+  
+  <div id="app">
+  </div>
 
   <!-- START SCRIPTS -->
-  @include('_scripts.joli_script')
+  <!-- START PLUGINS -->
+  <script type="text/javascript" src="/joli/js/plugins/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/joli/js/plugins/jquery/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="/joli/js/plugins/bootstrap/bootstrap.min.js"></script>        
+  <!-- END PLUGINS -->
+
+  <!-- START PAGE PLUGINS-->        
+  <script type="text/javascript" src="/joli/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
+  <!-- END PAGE PLUGINS --> 
+
   <script type="text/javascript" src="/js/app.js"></script>
   <!-- END SCRIPTS -->
 </body>

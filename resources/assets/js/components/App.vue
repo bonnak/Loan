@@ -1,44 +1,27 @@
 <template>
-	<!-- START PAGE CONTAINER -->
-  <div class="page-container">    
-
-    <!-- START PAGE SIDEBAR -->
-    <sidebar></sidebar>
-    <!-- END PAGE SIDEBAR -->
-
-    <!-- PAGE CONTENT -->
-    <div class="page-content">
-		  <!-- START BREADCRUMB -->
-		  <ul class="breadcrumb">
-		      <li><a href="#">Home</a></li>                    
-		      <li class="active">Dashboard</li>      
-		  </ul>
-		  <!-- END BREADCRUMB -->  
-
-		  <router-view></router-view>
-
-		</div>
-    <!-- END PAGE CONTENT -->
+  <div class="page-container">
+  	<sidebar></sidebar>
+  	<div class="page-content">
+  		<router-view></router-view>
+  	</div>
   </div>
-  <!-- END PAGE CONTAINER -->
-
-  <!-- LOGOUT BOX-->
-  <Logout></Logout>
-  <!-- END LOGOUT BOX-->
 </template>
 
 <script>
-import store from '../vuex/store'
+import { initJoliPlugins } from '../ui/plugins.js'
+import { initJoliActions } from '../ui/actions.js'
 import Sidebar from './Sidebar.vue'
-import Logout from './Logout.vue'
 
 export default {
+  components: { 
+  	Sidebar
+  },
 
-	store,
+  ready(){
+  	initJoliPlugins();
+  	initJoliActions();
 
-	components: {
-		Sidebar,
-		Logout
+		console.log('App ready');
 	}
 }
 </script>

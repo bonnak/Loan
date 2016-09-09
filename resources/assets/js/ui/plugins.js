@@ -1,4 +1,4 @@
-$(function() {
+export function initJoliPlugins() {
 
     var formElements = function(){                
         // Bootstrap datepicker
@@ -145,7 +145,7 @@ $(function() {
         //END Bootstrap file input
         
         return {// Init all form element features
-		init: function(){                    
+        init: function(){                    
                     feDatepicker();                    
                     feTimepicker();
                     feColorpicker();
@@ -632,7 +632,7 @@ $(function() {
      $.expr[':'].containsi = function(a, i, m) {
          return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
      };              
-});
+};
 
 Object.size = function(obj) {
     var size = 0, key;

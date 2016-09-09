@@ -1,7 +1,7 @@
 <template>
-	<div class="page-sidebar">
+	<div class="page-sidebar page-sidebar-fixed scroll">
 	    <!-- START X-NAVIGATION -->
-	    <ul class="x-navigation">
+	    <ul class="x-navigation x-navigation-custom">
 	        <li class="xn-logo">
 	            <a href="index.html">Joli Admin</a>
 	            <a href="#" class="x-navigation-control"></a>
@@ -61,13 +61,3 @@
 	    <!-- END X-NAVIGATION -->
 	</div>
 </template>
-
-<script>
-export default{
-	vuex: {
-    getters: {
-      menu: state => state.menu
-    }
-  },
-}
-</script>
