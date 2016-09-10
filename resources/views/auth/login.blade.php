@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="body-full-height">
 <head>
     <!-- META SECTION -->
     <title>Joli Admin - Responsive Bootstrap Admin Template</title>
@@ -12,46 +12,63 @@
 
     <!-- CSS INCLUDE -->
     <link rel="stylesheet" type="text/css" id="theme" href="{{ url('joli/css/theme-default.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url('css/app.css') }}"/>    
     <!-- EOF CSS INCLUDE -->
 </head>
 <body>
-  <div class="message-box animated fadeIn open" data-sound="alert" id="mb-signout">
-    <form class="form-horizontal">  
-      <div class="mb-container" style="top: 25%">
-          <div class="mb-middle">
-              <div class="mb-title"><span class="fa fa-sign-in"></span> User <strong>Authentication</strong></div>
-              <div class="mb-content">
-                  <div class="form-group">
-                    <span class="col-md-12 help-block" :class="auth.authenticated ? 'text-success' : 'text-danger'" style="text-align: center;">@{{ auth.response_text }}</span>
-                  </div>
-                  <div class="form-group">                      
-                      <label class="col-md-3 control-label">User Account</label>
-                      <div class="col-md-6">                                            
-                          <div>
-                              <input type="text" class="form-control" v-model="auth.user.user_name"/>
-                          </div>                                            
-                      </div>
-                  </div>               
-                  <div class="form-group">
-                      <label class="col-md-3 control-label">Password</label>
-                      <div class="col-md-6">                                            
-                          <div>
-                              <input type="password" class="form-control" v-model="auth.user.password"/>
-                          </div>                                            
-                      </div>
-                  </div>
-              </div>
-              <div class="mb-footer">
-                  <div style="margin-left: 400px;">
-                      <a @click.stop.prevent="login" class="btn btn-success btn-lg">Log in</a>
-                  </div>
-              </div>
-          </div>
-      </div>
-    </form>
-  </div>
+  
+  <div class="login-container">
+        
+            <div class="login-box animated fadeInDown">
+                <div class="login-logo"></div>
+                <div class="login-body">
+                    <div class="login-title"><strong>Welcome</strong>, Please login</div>
+                    <form action="index.html" class="form-horizontal" method="post">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" placeholder="Username"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="password" class="form-control" placeholder="Password"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <a href="#" class="btn btn-link btn-block">Forgot your password?</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-info btn-block">Log In</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                <div class="login-footer">
+                    <div class="pull-left">
+                        &copy; 2014 AppName
+                    </div>
+                    <div class="pull-right">
+                        <a href="#">About</a> |
+                        <a href="#">Privacy</a> |
+                        <a href="#">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
   <!-- START SCRIPTS -->
-  @include('_scripts.joli_script')
+  <!-- START PLUGINS -->
+  <script type="text/javascript" src="/joli/js/plugins/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/joli/js/plugins/jquery/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="/joli/js/plugins/bootstrap/bootstrap.min.js"></script>        
+  <!-- END PLUGINS -->
+
+  <!-- START PAGE PLUGINS-->        
+  <script type="text/javascript" src="/joli/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
+  <!-- END PAGE PLUGINS --> 
+
   <script type="text/javascript" src="/js/app.js"></script>
   <!-- END SCRIPTS -->
 </body>

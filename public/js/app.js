@@ -13255,6 +13255,75 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _functions = require('./functions');
+
+exports.default = {
+
+  // User object will let us check authentication status
+  user: {
+    authenticated: false
+  },
+
+  response: {
+    text: '',
+    code: ''
+  },
+
+  // Send a request to the login URL and save the returned JWT
+  login: function login(context, creds, redirect) {
+    var _this = this;
+
+    context.$http.post('/api/authenticate', creds).then(function (response) {
+      (0, _functions.setCookie)('token', response.data.token);
+
+      _this.user.authenticated = true;
+
+      _this.response = { text: response.data.text, code: response.status };
+
+      // Redirect to a specified route
+      if (redirect) {
+        context.$route.router.go(redirect);
+      }
+    }, function (err) {
+      context.error = err;
+
+      _this.response = { text: err.data.error, code: err.status };
+    });
+  },
+
+
+  // To log out, we just need to remove the token
+  logout: function logout() {
+    (0, _functions.deleteCookie)('token');
+    this.user.authenticated = false;
+  },
+  checkAuth: function checkAuth() {
+    var jwt = (0, _functions.getCookie)('token');
+    if (jwt) {
+      this.user.authenticated = true;
+    } else {
+      this.user.authenticated = false;
+    }
+
+    return this.user.authenticated;
+  },
+
+
+  // The object to be passed as a header for authenticated requests
+  getAuthHeader: function getAuthHeader() {
+    return {
+      'Authorization': 'Bearer ' + (0, _functions.getCookie)('token')
+    };
+  }
+};
+
+},{"./functions":12}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _plugins = require('../ui/plugins.js');
 
 var _actions = require('../ui/actions.js');
@@ -13297,7 +13366,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7817bbce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../ui/actions.js":11,"../ui/plugins.js":12,"./Sidebar.vue":6,"./Signout.vue":7,"./VNav.vue":8,"vue":4,"vue-hot-reload-api":2}],6:[function(require,module,exports){
+},{"../ui/actions.js":14,"../ui/plugins.js":15,"./Sidebar.vue":7,"./Signout.vue":9,"./VNav.vue":10,"vue":4,"vue-hot-reload-api":2}],7:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-sidebar page-sidebar-fixed scroll\">\n    <!-- START X-NAVIGATION -->\n    <ul class=\"x-navigation x-navigation-custom\">\n        <li class=\"xn-logo\">\n            <a href=\"index.html\">Joli Admin</a>\n            <a href=\"#\" class=\"x-navigation-control\"></a>\n        </li>\n        <li class=\"xn-title\">Navigation</li>\n        <li class=\"active\">\n            <a v-link=\"{ path: '/' }\"><span class=\"fa fa-desktop\"></span> <span class=\"xn-text\">Dashboard</span></a>                        \n        </li>                    \n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-files-o\"></span> <span class=\"xn-text\">Setup</span></a>\n            <ul>                \n                <li><a href=\"pages-profile.html\">Customer</a></li>\n                <li><a href=\"pages-profile.html\">Loan Group</a></li>\n                <li><a href=\"pages-profile.html\">Chart of Account</a></li>\n                <li><a href=\"pages-gallery.html\">Exchange Rate</a></li>\n                <li><a href=\"pages-gallery.html\">Identity Type</a></li>\n                <li><a v-link=\"{ path: '/user' }\">User Account</a></li>\n                <li><a href=\"pages-profile.html\">User Role</a></li>\n                <li><a href=\"pages-profile.html\">Location</a></li>\n            </ul>\n        </li>\n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-file-text-o\"></span> <span class=\"xn-text\">Layouts</span></a>\n            <ul>\n                <li><a href=\"layout-boxed.html\">Boxed</a></li>\n                <li><a href=\"layout-nav-toggled.html\">Navigation Toggled</a></li>\n                <li><a href=\"layout-nav-top.html\">Navigation Top</a></li>\n                <li><a href=\"layout-nav-right.html\">Navigation Right</a></li>\n                <li><a href=\"layout-nav-top-fixed.html\">Top Navigation Fixed</a></li>                            \n                <li><a href=\"layout-nav-custom.html\">Custom Navigation</a></li>\n                <li><a href=\"layout-frame-left.html\">Frame Left Column</a></li>\n                <li><a href=\"layout-frame-right.html\">Frame Right Column</a></li>\n                <li><a href=\"layout-search-left.html\">Search Left Side</a></li>\n                <li><a href=\"blank.html\">Blank Page</a></li>\n            </ul>\n        </li>        \n    </ul>\n    <!-- END X-NAVIGATION -->\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
@@ -13309,7 +13378,19 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5ff135ee", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":2}],7:[function(require,module,exports){
+},{"vue":4,"vue-hot-reload-api":2}],8:[function(require,module,exports){
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"login-container\">        \n  <div class=\"login-box animated fadeInDown\">\n    <div class=\"login-logo\"></div>\n    <div class=\"login-body\">\n      <div class=\"login-title\"><strong>Welcome</strong>, Please login</div>\n      <form action=\"index.html\" class=\"form-horizontal\" method=\"post\">\n      <div class=\"form-group\">\n        <div class=\"col-md-12\">\n          <input type=\"text\" class=\"form-control\" placeholder=\"Username\">\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"col-md-12\">\n          <input type=\"password\" class=\"form-control\" placeholder=\"Password\">\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"col-md-6\">\n          <a href=\"#\" class=\"btn btn-link btn-block\">Forgot your password?</a>\n        </div>\n        <div class=\"col-md-6\">\n          <button class=\"btn btn-info btn-block\">Log In</button>\n        </div>\n      </div>\n      </form>\n    </div>\n  </div>            \n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-25a354f6", module.exports)
+  } else {
+    hotAPI.update("_v-25a354f6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":4,"vue-hot-reload-api":2}],9:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"message-box animated fadeIn\" data-sound=\"alert\" id=\"mb-signout\">\n    <div class=\"mb-container\">\n      <div class=\"mb-middle\">\n        <div class=\"mb-title\"><span class=\"fa fa-sign-out\"></span> Log <strong>Out</strong> ?</div>\n        <div class=\"mb-content\">\n          <p>Are you sure you want to log out?</p>                    \n          <p>Press No if youwant to continue work. Press Yes to logout current user.</p>\n        </div>\n        <div class=\"mb-footer\">\n          <div class=\"pull-right\">\n              <a href=\"pages-login.html\" class=\"btn btn-success btn-lg\">Yes</a>\n              <button class=\"btn btn-default btn-lg mb-control-close\">No</button>\n          </div>\n        </div>\n      </div>\n    </div>\n\t</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
@@ -13321,7 +13402,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-05ad639e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":2}],8:[function(require,module,exports){
+},{"vue":4,"vue-hot-reload-api":2}],10:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<!-- START X-NAVIGATION VERTICAL -->\n  <ul class=\"x-navigation x-navigation-horizontal x-navigation-panel\">\n      <!-- TOGGLE NAVIGATION -->\n      <li class=\"xn-icon-button\">\n          <a href=\"#\" class=\"x-navigation-minimize\"><span class=\"fa fa-dedent\"></span></a>\n      </li>\n      <!-- END TOGGLE NAVIGATION -->\n      <!-- SEARCH -->\n      <li class=\"xn-search\">\n          <form role=\"form\">\n              <input type=\"text\" name=\"search\" placeholder=\"Search...\">\n          </form>\n      </li>   \n      <!-- END SEARCH -->\n      <!-- SIGN OUT -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\" class=\"mb-control\" data-box=\"#mb-signout\"><span class=\"fa fa-sign-out\"></span></a>                        \n      </li> \n      <!-- END SIGN OUT -->\n      <!-- MESSAGES -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\"><span class=\"fa fa-comments\"></span></a>\n          <div class=\"informer informer-danger\">4</div>\n          <div class=\"panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging\">\n              <div class=\"panel-heading\">\n                  <h3 class=\"panel-title\"><span class=\"fa fa-comments\"></span> Messages</h3>                                \n                  <div class=\"pull-right\">\n                      <span class=\"label label-danger\">4 new</span>\n                  </div>\n              </div>\n              <div class=\"panel-body list-group list-group-contacts scroll\" style=\"height: 200px;\">\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-online\"></div>\n                      <img src=\"assets/images/users/user2.jpg\" class=\"pull-left\" alt=\"John Doe\">\n                      <span class=\"contacts-title\">John Doe</span>\n                      <p>Praesent placerat tellus id augue condimentum</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-away\"></div>\n                      <img src=\"assets/images/users/user.jpg\" class=\"pull-left\" alt=\"Dmitry Ivaniuk\">\n                      <span class=\"contacts-title\">Dmitry Ivaniuk</span>\n                      <p>Donec risus sapien, sagittis et magna quis</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-away\"></div>\n                      <img src=\"assets/images/users/user3.jpg\" class=\"pull-left\" alt=\"Nadia Ali\">\n                      <span class=\"contacts-title\">Nadia Ali</span>\n                      <p>Mauris vel eros ut nunc rhoncus cursus sed</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-offline\"></div>\n                      <img src=\"assets/images/users/user6.jpg\" class=\"pull-left\" alt=\"Darth Vader\">\n                      <span class=\"contacts-title\">Darth Vader</span>\n                      <p>I want my money back!</p>\n                  </a>\n              </div>     \n              <div class=\"panel-footer text-center\">\n                  <a href=\"pages-messages.html\">Show all messages</a>\n              </div>                            \n          </div>                        \n      </li>\n      <!-- END MESSAGES -->\n      <!-- TASKS -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\"><span class=\"fa fa-tasks\"></span></a>\n          <div class=\"informer informer-warning\">3</div>\n          <div class=\"panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging\">\n              <div class=\"panel-heading\">\n                  <h3 class=\"panel-title\"><span class=\"fa fa-tasks\"></span> Tasks</h3>                                \n                  <div class=\"pull-right\">\n                      <span class=\"label label-warning\">3 active</span>\n                  </div>\n              </div>\n              <div class=\"panel-body list-group scroll\" style=\"height: 200px;\">                                \n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Phasellus augue arcu, elementum</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-danger\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 50%;\">50%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 25 Sep 2014 / 50%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Aenean ac cursus</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-warning\" role=\"progressbar\" aria-valuenow=\"80\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 80%;\">80%</div>\n                      </div>\n                      <small class=\"text-muted\">Dmitry Ivaniuk, 24 Sep 2014 / 80%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Lorem ipsum dolor</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-success\" role=\"progressbar\" aria-valuenow=\"95\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 95%;\">95%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 23 Sep 2014 / 95%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Cras suscipit ac quam at tincidunt.</strong>\n                      <div class=\"progress progress-small\">\n                          <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\">100%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 21 Sep 2014 /</small><small class=\"text-success\"> Done</small>\n                  </a>                                \n              </div>     \n              <div class=\"panel-footer text-center\">\n                  <a href=\"pages-tasks.html\">Show all tasks</a>\n              </div>                            \n          </div>                        \n      </li>\n      <!-- END TASKS -->\n  </ul>\n  <!-- END X-NAVIGATION VERTICAL -->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
@@ -13333,7 +13414,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-17fc7820", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":2}],9:[function(require,module,exports){
+},{"vue":4,"vue-hot-reload-api":2}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13356,7 +13437,42 @@ function currency(value, currency, decimals) {
   return sign + currency + head + _int.slice(i).replace(digitsRE, '$1,') + _float;
 }
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.getCookie = getCookie;
+exports.setCookie = setCookie;
+exports.deleteCookie = deleteCookie;
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function deleteCookie(name) {
+    if (getCookie(name)) setCookie(name, "", -1);
+}
+
+},{}],13:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -13371,7 +13487,15 @@ var _App = require('./components/App.vue');
 
 var _App2 = _interopRequireDefault(_App);
 
+var _Signin = require('./components/Signin.vue');
+
+var _Signin2 = _interopRequireDefault(_Signin);
+
 var _currency = require('./currency');
+
+var _auth = require('./auth');
+
+var _auth2 = _interopRequireDefault(_auth);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13380,24 +13504,44 @@ _vue2.default.use(_vueRouter2.default);
 _vue2.default.filter('currency', _currency.currency);
 
 var router = new _vueRouter2.default({
-	saveScrollPosition: true,
-	transitionOnLoad: true,
-	linkActiveClass: 'is-active'
+  saveScrollPosition: true,
+  transitionOnLoad: true,
+  linkActiveClass: 'is-active'
 });
 
 router.map({
-	'/a': {
-		component: { template: 'A' }
-	},
+  '/a': {
+    component: { template: 'A' }
+  },
 
-	'/b': {
-		component: { template: 'B' }
-	}
+  '/b': {
+    component: { template: 'B' }
+  }
 });
 
-router.start(_App2.default, '#app');
+router.start({
+  data: function data() {
+    return {
+      current_view: ''
+    };
+  },
 
-},{"./components/App.vue":5,"./currency":9,"vue":4,"vue-router":3}],11:[function(require,module,exports){
+
+  components: {
+    Signin: _Signin2.default,
+    App: _App2.default
+  },
+
+  ready: function ready() {
+    if (_auth2.default.checkAuth()) {
+      this.current_view = 'App';
+    } else {
+      this.current_view = 'Signin';
+    }
+  }
+}, '#app');
+
+},{"./auth":5,"./components/App.vue":6,"./components/Signin.vue":8,"./currency":11,"vue":4,"vue-router":3}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13932,7 +14076,7 @@ Object.size = function (obj) {
 };
 /* EOF NEW OBJECT(GET SIZE OF ARRAY) */
 
-},{}],12:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14544,6 +14688,6 @@ Object.size = function (obj) {
     return size;
 };
 
-},{}]},{},[10]);
+},{}]},{},[13]);
 
 //# sourceMappingURL=app.js.map

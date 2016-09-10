@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './components/App.vue'
+import Signin from './components/Signin.vue'
 import { currency } from './currency'
+import auth from './auth';
 
 Vue.use(VueRouter)
 
@@ -23,4 +25,25 @@ router.map({
 	}
 });
 
-router.start(App, '#app');
+router.start({
+
+	data() {
+		return {
+			current_view: ''
+		}    
+  },
+
+  components: {
+    Signin,
+    App
+  },
+
+  ready(){
+  	if(auth.checkAuth()){
+  		this.current_view = 'App';
+  	}
+  	else{
+  		this.current_view = 'Signin';
+  	}
+  }
+}, '#app');
