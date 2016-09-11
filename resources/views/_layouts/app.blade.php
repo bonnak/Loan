@@ -28,8 +28,9 @@
   <script type="text/javascript" src="/joli/js/plugins/bootstrap/bootstrap.min.js"></script>        
   <!-- END PLUGINS -->
 
-  <!-- START PAGE PLUGINS-->        
+  <!-- START PAGE PLUGINS-->         
   <script type="text/javascript" src="/joli/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
+  <script type="text/javascript" src="/joli/js/plugins/datatables/jquery.dataTables.min.js"></script>
   <!-- END PAGE PLUGINS --> 
 
   <script type="text/javascript" src="/js/app.js"></script>

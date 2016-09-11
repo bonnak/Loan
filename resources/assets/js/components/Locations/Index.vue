@@ -1,6 +1,6 @@
 <template>
-	<div class="panel panel-default">
-    <component :is="current_view"></component>
+	<div class="page-content-wrap">
+		<component :is="current_view"></component>
 	</div>
 </template>
 
@@ -19,3 +19,9 @@ export default{
 	}
 }
 </script>
+
+<style>
+.page-content-wrap{
+	padding: 5px;
+}
+</style>

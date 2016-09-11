@@ -14562,6 +14562,26 @@ setTimeout(function () {
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"_process":1}],6:[function(require,module,exports){
+var inserted = exports.cache = {}
+
+exports.insert = function (css) {
+  if (inserted[css]) return
+  inserted[css] = true
+
+  var elem = document.createElement('style')
+  elem.setAttribute('type', 'text/css')
+
+  if ('textContent' in elem) {
+    elem.textContent = css
+  } else {
+    elem.styleSheet.cssText = css
+  }
+
+  document.getElementsByTagName('head')[0].appendChild(elem)
+  return elem
+}
+
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14624,7 +14644,7 @@ exports.default = {
   }
 };
 
-},{"./functions":15}],7:[function(require,module,exports){
+},{"./functions":16}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14673,7 +14693,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7817bbce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../ui/actions.js":17,"../ui/plugins.js":18,"./Sidebar.vue":8,"./Signout.vue":10,"./VNav.vue":11,"vue":5,"vue-hot-reload-api":2}],8:[function(require,module,exports){
+},{"../ui/actions.js":18,"../ui/plugins.js":19,"./Sidebar.vue":9,"./Signout.vue":11,"./VNav.vue":12,"vue":5,"vue-hot-reload-api":2}],9:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-sidebar page-sidebar-fixed scroll\">\n    <!-- START X-NAVIGATION -->\n    <ul class=\"x-navigation x-navigation-custom\">\n        <li class=\"xn-logo\">\n            <a href=\"index.html\">Joli Admin</a>\n            <a href=\"#\" class=\"x-navigation-control\"></a>\n        </li>\n        <li class=\"xn-title\">Navigation</li>\n        <li class=\"active\">\n            <a v-link=\"{ path: '/' }\"><span class=\"fa fa-desktop\"></span> <span class=\"xn-text\">Dashboard</span></a>                        \n        </li>                    \n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-files-o\"></span> <span class=\"xn-text\">Setup</span></a>\n            <ul>                \n                <li><a href=\"pages-profile.html\">Customer</a></li>\n                <li><a href=\"pages-profile.html\">Loan Group</a></li>\n                <li><a href=\"pages-profile.html\">Chart of Account</a></li>\n                <li><a href=\"pages-gallery.html\">Exchange Rate</a></li>\n                <li><a href=\"pages-gallery.html\">Identity Type</a></li>\n                <li><a v-link=\"{ path: '/user' }\">User Account</a></li>\n                <li><a href=\"pages-profile.html\">User Role</a></li>\n                <li><a v-link=\"{ path: '/location' }\">Location</a></li>\n            </ul>\n        </li>\n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-file-text-o\"></span> <span class=\"xn-text\">Layouts</span></a>\n            <ul>\n                <li><a href=\"layout-boxed.html\">Boxed</a></li>\n                <li><a href=\"layout-nav-toggled.html\">Navigation Toggled</a></li>\n                <li><a href=\"layout-nav-top.html\">Navigation Top</a></li>\n                <li><a href=\"layout-nav-right.html\">Navigation Right</a></li>\n                <li><a href=\"layout-nav-top-fixed.html\">Top Navigation Fixed</a></li>                            \n                <li><a href=\"layout-nav-custom.html\">Custom Navigation</a></li>\n                <li><a href=\"layout-frame-left.html\">Frame Left Column</a></li>\n                <li><a href=\"layout-frame-right.html\">Frame Right Column</a></li>\n                <li><a href=\"layout-search-left.html\">Search Left Side</a></li>\n                <li><a href=\"blank.html\">Blank Page</a></li>\n            </ul>\n        </li>        \n    </ul>\n    <!-- END X-NAVIGATION -->\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
@@ -14685,7 +14705,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5ff135ee", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],9:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14735,7 +14755,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-25a354f6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../auth":6,"vue":5,"vue-hot-reload-api":2}],10:[function(require,module,exports){
+},{"../auth":7,"vue":5,"vue-hot-reload-api":2}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14767,8 +14787,8 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-05ad639e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../auth":6,"vue":5,"vue-hot-reload-api":2}],11:[function(require,module,exports){
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<!-- START X-NAVIGATION VERTICAL -->\n  <ul class=\"x-navigation x-navigation-horizontal x-navigation-panel\">\n      <!-- TOGGLE NAVIGATION -->\n      <li class=\"xn-icon-button\">\n          <a href=\"#\" class=\"x-navigation-minimize\"><span class=\"fa fa-dedent\"></span></a>\n      </li>\n      <!-- END TOGGLE NAVIGATION -->\n      <!-- SEARCH -->\n      <li class=\"xn-search\">\n          <form role=\"form\">\n              <input type=\"text\" name=\"search\" placeholder=\"Search...\">\n          </form>\n      </li>   \n      <!-- END SEARCH -->\n      <!-- SIGN OUT -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\" class=\"mb-control\" data-box=\"#mb-signout\"><span class=\"fa fa-sign-out\"></span></a>                        \n      </li> \n      <!-- END SIGN OUT -->\n      <!-- MESSAGES -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\"><span class=\"fa fa-comments\"></span></a>\n          <div class=\"informer informer-danger\">4</div>\n          <div class=\"panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging\">\n              <div class=\"panel-heading\">\n                  <h3 class=\"panel-title\"><span class=\"fa fa-comments\"></span> Messages</h3>                                \n                  <div class=\"pull-right\">\n                      <span class=\"label label-danger\">4 new</span>\n                  </div>\n              </div>\n              <div class=\"panel-body list-group list-group-contacts scroll\" style=\"height: 200px;\">\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-online\"></div>\n                      <img src=\"assets/images/users/user2.jpg\" class=\"pull-left\" alt=\"John Doe\">\n                      <span class=\"contacts-title\">John Doe</span>\n                      <p>Praesent placerat tellus id augue condimentum</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-away\"></div>\n                      <img src=\"assets/images/users/user.jpg\" class=\"pull-left\" alt=\"Dmitry Ivaniuk\">\n                      <span class=\"contacts-title\">Dmitry Ivaniuk</span>\n                      <p>Donec risus sapien, sagittis et magna quis</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-away\"></div>\n                      <img src=\"assets/images/users/user3.jpg\" class=\"pull-left\" alt=\"Nadia Ali\">\n                      <span class=\"contacts-title\">Nadia Ali</span>\n                      <p>Mauris vel eros ut nunc rhoncus cursus sed</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-offline\"></div>\n                      <img src=\"assets/images/users/user6.jpg\" class=\"pull-left\" alt=\"Darth Vader\">\n                      <span class=\"contacts-title\">Darth Vader</span>\n                      <p>I want my money back!</p>\n                  </a>\n              </div>     \n              <div class=\"panel-footer text-center\">\n                  <a href=\"pages-messages.html\">Show all messages</a>\n              </div>                            \n          </div>                        \n      </li>\n      <!-- END MESSAGES -->\n      <!-- TASKS -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\"><span class=\"fa fa-tasks\"></span></a>\n          <div class=\"informer informer-warning\">3</div>\n          <div class=\"panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging\">\n              <div class=\"panel-heading\">\n                  <h3 class=\"panel-title\"><span class=\"fa fa-tasks\"></span> Tasks</h3>                                \n                  <div class=\"pull-right\">\n                      <span class=\"label label-warning\">3 active</span>\n                  </div>\n              </div>\n              <div class=\"panel-body list-group scroll\" style=\"height: 200px;\">                                \n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Phasellus augue arcu, elementum</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-danger\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 50%;\">50%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 25 Sep 2014 / 50%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Aenean ac cursus</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-warning\" role=\"progressbar\" aria-valuenow=\"80\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 80%;\">80%</div>\n                      </div>\n                      <small class=\"text-muted\">Dmitry Ivaniuk, 24 Sep 2014 / 80%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Lorem ipsum dolor</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-success\" role=\"progressbar\" aria-valuenow=\"95\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 95%;\">95%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 23 Sep 2014 / 95%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Cras suscipit ac quam at tincidunt.</strong>\n                      <div class=\"progress progress-small\">\n                          <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\">100%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 21 Sep 2014 /</small><small class=\"text-success\"> Done</small>\n                  </a>                                \n              </div>     \n              <div class=\"panel-footer text-center\">\n                  <a href=\"pages-tasks.html\">Show all tasks</a>\n              </div>                            \n          </div>                        \n      </li>\n      <!-- END TASKS -->\n  </ul>\n  <!-- END X-NAVIGATION VERTICAL -->\n"
+},{"../auth":7,"vue":5,"vue-hot-reload-api":2}],12:[function(require,module,exports){
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<!-- START X-NAVIGATION VERTICAL -->\n  <ul class=\"x-navigation x-navigation-horizontal x-navigation-panel\">\n      <!-- TOGGLE NAVIGATION -->\n      <li class=\"xn-icon-button\">\n          <a href=\"#\" class=\"x-navigation-minimize\"><span class=\"fa fa-dedent\"></span></a>\n      </li>\n      <!-- END TOGGLE NAVIGATION -->\n      <!-- SEARCH -->\n      <li class=\"xn-search\">\n          <form role=\"form\">\n              <input type=\"text\" name=\"search\" placeholder=\"Search...\">\n          </form>\n      </li>   \n      <!-- END SEARCH -->\n      <!-- SIGN OUT -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\" class=\"mb-control\" data-box=\"#mb-signout\"><span class=\"fa fa-sign-out\"></span></a>                        \n      </li> \n      <!-- END SIGN OUT -->\n  </ul>\n  <!-- END X-NAVIGATION VERTICAL -->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14779,7 +14799,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-17fc7820", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],12:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2}],13:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.page-content-wrap{\n\tpadding: 5px;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14804,19 +14826,45 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n    <component :is=\"current_view\"></component>\n\t</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-content-wrap\">\n\t<component :is=\"current_view\"></component>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.page-content-wrap{\n\tpadding: 5px;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-afdf6de4", module.exports)
   } else {
     hotAPI.update("_v-afdf6de4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Province.vue":13,"vue":5,"vue-hot-reload-api":2}],13:[function(require,module,exports){
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel-heading\">                                \n      <h3 class=\"panel-title\">Province</h3>\n      <ul class=\"panel-controls\">\n          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n      </ul>                                \n  </div>\n  <div class=\"panel-body\">\n      <table class=\"table datatable\">\n          <thead>\n              <tr>\n                  <th>Name</th>\n                  <th>Position</th>\n                  <th>Office</th>\n                  <th>Age</th>\n                  <th>Start date</th>\n                  <th>Salary</th>\n              </tr>\n          </thead>\n          <tbody>\n              <tr>\n                  <td>Tiger Nixon</td>\n                  <td>System Architect</td>\n                  <td>Edinburgh</td>\n                  <td>61</td>\n                  <td>2011/04/25</td>\n                  <td>$320,800</td>\n              </tr>\n              <tr>\n                  <td>Garrett Winters</td>\n                  <td>Accountant</td>\n                  <td>Tokyo</td>\n                  <td>63</td>\n                  <td>2011/07/25</td>\n                  <td>$170,750</td>\n              </tr>                \n          </tbody>\n      </table>\n  </div>\n"
+},{"./Province.vue":14,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],14:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	data: function data() {
+		return {
+			provinces: []
+		};
+	},
+	created: function created() {
+		var _this = this;
+
+		this.$http.get('/api/provinces').then(function (response) {
+			_this.provinces = response.data.provinces;
+		}, function (error) {
+			console.log(error);
+		});
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <table class=\"table datatable\">\n\t          <thead>\n\t              <tr>\n                  <th>Code</th>\n                  <th>Name_EN</th>\n                  <th>Name_KH</th>\n\t              </tr>\n\t          </thead>\n\t          <tbody>\n\t              <tr v-for=\"province in provinces\">\n                  <td>{{ province.code }}</td>\n                  <td>{{ province.name_en }}</td>\n                  <td>{{ province.name_kh }}</td>                  \n\t              </tr>               \n\t          </tbody>\n\t      </table>\n\t  </div>\n  </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14827,7 +14875,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-bb8126b8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],14:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14850,7 +14898,7 @@ function currency(value, currency, decimals) {
   return sign + currency + head + _int.slice(i).replace(digitsRE, '$1,') + _float;
 }
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14885,7 +14933,7 @@ function deleteCookie(name) {
     if (getCookie(name)) setCookie(name, "", -1);
 }
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -14921,6 +14969,8 @@ _vue2.default.use(_vueResource2.default);
 
 _vue2.default.filter('currency', _currency.currency);
 
+_vue2.default.http.headers.common['Authorization'] = 'Bearer ' + _auth2.default.getAuthHeader().Authorization;
+
 var router = new _vueRouter2.default({
   saveScrollPosition: true,
   transitionOnLoad: true,
@@ -14955,7 +15005,7 @@ router.start({
   }
 }, '#app');
 
-},{"./auth":6,"./components/App.vue":7,"./components/Signin.vue":9,"./components/locations/Index.vue":12,"./currency":14,"vue":5,"vue-resource":3,"vue-router":4}],17:[function(require,module,exports){
+},{"./auth":7,"./components/App.vue":8,"./components/Signin.vue":10,"./components/locations/Index.vue":13,"./currency":15,"vue":5,"vue-resource":3,"vue-router":4}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15490,7 +15540,7 @@ Object.size = function (obj) {
 };
 /* EOF NEW OBJECT(GET SIZE OF ARRAY) */
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15650,25 +15700,25 @@ function initJoliPlugins() {
     var uiElements = function () {
 
         //Datatables
-        var uiDatatable = function uiDatatable() {}
-        // if($(".datatable").length > 0){                
-        //     $(".datatable").dataTable();
-        //     $(".datatable").on('page.dt',function () {
-        //         onresize(100);
-        //     });
-        // }
+        var uiDatatable = function uiDatatable() {
+            if ($(".datatable").length > 0) {
+                $(".datatable").dataTable();
+                $(".datatable").on('page.dt', function () {
+                    onresize(100);
+                });
+            }
 
-        // if($(".datatable_simple").length > 0){                
-        //     $(".datatable_simple").dataTable({"ordering": false, "info": false, "lengthChange": false,"searching": false});
-        //     $(".datatable_simple").on('page.dt',function () {
-        //         onresize(100);
-        //     });                
-        // }            
-
+            if ($(".datatable_simple").length > 0) {
+                $(".datatable_simple").dataTable({ "ordering": false, "info": false, "lengthChange": false, "searching": false });
+                $(".datatable_simple").on('page.dt', function () {
+                    onresize(100);
+                });
+            }
+        };
         //END Datatable        
 
         //RangeSlider // This function can be removed or cleared.
-        ;var uiRangeSlider = function uiRangeSlider() {
+        var uiRangeSlider = function uiRangeSlider() {
 
             //Default Slider with start value
             if ($(".defaultSlider").length > 0) {
@@ -16103,6 +16153,6 @@ Object.size = function (obj) {
     return size;
 };
 
-},{}]},{},[16]);
+},{}]},{},[17]);
 
 //# sourceMappingURL=app.js.map

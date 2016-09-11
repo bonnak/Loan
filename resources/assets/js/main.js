@@ -11,6 +11,8 @@ Vue.use(VueResource)
 
 Vue.filter('currency', currency)
 
+Vue.http.headers.common['Authorization'] = 'Bearer ' + auth.getAuthHeader().Authorization;
+
 const router = new VueRouter({
   saveScrollPosition: true,
   transitionOnLoad: true,
