@@ -12,19 +12,19 @@
 */
 
 $factory->define(App\Role::class, function (Faker\Generator $faker) {
-    return [
-        'name' => $faker->randomElement(['Administrator', 'Accountant']),
-    ];
+  return [
+    'name' => $faker->randomElement(['Administrator', 'Accountant']),
+  ];
 });
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
-    return [
-        'user_name' => $faker->username,
-        'password' => 12345678,
-        'full_name' => $faker->name,
-        'email' => $faker->safeEmail,
-        'role_id' => 1,
-        'status' => 1,
-        'remember_token' => str_random(10),
-    ];
+  return [
+    'user_name' => $faker->username,
+    'password' => 12345678,
+    'full_name' => $faker->name,
+    'email' => $faker->safeEmail,
+    'role_id' => 1,
+    'status' => 1,
+    'remember_token' => str_random(10),
+  ];
 });
