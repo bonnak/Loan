@@ -26,6 +26,6 @@ $api->version('v1', function ($api) {
     $api->get('user/{user_name}', 'App\Http\Controllers\UserController@userExist');
     $api->post('user', 'App\Http\Controllers\UserController@store');
 
-    $api->get('provinces', 'App\Http\Controllers\ProvinceController@index');
+    $api->get('provinces', 'App\Http\Controllers\ProvinceController@getProvinces');
   });
 });

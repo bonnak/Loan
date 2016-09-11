@@ -13,7 +13,7 @@ class ProvinceController extends Controller
 	 * 
 	 * @return array 
 	 */
-  public function index()
+  public function getProvinces()
   {
   	return Province::get();
   }
