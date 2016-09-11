@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueResource from 'vue-resource'
 import App from './components/App.vue'
 import Signin from './components/Signin.vue'
 import { currency } from './currency'
 import auth from './auth';
 
 Vue.use(VueRouter)
+Vue.use(VueResource)
 
 Vue.filter('currency', currency)
 
@@ -16,12 +18,8 @@ const router = new VueRouter({
 });
 
 router.map({
-	'/a':{
+	'/':{
 		component: { template: 'A'}
-	},
-
-	'/b': {
-		component: { template: 'B' }
 	}
 });
 

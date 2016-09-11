@@ -9,7 +9,7 @@
         </div>
         <div class="mb-footer">
           <div class="pull-right">
-              <a href="pages-login.html" class="btn btn-success btn-lg">Yes</a>
+              <a href="pages-login.html" class="btn btn-success btn-lg" @click.prevent.stop="logout()">Yes</a>
               <button class="btn btn-default btn-lg mb-control-close">No</button>
           </div>
         </div>
@@ -17,3 +17,15 @@
     </div>
 	</div>
 </template>
+
+<script>
+import auth from '../auth'
+
+export default {
+  methods:{
+    logout(){
+      auth.logout();
+    }
+  }
+}
+</script>

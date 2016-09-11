@@ -463,6 +463,1319 @@ function format (id) {
 
 },{}],3:[function(require,module,exports){
 /*!
+ * vue-resource v0.9.3
+ * https://github.com/vuejs/vue-resource
+ * Released under the MIT License.
+ */
+
+'use strict';
+
+/**
+ * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
+ */
+
+var RESOLVED = 0;
+var REJECTED = 1;
+var PENDING = 2;
+
+function Promise$2(executor) {
+
+    this.state = PENDING;
+    this.value = undefined;
+    this.deferred = [];
+
+    var promise = this;
+
+    try {
+        executor(function (x) {
+            promise.resolve(x);
+        }, function (r) {
+            promise.reject(r);
+        });
+    } catch (e) {
+        promise.reject(e);
+    }
+}
+
+Promise$2.reject = function (r) {
+    return new Promise$2(function (resolve, reject) {
+        reject(r);
+    });
+};
+
+Promise$2.resolve = function (x) {
+    return new Promise$2(function (resolve, reject) {
+        resolve(x);
+    });
+};
+
+Promise$2.all = function all(iterable) {
+    return new Promise$2(function (resolve, reject) {
+        var count = 0,
+            result = [];
+
+        if (iterable.length === 0) {
+            resolve(result);
+        }
+
+        function resolver(i) {
+            return function (x) {
+                result[i] = x;
+                count += 1;
+
+                if (count === iterable.length) {
+                    resolve(result);
+                }
+            };
+        }
+
+        for (var i = 0; i < iterable.length; i += 1) {
+            Promise$2.resolve(iterable[i]).then(resolver(i), reject);
+        }
+    });
+};
+
+Promise$2.race = function race(iterable) {
+    return new Promise$2(function (resolve, reject) {
+        for (var i = 0; i < iterable.length; i += 1) {
+            Promise$2.resolve(iterable[i]).then(resolve, reject);
+        }
+    });
+};
+
+var p$1 = Promise$2.prototype;
+
+p$1.resolve = function resolve(x) {
+    var promise = this;
+
+    if (promise.state === PENDING) {
+        if (x === promise) {
+            throw new TypeError('Promise settled with itself.');
+        }
+
+        var called = false;
+
+        try {
+            var then = x && x['then'];
+
+            if (x !== null && typeof x === 'object' && typeof then === 'function') {
+                then.call(x, function (x) {
+                    if (!called) {
+                        promise.resolve(x);
+                    }
+                    called = true;
+                }, function (r) {
+                    if (!called) {
+                        promise.reject(r);
+                    }
+                    called = true;
+                });
+                return;
+            }
+        } catch (e) {
+            if (!called) {
+                promise.reject(e);
+            }
+            return;
+        }
+
+        promise.state = RESOLVED;
+        promise.value = x;
+        promise.notify();
+    }
+};
+
+p$1.reject = function reject(reason) {
+    var promise = this;
+
+    if (promise.state === PENDING) {
+        if (reason === promise) {
+            throw new TypeError('Promise settled with itself.');
+        }
+
+        promise.state = REJECTED;
+        promise.value = reason;
+        promise.notify();
+    }
+};
+
+p$1.notify = function notify() {
+    var promise = this;
+
+    nextTick(function () {
+        if (promise.state !== PENDING) {
+            while (promise.deferred.length) {
+                var deferred = promise.deferred.shift(),
+                    onResolved = deferred[0],
+                    onRejected = deferred[1],
+                    resolve = deferred[2],
+                    reject = deferred[3];
+
+                try {
+                    if (promise.state === RESOLVED) {
+                        if (typeof onResolved === 'function') {
+                            resolve(onResolved.call(undefined, promise.value));
+                        } else {
+                            resolve(promise.value);
+                        }
+                    } else if (promise.state === REJECTED) {
+                        if (typeof onRejected === 'function') {
+                            resolve(onRejected.call(undefined, promise.value));
+                        } else {
+                            reject(promise.value);
+                        }
+                    }
+                } catch (e) {
+                    reject(e);
+                }
+            }
+        }
+    });
+};
+
+p$1.then = function then(onResolved, onRejected) {
+    var promise = this;
+
+    return new Promise$2(function (resolve, reject) {
+        promise.deferred.push([onResolved, onRejected, resolve, reject]);
+        promise.notify();
+    });
+};
+
+p$1.catch = function (onRejected) {
+    return this.then(undefined, onRejected);
+};
+
+var PromiseObj = window.Promise || Promise$2;
+
+function Promise$1(executor, context) {
+
+    if (executor instanceof PromiseObj) {
+        this.promise = executor;
+    } else {
+        this.promise = new PromiseObj(executor.bind(context));
+    }
+
+    this.context = context;
+}
+
+Promise$1.all = function (iterable, context) {
+    return new Promise$1(PromiseObj.all(iterable), context);
+};
+
+Promise$1.resolve = function (value, context) {
+    return new Promise$1(PromiseObj.resolve(value), context);
+};
+
+Promise$1.reject = function (reason, context) {
+    return new Promise$1(PromiseObj.reject(reason), context);
+};
+
+Promise$1.race = function (iterable, context) {
+    return new Promise$1(PromiseObj.race(iterable), context);
+};
+
+var p = Promise$1.prototype;
+
+p.bind = function (context) {
+    this.context = context;
+    return this;
+};
+
+p.then = function (fulfilled, rejected) {
+
+    if (fulfilled && fulfilled.bind && this.context) {
+        fulfilled = fulfilled.bind(this.context);
+    }
+
+    if (rejected && rejected.bind && this.context) {
+        rejected = rejected.bind(this.context);
+    }
+
+    return new Promise$1(this.promise.then(fulfilled, rejected), this.context);
+};
+
+p.catch = function (rejected) {
+
+    if (rejected && rejected.bind && this.context) {
+        rejected = rejected.bind(this.context);
+    }
+
+    return new Promise$1(this.promise.catch(rejected), this.context);
+};
+
+p.finally = function (callback) {
+
+    return this.then(function (value) {
+        callback.call(this);
+        return value;
+    }, function (reason) {
+        callback.call(this);
+        return PromiseObj.reject(reason);
+    });
+};
+
+var debug = false;
+var util = {};
+var array = [];
+function Util (Vue) {
+    util = Vue.util;
+    debug = Vue.config.debug || !Vue.config.silent;
+}
+
+function warn(msg) {
+    if (typeof console !== 'undefined' && debug) {
+        console.warn('[VueResource warn]: ' + msg);
+    }
+}
+
+function error(msg) {
+    if (typeof console !== 'undefined') {
+        console.error(msg);
+    }
+}
+
+function nextTick(cb, ctx) {
+    return util.nextTick(cb, ctx);
+}
+
+function trim(str) {
+    return str.replace(/^\s*|\s*$/g, '');
+}
+
+var isArray = Array.isArray;
+
+function isString(val) {
+    return typeof val === 'string';
+}
+
+function isBoolean(val) {
+    return val === true || val === false;
+}
+
+function isFunction(val) {
+    return typeof val === 'function';
+}
+
+function isObject(obj) {
+    return obj !== null && typeof obj === 'object';
+}
+
+function isPlainObject(obj) {
+    return isObject(obj) && Object.getPrototypeOf(obj) == Object.prototype;
+}
+
+function isFormData(obj) {
+    return typeof FormData !== 'undefined' && obj instanceof FormData;
+}
+
+function when(value, fulfilled, rejected) {
+
+    var promise = Promise$1.resolve(value);
+
+    if (arguments.length < 2) {
+        return promise;
+    }
+
+    return promise.then(fulfilled, rejected);
+}
+
+function options(fn, obj, opts) {
+
+    opts = opts || {};
+
+    if (isFunction(opts)) {
+        opts = opts.call(obj);
+    }
+
+    return merge(fn.bind({ $vm: obj, $options: opts }), fn, { $options: opts });
+}
+
+function each(obj, iterator) {
+
+    var i, key;
+
+    if (typeof obj.length == 'number') {
+        for (i = 0; i < obj.length; i++) {
+            iterator.call(obj[i], obj[i], i);
+        }
+    } else if (isObject(obj)) {
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                iterator.call(obj[key], obj[key], key);
+            }
+        }
+    }
+
+    return obj;
+}
+
+var assign = Object.assign || _assign;
+
+function merge(target) {
+
+    var args = array.slice.call(arguments, 1);
+
+    args.forEach(function (source) {
+        _merge(target, source, true);
+    });
+
+    return target;
+}
+
+function defaults(target) {
+
+    var args = array.slice.call(arguments, 1);
+
+    args.forEach(function (source) {
+
+        for (var key in source) {
+            if (target[key] === undefined) {
+                target[key] = source[key];
+            }
+        }
+    });
+
+    return target;
+}
+
+function _assign(target) {
+
+    var args = array.slice.call(arguments, 1);
+
+    args.forEach(function (source) {
+        _merge(target, source);
+    });
+
+    return target;
+}
+
+function _merge(target, source, deep) {
+    for (var key in source) {
+        if (deep && (isPlainObject(source[key]) || isArray(source[key]))) {
+            if (isPlainObject(source[key]) && !isPlainObject(target[key])) {
+                target[key] = {};
+            }
+            if (isArray(source[key]) && !isArray(target[key])) {
+                target[key] = [];
+            }
+            _merge(target[key], source[key], deep);
+        } else if (source[key] !== undefined) {
+            target[key] = source[key];
+        }
+    }
+}
+
+function root (options, next) {
+
+    var url = next(options);
+
+    if (isString(options.root) && !url.match(/^(https?:)?\//)) {
+        url = options.root + '/' + url;
+    }
+
+    return url;
+}
+
+function query (options, next) {
+
+    var urlParams = Object.keys(Url.options.params),
+        query = {},
+        url = next(options);
+
+    each(options.params, function (value, key) {
+        if (urlParams.indexOf(key) === -1) {
+            query[key] = value;
+        }
+    });
+
+    query = Url.params(query);
+
+    if (query) {
+        url += (url.indexOf('?') == -1 ? '?' : '&') + query;
+    }
+
+    return url;
+}
+
+/**
+ * URL Template v2.0.6 (https://github.com/bramstein/url-template)
+ */
+
+function expand(url, params, variables) {
+
+    var tmpl = parse(url),
+        expanded = tmpl.expand(params);
+
+    if (variables) {
+        variables.push.apply(variables, tmpl.vars);
+    }
+
+    return expanded;
+}
+
+function parse(template) {
+
+    var operators = ['+', '#', '.', '/', ';', '?', '&'],
+        variables = [];
+
+    return {
+        vars: variables,
+        expand: function (context) {
+            return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function (_, expression, literal) {
+                if (expression) {
+
+                    var operator = null,
+                        values = [];
+
+                    if (operators.indexOf(expression.charAt(0)) !== -1) {
+                        operator = expression.charAt(0);
+                        expression = expression.substr(1);
+                    }
+
+                    expression.split(/,/g).forEach(function (variable) {
+                        var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
+                        values.push.apply(values, getValues(context, operator, tmp[1], tmp[2] || tmp[3]));
+                        variables.push(tmp[1]);
+                    });
+
+                    if (operator && operator !== '+') {
+
+                        var separator = ',';
+
+                        if (operator === '?') {
+                            separator = '&';
+                        } else if (operator !== '#') {
+                            separator = operator;
+                        }
+
+                        return (values.length !== 0 ? operator : '') + values.join(separator);
+                    } else {
+                        return values.join(',');
+                    }
+                } else {
+                    return encodeReserved(literal);
+                }
+            });
+        }
+    };
+}
+
+function getValues(context, operator, key, modifier) {
+
+    var value = context[key],
+        result = [];
+
+    if (isDefined(value) && value !== '') {
+        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+            value = value.toString();
+
+            if (modifier && modifier !== '*') {
+                value = value.substring(0, parseInt(modifier, 10));
+            }
+
+            result.push(encodeValue(operator, value, isKeyOperator(operator) ? key : null));
+        } else {
+            if (modifier === '*') {
+                if (Array.isArray(value)) {
+                    value.filter(isDefined).forEach(function (value) {
+                        result.push(encodeValue(operator, value, isKeyOperator(operator) ? key : null));
+                    });
+                } else {
+                    Object.keys(value).forEach(function (k) {
+                        if (isDefined(value[k])) {
+                            result.push(encodeValue(operator, value[k], k));
+                        }
+                    });
+                }
+            } else {
+                var tmp = [];
+
+                if (Array.isArray(value)) {
+                    value.filter(isDefined).forEach(function (value) {
+                        tmp.push(encodeValue(operator, value));
+                    });
+                } else {
+                    Object.keys(value).forEach(function (k) {
+                        if (isDefined(value[k])) {
+                            tmp.push(encodeURIComponent(k));
+                            tmp.push(encodeValue(operator, value[k].toString()));
+                        }
+                    });
+                }
+
+                if (isKeyOperator(operator)) {
+                    result.push(encodeURIComponent(key) + '=' + tmp.join(','));
+                } else if (tmp.length !== 0) {
+                    result.push(tmp.join(','));
+                }
+            }
+        }
+    } else {
+        if (operator === ';') {
+            result.push(encodeURIComponent(key));
+        } else if (value === '' && (operator === '&' || operator === '?')) {
+            result.push(encodeURIComponent(key) + '=');
+        } else if (value === '') {
+            result.push('');
+        }
+    }
+
+    return result;
+}
+
+function isDefined(value) {
+    return value !== undefined && value !== null;
+}
+
+function isKeyOperator(operator) {
+    return operator === ';' || operator === '&' || operator === '?';
+}
+
+function encodeValue(operator, value, key) {
+
+    value = operator === '+' || operator === '#' ? encodeReserved(value) : encodeURIComponent(value);
+
+    if (key) {
+        return encodeURIComponent(key) + '=' + value;
+    } else {
+        return value;
+    }
+}
+
+function encodeReserved(str) {
+    return str.split(/(%[0-9A-Fa-f]{2})/g).map(function (part) {
+        if (!/%[0-9A-Fa-f]/.test(part)) {
+            part = encodeURI(part);
+        }
+        return part;
+    }).join('');
+}
+
+function template (options) {
+
+    var variables = [],
+        url = expand(options.url, options.params, variables);
+
+    variables.forEach(function (key) {
+        delete options.params[key];
+    });
+
+    return url;
+}
+
+/**
+ * Service for URL templating.
+ */
+
+var ie = document.documentMode;
+var el = document.createElement('a');
+
+function Url(url, params) {
+
+    var self = this || {},
+        options = url,
+        transform;
+
+    if (isString(url)) {
+        options = { url: url, params: params };
+    }
+
+    options = merge({}, Url.options, self.$options, options);
+
+    Url.transforms.forEach(function (handler) {
+        transform = factory(handler, transform, self.$vm);
+    });
+
+    return transform(options);
+}
+
+/**
+ * Url options.
+ */
+
+Url.options = {
+    url: '',
+    root: null,
+    params: {}
+};
+
+/**
+ * Url transforms.
+ */
+
+Url.transforms = [template, query, root];
+
+/**
+ * Encodes a Url parameter string.
+ *
+ * @param {Object} obj
+ */
+
+Url.params = function (obj) {
+
+    var params = [],
+        escape = encodeURIComponent;
+
+    params.add = function (key, value) {
+
+        if (isFunction(value)) {
+            value = value();
+        }
+
+        if (value === null) {
+            value = '';
+        }
+
+        this.push(escape(key) + '=' + escape(value));
+    };
+
+    serialize(params, obj);
+
+    return params.join('&').replace(/%20/g, '+');
+};
+
+/**
+ * Parse a URL and return its components.
+ *
+ * @param {String} url
+ */
+
+Url.parse = function (url) {
+
+    if (ie) {
+        el.href = url;
+        url = el.href;
+    }
+
+    el.href = url;
+
+    return {
+        href: el.href,
+        protocol: el.protocol ? el.protocol.replace(/:$/, '') : '',
+        port: el.port,
+        host: el.host,
+        hostname: el.hostname,
+        pathname: el.pathname.charAt(0) === '/' ? el.pathname : '/' + el.pathname,
+        search: el.search ? el.search.replace(/^\?/, '') : '',
+        hash: el.hash ? el.hash.replace(/^#/, '') : ''
+    };
+};
+
+function factory(handler, next, vm) {
+    return function (options) {
+        return handler.call(vm, options, next);
+    };
+}
+
+function serialize(params, obj, scope) {
+
+    var array = isArray(obj),
+        plain = isPlainObject(obj),
+        hash;
+
+    each(obj, function (value, key) {
+
+        hash = isObject(value) || isArray(value);
+
+        if (scope) {
+            key = scope + '[' + (plain || hash ? key : '') + ']';
+        }
+
+        if (!scope && array) {
+            params.add(value.name, value.value);
+        } else if (hash) {
+            serialize(params, value, key);
+        } else {
+            params.add(key, value);
+        }
+    });
+}
+
+function xdrClient (request) {
+    return new Promise$1(function (resolve) {
+
+        var xdr = new XDomainRequest(),
+            handler = function (event) {
+
+            var response = request.respondWith(xdr.responseText, {
+                status: xdr.status,
+                statusText: xdr.statusText
+            });
+
+            resolve(response);
+        };
+
+        request.abort = function () {
+            return xdr.abort();
+        };
+
+        xdr.open(request.method, request.getUrl(), true);
+        xdr.timeout = 0;
+        xdr.onload = handler;
+        xdr.onerror = handler;
+        xdr.ontimeout = function () {};
+        xdr.onprogress = function () {};
+        xdr.send(request.getBody());
+    });
+}
+
+var ORIGIN_URL = Url.parse(location.href);
+var SUPPORTS_CORS = 'withCredentials' in new XMLHttpRequest();
+
+function cors (request, next) {
+
+    if (!isBoolean(request.crossOrigin) && crossOrigin(request)) {
+        request.crossOrigin = true;
+    }
+
+    if (request.crossOrigin) {
+
+        if (!SUPPORTS_CORS) {
+            request.client = xdrClient;
+        }
+
+        delete request.emulateHTTP;
+    }
+
+    next();
+}
+
+function crossOrigin(request) {
+
+    var requestUrl = Url.parse(Url(request));
+
+    return requestUrl.protocol !== ORIGIN_URL.protocol || requestUrl.host !== ORIGIN_URL.host;
+}
+
+function body (request, next) {
+
+    if (request.emulateJSON && isPlainObject(request.body)) {
+        request.body = Url.params(request.body);
+        request.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    }
+
+    if (isFormData(request.body)) {
+        delete request.headers['Content-Type'];
+    }
+
+    if (isPlainObject(request.body)) {
+        request.body = JSON.stringify(request.body);
+    }
+
+    next(function (response) {
+
+        var contentType = response.headers['Content-Type'];
+
+        if (isString(contentType) && contentType.indexOf('application/json') === 0) {
+
+            try {
+                response.data = response.json();
+            } catch (e) {
+                response.data = null;
+            }
+        } else {
+            response.data = response.text();
+        }
+    });
+}
+
+function jsonpClient (request) {
+    return new Promise$1(function (resolve) {
+
+        var name = request.jsonp || 'callback',
+            callback = '_jsonp' + Math.random().toString(36).substr(2),
+            body = null,
+            handler,
+            script;
+
+        handler = function (event) {
+
+            var status = 0;
+
+            if (event.type === 'load' && body !== null) {
+                status = 200;
+            } else if (event.type === 'error') {
+                status = 404;
+            }
+
+            resolve(request.respondWith(body, { status: status }));
+
+            delete window[callback];
+            document.body.removeChild(script);
+        };
+
+        request.params[name] = callback;
+
+        window[callback] = function (result) {
+            body = JSON.stringify(result);
+        };
+
+        script = document.createElement('script');
+        script.src = request.getUrl();
+        script.type = 'text/javascript';
+        script.async = true;
+        script.onload = handler;
+        script.onerror = handler;
+
+        document.body.appendChild(script);
+    });
+}
+
+function jsonp (request, next) {
+
+    if (request.method == 'JSONP') {
+        request.client = jsonpClient;
+    }
+
+    next(function (response) {
+
+        if (request.method == 'JSONP') {
+            response.data = response.json();
+        }
+    });
+}
+
+function before (request, next) {
+
+    if (isFunction(request.before)) {
+        request.before.call(this, request);
+    }
+
+    next();
+}
+
+/**
+ * HTTP method override Interceptor.
+ */
+
+function method (request, next) {
+
+    if (request.emulateHTTP && /^(PUT|PATCH|DELETE)$/i.test(request.method)) {
+        request.headers['X-HTTP-Method-Override'] = request.method;
+        request.method = 'POST';
+    }
+
+    next();
+}
+
+function header (request, next) {
+
+    request.method = request.method.toUpperCase();
+    request.headers = assign({}, Http.headers.common, !request.crossOrigin ? Http.headers.custom : {}, Http.headers[request.method.toLowerCase()], request.headers);
+
+    next();
+}
+
+/**
+ * Timeout Interceptor.
+ */
+
+function timeout (request, next) {
+
+    var timeout;
+
+    if (request.timeout) {
+        timeout = setTimeout(function () {
+            request.abort();
+        }, request.timeout);
+    }
+
+    next(function (response) {
+
+        clearTimeout(timeout);
+    });
+}
+
+function xhrClient (request) {
+    return new Promise$1(function (resolve) {
+
+        var xhr = new XMLHttpRequest(),
+            handler = function (event) {
+
+            var response = request.respondWith('response' in xhr ? xhr.response : xhr.responseText, {
+                status: xhr.status === 1223 ? 204 : xhr.status, // IE9 status bug
+                statusText: xhr.status === 1223 ? 'No Content' : trim(xhr.statusText),
+                headers: parseHeaders(xhr.getAllResponseHeaders())
+            });
+
+            resolve(response);
+        };
+
+        request.abort = function () {
+            return xhr.abort();
+        };
+
+        xhr.open(request.method, request.getUrl(), true);
+        xhr.timeout = 0;
+        xhr.onload = handler;
+        xhr.onerror = handler;
+
+        if (request.progress) {
+            if (request.method === 'GET') {
+                xhr.addEventListener('progress', request.progress);
+            } else if (/^(POST|PUT)$/i.test(request.method)) {
+                xhr.upload.addEventListener('progress', request.progress);
+            }
+        }
+
+        if (request.credentials === true) {
+            xhr.withCredentials = true;
+        }
+
+        each(request.headers || {}, function (value, header) {
+            xhr.setRequestHeader(header, value);
+        });
+
+        xhr.send(request.getBody());
+    });
+}
+
+function parseHeaders(str) {
+
+    var headers = {},
+        value,
+        name,
+        i;
+
+    each(trim(str).split('\n'), function (row) {
+
+        i = row.indexOf(':');
+        name = trim(row.slice(0, i));
+        value = trim(row.slice(i + 1));
+
+        if (headers[name]) {
+
+            if (isArray(headers[name])) {
+                headers[name].push(value);
+            } else {
+                headers[name] = [headers[name], value];
+            }
+        } else {
+
+            headers[name] = value;
+        }
+    });
+
+    return headers;
+}
+
+function Client (context) {
+
+    var reqHandlers = [sendRequest],
+        resHandlers = [],
+        handler;
+
+    if (!isObject(context)) {
+        context = null;
+    }
+
+    function Client(request) {
+        return new Promise$1(function (resolve) {
+
+            function exec() {
+
+                handler = reqHandlers.pop();
+
+                if (isFunction(handler)) {
+                    handler.call(context, request, next);
+                } else {
+                    warn('Invalid interceptor of type ' + typeof handler + ', must be a function');
+                    next();
+                }
+            }
+
+            function next(response) {
+
+                if (isFunction(response)) {
+
+                    resHandlers.unshift(response);
+                } else if (isObject(response)) {
+
+                    resHandlers.forEach(function (handler) {
+                        response = when(response, function (response) {
+                            return handler.call(context, response) || response;
+                        });
+                    });
+
+                    when(response, resolve);
+
+                    return;
+                }
+
+                exec();
+            }
+
+            exec();
+        }, context);
+    }
+
+    Client.use = function (handler) {
+        reqHandlers.push(handler);
+    };
+
+    return Client;
+}
+
+function sendRequest(request, resolve) {
+
+    var client = request.client || xhrClient;
+
+    resolve(client(request));
+}
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+/**
+ * HTTP Response.
+ */
+
+var Response = function () {
+    function Response(body, _ref) {
+        var url = _ref.url;
+        var headers = _ref.headers;
+        var status = _ref.status;
+        var statusText = _ref.statusText;
+        classCallCheck(this, Response);
+
+
+        this.url = url;
+        this.body = body;
+        this.headers = headers || {};
+        this.status = status || 0;
+        this.statusText = statusText || '';
+        this.ok = status >= 200 && status < 300;
+    }
+
+    Response.prototype.text = function text() {
+        return this.body;
+    };
+
+    Response.prototype.blob = function blob() {
+        return new Blob([this.body]);
+    };
+
+    Response.prototype.json = function json() {
+        return JSON.parse(this.body);
+    };
+
+    return Response;
+}();
+
+var Request = function () {
+    function Request(options) {
+        classCallCheck(this, Request);
+
+
+        this.method = 'GET';
+        this.body = null;
+        this.params = {};
+        this.headers = {};
+
+        assign(this, options);
+    }
+
+    Request.prototype.getUrl = function getUrl() {
+        return Url(this);
+    };
+
+    Request.prototype.getBody = function getBody() {
+        return this.body;
+    };
+
+    Request.prototype.respondWith = function respondWith(body, options) {
+        return new Response(body, assign(options || {}, { url: this.getUrl() }));
+    };
+
+    return Request;
+}();
+
+/**
+ * Service for sending network requests.
+ */
+
+var CUSTOM_HEADERS = { 'X-Requested-With': 'XMLHttpRequest' };
+var COMMON_HEADERS = { 'Accept': 'application/json, text/plain, */*' };
+var JSON_CONTENT_TYPE = { 'Content-Type': 'application/json;charset=utf-8' };
+
+function Http(options) {
+
+    var self = this || {},
+        client = Client(self.$vm);
+
+    defaults(options || {}, self.$options, Http.options);
+
+    Http.interceptors.forEach(function (handler) {
+        client.use(handler);
+    });
+
+    return client(new Request(options)).then(function (response) {
+
+        return response.ok ? response : Promise$1.reject(response);
+    }, function (response) {
+
+        if (response instanceof Error) {
+            error(response);
+        }
+
+        return Promise$1.reject(response);
+    });
+}
+
+Http.options = {};
+
+Http.headers = {
+    put: JSON_CONTENT_TYPE,
+    post: JSON_CONTENT_TYPE,
+    patch: JSON_CONTENT_TYPE,
+    delete: JSON_CONTENT_TYPE,
+    custom: CUSTOM_HEADERS,
+    common: COMMON_HEADERS
+};
+
+Http.interceptors = [before, timeout, method, body, jsonp, header, cors];
+
+['get', 'delete', 'head', 'jsonp'].forEach(function (method) {
+
+    Http[method] = function (url, options) {
+        return this(assign(options || {}, { url: url, method: method }));
+    };
+});
+
+['post', 'put', 'patch'].forEach(function (method) {
+
+    Http[method] = function (url, body, options) {
+        return this(assign(options || {}, { url: url, method: method, body: body }));
+    };
+});
+
+function Resource(url, params, actions, options) {
+
+    var self = this || {},
+        resource = {};
+
+    actions = assign({}, Resource.actions, actions);
+
+    each(actions, function (action, name) {
+
+        action = merge({ url: url, params: params || {} }, options, action);
+
+        resource[name] = function () {
+            return (self.$http || Http)(opts(action, arguments));
+        };
+    });
+
+    return resource;
+}
+
+function opts(action, args) {
+
+    var options = assign({}, action),
+        params = {},
+        body;
+
+    switch (args.length) {
+
+        case 2:
+
+            params = args[0];
+            body = args[1];
+
+            break;
+
+        case 1:
+
+            if (/^(POST|PUT|PATCH)$/i.test(options.method)) {
+                body = args[0];
+            } else {
+                params = args[0];
+            }
+
+            break;
+
+        case 0:
+
+            break;
+
+        default:
+
+            throw 'Expected up to 4 arguments [params, body], got ' + args.length + ' arguments';
+    }
+
+    options.body = body;
+    options.params = assign({}, options.params, params);
+
+    return options;
+}
+
+Resource.actions = {
+
+    get: { method: 'GET' },
+    save: { method: 'POST' },
+    query: { method: 'GET' },
+    update: { method: 'PUT' },
+    remove: { method: 'DELETE' },
+    delete: { method: 'DELETE' }
+
+};
+
+function plugin(Vue) {
+
+    if (plugin.installed) {
+        return;
+    }
+
+    Util(Vue);
+
+    Vue.url = Url;
+    Vue.http = Http;
+    Vue.resource = Resource;
+    Vue.Promise = Promise$1;
+
+    Object.defineProperties(Vue.prototype, {
+
+        $url: {
+            get: function () {
+                return options(Vue.url, this, this.$options.url);
+            }
+        },
+
+        $http: {
+            get: function () {
+                return options(Vue.http, this, this.$options.http);
+            }
+        },
+
+        $resource: {
+            get: function () {
+                return Vue.resource.bind(this);
+            }
+        },
+
+        $promise: {
+            get: function () {
+                var _this = this;
+
+                return function (executor) {
+                    return new Vue.Promise(executor, _this);
+                };
+            }
+        }
+
+    });
+}
+
+if (typeof window !== 'undefined' && window.Vue) {
+    window.Vue.use(plugin);
+}
+
+module.exports = plugin;
+},{}],4:[function(require,module,exports){
+/*!
  * vue-router v0.7.13
  * (c) 2016 Evan You
  * Released under the MIT License.
@@ -3171,7 +4484,7 @@ function format (id) {
   return Router;
 
 }));
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.26
@@ -13248,7 +14561,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":1}],5:[function(require,module,exports){
+},{"_process":1}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13259,11 +14572,6 @@ var _functions = require('./functions');
 
 exports.default = {
 
-  // User object will let us check authentication status
-  user: {
-    authenticated: false
-  },
-
   response: {
     text: '',
     code: ''
@@ -13273,39 +14581,38 @@ exports.default = {
   login: function login(context, creds, redirect) {
     var _this = this;
 
-    context.$http.post('/api/authenticate', creds).then(function (response) {
-      (0, _functions.setCookie)('token', response.data.token);
+    var rest = context.$http.post('/api/authenticate', creds);
 
-      _this.user.authenticated = true;
+    rest.then(function (response) {
+      (0, _functions.setCookie)('token', response.data.token);
 
       _this.response = { text: response.data.text, code: response.status };
 
       // Redirect to a specified route
       if (redirect) {
-        context.$route.router.go(redirect);
+        //context.$route.router.go(redirect);  
+        window.location.href = redirect;
       }
     }, function (err) {
-      context.error = err;
-
       _this.response = { text: err.data.error, code: err.status };
     });
+
+    return rest;
   },
 
 
   // To log out, we just need to remove the token
   logout: function logout() {
     (0, _functions.deleteCookie)('token');
-    this.user.authenticated = false;
+    window.location.href = '/';
   },
   checkAuth: function checkAuth() {
     var jwt = (0, _functions.getCookie)('token');
     if (jwt) {
-      this.user.authenticated = true;
-    } else {
-      this.user.authenticated = false;
+      return true;
     }
 
-    return this.user.authenticated;
+    return false;
   },
 
 
@@ -13317,7 +14624,7 @@ exports.default = {
   }
 };
 
-},{"./functions":12}],6:[function(require,module,exports){
+},{"./functions":13}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13366,7 +14673,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7817bbce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../ui/actions.js":14,"../ui/plugins.js":15,"./Sidebar.vue":7,"./Signout.vue":9,"./VNav.vue":10,"vue":4,"vue-hot-reload-api":2}],7:[function(require,module,exports){
+},{"../ui/actions.js":15,"../ui/plugins.js":16,"./Sidebar.vue":8,"./Signout.vue":10,"./VNav.vue":11,"vue":5,"vue-hot-reload-api":2}],8:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-sidebar page-sidebar-fixed scroll\">\n    <!-- START X-NAVIGATION -->\n    <ul class=\"x-navigation x-navigation-custom\">\n        <li class=\"xn-logo\">\n            <a href=\"index.html\">Joli Admin</a>\n            <a href=\"#\" class=\"x-navigation-control\"></a>\n        </li>\n        <li class=\"xn-title\">Navigation</li>\n        <li class=\"active\">\n            <a v-link=\"{ path: '/' }\"><span class=\"fa fa-desktop\"></span> <span class=\"xn-text\">Dashboard</span></a>                        \n        </li>                    \n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-files-o\"></span> <span class=\"xn-text\">Setup</span></a>\n            <ul>                \n                <li><a href=\"pages-profile.html\">Customer</a></li>\n                <li><a href=\"pages-profile.html\">Loan Group</a></li>\n                <li><a href=\"pages-profile.html\">Chart of Account</a></li>\n                <li><a href=\"pages-gallery.html\">Exchange Rate</a></li>\n                <li><a href=\"pages-gallery.html\">Identity Type</a></li>\n                <li><a v-link=\"{ path: '/user' }\">User Account</a></li>\n                <li><a href=\"pages-profile.html\">User Role</a></li>\n                <li><a href=\"pages-profile.html\">Location</a></li>\n            </ul>\n        </li>\n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-file-text-o\"></span> <span class=\"xn-text\">Layouts</span></a>\n            <ul>\n                <li><a href=\"layout-boxed.html\">Boxed</a></li>\n                <li><a href=\"layout-nav-toggled.html\">Navigation Toggled</a></li>\n                <li><a href=\"layout-nav-top.html\">Navigation Top</a></li>\n                <li><a href=\"layout-nav-right.html\">Navigation Right</a></li>\n                <li><a href=\"layout-nav-top-fixed.html\">Top Navigation Fixed</a></li>                            \n                <li><a href=\"layout-nav-custom.html\">Custom Navigation</a></li>\n                <li><a href=\"layout-frame-left.html\">Frame Left Column</a></li>\n                <li><a href=\"layout-frame-right.html\">Frame Right Column</a></li>\n                <li><a href=\"layout-search-left.html\">Search Left Side</a></li>\n                <li><a href=\"blank.html\">Blank Page</a></li>\n            </ul>\n        </li>        \n    </ul>\n    <!-- END X-NAVIGATION -->\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
@@ -13378,8 +14685,46 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5ff135ee", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":2}],8:[function(require,module,exports){
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"login-container\">        \n  <div class=\"login-box animated fadeInDown\">\n    <div class=\"login-logo\"></div>\n    <div class=\"login-body\">\n      <div class=\"login-title\"><strong>Welcome</strong>, Please login</div>\n      <form action=\"index.html\" class=\"form-horizontal\" method=\"post\">\n      <div class=\"form-group\">\n        <div class=\"col-md-12\">\n          <input type=\"text\" class=\"form-control\" placeholder=\"Username\">\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"col-md-12\">\n          <input type=\"password\" class=\"form-control\" placeholder=\"Password\">\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <div class=\"col-md-6\">\n          <a href=\"#\" class=\"btn btn-link btn-block\">Forgot your password?</a>\n        </div>\n        <div class=\"col-md-6\">\n          <button class=\"btn btn-info btn-block\">Log In</button>\n        </div>\n      </div>\n      </form>\n    </div>\n  </div>            \n</div>\n"
+},{"vue":5,"vue-hot-reload-api":2}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _auth = require('../auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  data: function data() {
+    return {
+      credential: {
+        user_name: '',
+        password: ''
+      },
+
+      valid_creds: null
+    };
+  },
+
+
+  methods: {
+    login: function login() {
+      var _this = this;
+
+      _auth2.default.login(this, this.credential, '/').then(function (response) {
+        _this.valid_creds = true;
+      }, function (err) {
+        _this.valid_creds = false;
+      });
+    }
+  }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"login-container\">        \n  <div class=\"login-box animated fadeInDown\">\n    <div class=\"login-logo\"></div>\n    <div class=\"login-body\">\n      <div class=\"login-title\"><strong>Welcome</strong>, Please login</div>\n      <form action=\"index.html\" class=\"form-horizontal\" method=\"post\">\n        <div class=\"form-group\" v-show=\"!valid_creds &amp;&amp; valid_creds !== null\">\n          <span class=\"col-md-12 help-block text-danger\" style=\"text-align: center;\">Your username or password are invalid</span>\n        </div>\n        <div class=\"form-group\">\n          <div class=\"col-md-12\">\n            <input type=\"text\" class=\"form-control\" placeholder=\"Username\" v-model=\"credential.user_name\">\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <div class=\"col-md-12\">\n            <input type=\"password\" class=\"form-control\" placeholder=\"Password\" v-model=\"credential.password\">\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <div class=\"col-md-6\">\n            <a href=\"#\" class=\"btn btn-link btn-block\">Forgot your password?</a>\n          </div>\n          <div class=\"col-md-6\">\n            <button class=\"btn btn-info btn-block\" @click.prevent=\"login()\">Log In</button>\n          </div>\n        </div>\n      </form>\n    </div>\n  </div>            \n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -13390,8 +14735,28 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-25a354f6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":2}],9:[function(require,module,exports){
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"message-box animated fadeIn\" data-sound=\"alert\" id=\"mb-signout\">\n    <div class=\"mb-container\">\n      <div class=\"mb-middle\">\n        <div class=\"mb-title\"><span class=\"fa fa-sign-out\"></span> Log <strong>Out</strong> ?</div>\n        <div class=\"mb-content\">\n          <p>Are you sure you want to log out?</p>                    \n          <p>Press No if youwant to continue work. Press Yes to logout current user.</p>\n        </div>\n        <div class=\"mb-footer\">\n          <div class=\"pull-right\">\n              <a href=\"pages-login.html\" class=\"btn btn-success btn-lg\">Yes</a>\n              <button class=\"btn btn-default btn-lg mb-control-close\">No</button>\n          </div>\n        </div>\n      </div>\n    </div>\n\t</div>\n"
+},{"../auth":6,"vue":5,"vue-hot-reload-api":2}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _auth = require('../auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  methods: {
+    logout: function logout() {
+      _auth2.default.logout();
+    }
+  }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"message-box animated fadeIn\" data-sound=\"alert\" id=\"mb-signout\">\n    <div class=\"mb-container\">\n      <div class=\"mb-middle\">\n        <div class=\"mb-title\"><span class=\"fa fa-sign-out\"></span> Log <strong>Out</strong> ?</div>\n        <div class=\"mb-content\">\n          <p>Are you sure you want to log out?</p>                    \n          <p>Press No if youwant to continue work. Press Yes to logout current user.</p>\n        </div>\n        <div class=\"mb-footer\">\n          <div class=\"pull-right\">\n              <a href=\"pages-login.html\" class=\"btn btn-success btn-lg\" @click.prevent.stop=\"logout()\">Yes</a>\n              <button class=\"btn btn-default btn-lg mb-control-close\">No</button>\n          </div>\n        </div>\n      </div>\n    </div>\n\t</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -13402,7 +14767,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-05ad639e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":2}],10:[function(require,module,exports){
+},{"../auth":6,"vue":5,"vue-hot-reload-api":2}],11:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<!-- START X-NAVIGATION VERTICAL -->\n  <ul class=\"x-navigation x-navigation-horizontal x-navigation-panel\">\n      <!-- TOGGLE NAVIGATION -->\n      <li class=\"xn-icon-button\">\n          <a href=\"#\" class=\"x-navigation-minimize\"><span class=\"fa fa-dedent\"></span></a>\n      </li>\n      <!-- END TOGGLE NAVIGATION -->\n      <!-- SEARCH -->\n      <li class=\"xn-search\">\n          <form role=\"form\">\n              <input type=\"text\" name=\"search\" placeholder=\"Search...\">\n          </form>\n      </li>   \n      <!-- END SEARCH -->\n      <!-- SIGN OUT -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\" class=\"mb-control\" data-box=\"#mb-signout\"><span class=\"fa fa-sign-out\"></span></a>                        \n      </li> \n      <!-- END SIGN OUT -->\n      <!-- MESSAGES -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\"><span class=\"fa fa-comments\"></span></a>\n          <div class=\"informer informer-danger\">4</div>\n          <div class=\"panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging\">\n              <div class=\"panel-heading\">\n                  <h3 class=\"panel-title\"><span class=\"fa fa-comments\"></span> Messages</h3>                                \n                  <div class=\"pull-right\">\n                      <span class=\"label label-danger\">4 new</span>\n                  </div>\n              </div>\n              <div class=\"panel-body list-group list-group-contacts scroll\" style=\"height: 200px;\">\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-online\"></div>\n                      <img src=\"assets/images/users/user2.jpg\" class=\"pull-left\" alt=\"John Doe\">\n                      <span class=\"contacts-title\">John Doe</span>\n                      <p>Praesent placerat tellus id augue condimentum</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-away\"></div>\n                      <img src=\"assets/images/users/user.jpg\" class=\"pull-left\" alt=\"Dmitry Ivaniuk\">\n                      <span class=\"contacts-title\">Dmitry Ivaniuk</span>\n                      <p>Donec risus sapien, sagittis et magna quis</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-away\"></div>\n                      <img src=\"assets/images/users/user3.jpg\" class=\"pull-left\" alt=\"Nadia Ali\">\n                      <span class=\"contacts-title\">Nadia Ali</span>\n                      <p>Mauris vel eros ut nunc rhoncus cursus sed</p>\n                  </a>\n                  <a href=\"#\" class=\"list-group-item\">\n                      <div class=\"list-group-status status-offline\"></div>\n                      <img src=\"assets/images/users/user6.jpg\" class=\"pull-left\" alt=\"Darth Vader\">\n                      <span class=\"contacts-title\">Darth Vader</span>\n                      <p>I want my money back!</p>\n                  </a>\n              </div>     \n              <div class=\"panel-footer text-center\">\n                  <a href=\"pages-messages.html\">Show all messages</a>\n              </div>                            \n          </div>                        \n      </li>\n      <!-- END MESSAGES -->\n      <!-- TASKS -->\n      <li class=\"xn-icon-button pull-right\">\n          <a href=\"#\"><span class=\"fa fa-tasks\"></span></a>\n          <div class=\"informer informer-warning\">3</div>\n          <div class=\"panel panel-primary animated zoomIn xn-drop-left xn-panel-dragging\">\n              <div class=\"panel-heading\">\n                  <h3 class=\"panel-title\"><span class=\"fa fa-tasks\"></span> Tasks</h3>                                \n                  <div class=\"pull-right\">\n                      <span class=\"label label-warning\">3 active</span>\n                  </div>\n              </div>\n              <div class=\"panel-body list-group scroll\" style=\"height: 200px;\">                                \n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Phasellus augue arcu, elementum</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-danger\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 50%;\">50%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 25 Sep 2014 / 50%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Aenean ac cursus</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-warning\" role=\"progressbar\" aria-valuenow=\"80\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 80%;\">80%</div>\n                      </div>\n                      <small class=\"text-muted\">Dmitry Ivaniuk, 24 Sep 2014 / 80%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Lorem ipsum dolor</strong>\n                      <div class=\"progress progress-small progress-striped active\">\n                          <div class=\"progress-bar progress-bar-success\" role=\"progressbar\" aria-valuenow=\"95\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 95%;\">95%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 23 Sep 2014 / 95%</small>\n                  </a>\n                  <a class=\"list-group-item\" href=\"#\">\n                      <strong>Cras suscipit ac quam at tincidunt.</strong>\n                      <div class=\"progress progress-small\">\n                          <div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"100\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 100%;\">100%</div>\n                      </div>\n                      <small class=\"text-muted\">John Doe, 21 Sep 2014 /</small><small class=\"text-success\"> Done</small>\n                  </a>                                \n              </div>     \n              <div class=\"panel-footer text-center\">\n                  <a href=\"pages-tasks.html\">Show all tasks</a>\n              </div>                            \n          </div>                        \n      </li>\n      <!-- END TASKS -->\n  </ul>\n  <!-- END X-NAVIGATION VERTICAL -->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
@@ -13414,7 +14779,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-17fc7820", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":2}],11:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13437,7 +14802,7 @@ function currency(value, currency, decimals) {
   return sign + currency + head + _int.slice(i).replace(digitsRE, '$1,') + _float;
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13472,7 +14837,7 @@ function deleteCookie(name) {
     if (getCookie(name)) setCookie(name, "", -1);
 }
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -13482,6 +14847,10 @@ var _vue2 = _interopRequireDefault(_vue);
 var _vueRouter = require('vue-router');
 
 var _vueRouter2 = _interopRequireDefault(_vueRouter);
+
+var _vueResource = require('vue-resource');
+
+var _vueResource2 = _interopRequireDefault(_vueResource);
 
 var _App = require('./components/App.vue');
 
@@ -13500,6 +14869,7 @@ var _auth2 = _interopRequireDefault(_auth);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.use(_vueRouter2.default);
+_vue2.default.use(_vueResource2.default);
 
 _vue2.default.filter('currency', _currency.currency);
 
@@ -13510,12 +14880,8 @@ var router = new _vueRouter2.default({
 });
 
 router.map({
-  '/a': {
+  '/': {
     component: { template: 'A' }
-  },
-
-  '/b': {
-    component: { template: 'B' }
   }
 });
 
@@ -13541,7 +14907,7 @@ router.start({
   }
 }, '#app');
 
-},{"./auth":5,"./components/App.vue":6,"./components/Signin.vue":8,"./currency":11,"vue":4,"vue-router":3}],14:[function(require,module,exports){
+},{"./auth":6,"./components/App.vue":7,"./components/Signin.vue":9,"./currency":12,"vue":5,"vue-resource":3,"vue-router":4}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14076,7 +15442,7 @@ Object.size = function (obj) {
 };
 /* EOF NEW OBJECT(GET SIZE OF ARRAY) */
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14688,6 +16054,6 @@ Object.size = function (obj) {
     return size;
 };
 
-},{}]},{},[13]);
+},{}]},{},[14]);
 
 //# sourceMappingURL=app.js.map
