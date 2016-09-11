@@ -14624,7 +14624,7 @@ exports.default = {
   }
 };
 
-},{"./functions":13}],7:[function(require,module,exports){
+},{"./functions":15}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14673,8 +14673,8 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7817bbce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../ui/actions.js":15,"../ui/plugins.js":16,"./Sidebar.vue":8,"./Signout.vue":10,"./VNav.vue":11,"vue":5,"vue-hot-reload-api":2}],8:[function(require,module,exports){
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-sidebar page-sidebar-fixed scroll\">\n    <!-- START X-NAVIGATION -->\n    <ul class=\"x-navigation x-navigation-custom\">\n        <li class=\"xn-logo\">\n            <a href=\"index.html\">Joli Admin</a>\n            <a href=\"#\" class=\"x-navigation-control\"></a>\n        </li>\n        <li class=\"xn-title\">Navigation</li>\n        <li class=\"active\">\n            <a v-link=\"{ path: '/' }\"><span class=\"fa fa-desktop\"></span> <span class=\"xn-text\">Dashboard</span></a>                        \n        </li>                    \n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-files-o\"></span> <span class=\"xn-text\">Setup</span></a>\n            <ul>                \n                <li><a href=\"pages-profile.html\">Customer</a></li>\n                <li><a href=\"pages-profile.html\">Loan Group</a></li>\n                <li><a href=\"pages-profile.html\">Chart of Account</a></li>\n                <li><a href=\"pages-gallery.html\">Exchange Rate</a></li>\n                <li><a href=\"pages-gallery.html\">Identity Type</a></li>\n                <li><a v-link=\"{ path: '/user' }\">User Account</a></li>\n                <li><a href=\"pages-profile.html\">User Role</a></li>\n                <li><a href=\"pages-profile.html\">Location</a></li>\n            </ul>\n        </li>\n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-file-text-o\"></span> <span class=\"xn-text\">Layouts</span></a>\n            <ul>\n                <li><a href=\"layout-boxed.html\">Boxed</a></li>\n                <li><a href=\"layout-nav-toggled.html\">Navigation Toggled</a></li>\n                <li><a href=\"layout-nav-top.html\">Navigation Top</a></li>\n                <li><a href=\"layout-nav-right.html\">Navigation Right</a></li>\n                <li><a href=\"layout-nav-top-fixed.html\">Top Navigation Fixed</a></li>                            \n                <li><a href=\"layout-nav-custom.html\">Custom Navigation</a></li>\n                <li><a href=\"layout-frame-left.html\">Frame Left Column</a></li>\n                <li><a href=\"layout-frame-right.html\">Frame Right Column</a></li>\n                <li><a href=\"layout-search-left.html\">Search Left Side</a></li>\n                <li><a href=\"blank.html\">Blank Page</a></li>\n            </ul>\n        </li>        \n    </ul>\n    <!-- END X-NAVIGATION -->\n</div>\n"
+},{"../ui/actions.js":17,"../ui/plugins.js":18,"./Sidebar.vue":8,"./Signout.vue":10,"./VNav.vue":11,"vue":5,"vue-hot-reload-api":2}],8:[function(require,module,exports){
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-sidebar page-sidebar-fixed scroll\">\n    <!-- START X-NAVIGATION -->\n    <ul class=\"x-navigation x-navigation-custom\">\n        <li class=\"xn-logo\">\n            <a href=\"index.html\">Joli Admin</a>\n            <a href=\"#\" class=\"x-navigation-control\"></a>\n        </li>\n        <li class=\"xn-title\">Navigation</li>\n        <li class=\"active\">\n            <a v-link=\"{ path: '/' }\"><span class=\"fa fa-desktop\"></span> <span class=\"xn-text\">Dashboard</span></a>                        \n        </li>                    \n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-files-o\"></span> <span class=\"xn-text\">Setup</span></a>\n            <ul>                \n                <li><a href=\"pages-profile.html\">Customer</a></li>\n                <li><a href=\"pages-profile.html\">Loan Group</a></li>\n                <li><a href=\"pages-profile.html\">Chart of Account</a></li>\n                <li><a href=\"pages-gallery.html\">Exchange Rate</a></li>\n                <li><a href=\"pages-gallery.html\">Identity Type</a></li>\n                <li><a v-link=\"{ path: '/user' }\">User Account</a></li>\n                <li><a href=\"pages-profile.html\">User Role</a></li>\n                <li><a v-link=\"{ path: '/location' }\">Location</a></li>\n            </ul>\n        </li>\n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-file-text-o\"></span> <span class=\"xn-text\">Layouts</span></a>\n            <ul>\n                <li><a href=\"layout-boxed.html\">Boxed</a></li>\n                <li><a href=\"layout-nav-toggled.html\">Navigation Toggled</a></li>\n                <li><a href=\"layout-nav-top.html\">Navigation Top</a></li>\n                <li><a href=\"layout-nav-right.html\">Navigation Right</a></li>\n                <li><a href=\"layout-nav-top-fixed.html\">Top Navigation Fixed</a></li>                            \n                <li><a href=\"layout-nav-custom.html\">Custom Navigation</a></li>\n                <li><a href=\"layout-frame-left.html\">Frame Left Column</a></li>\n                <li><a href=\"layout-frame-right.html\">Frame Right Column</a></li>\n                <li><a href=\"layout-search-left.html\">Search Left Side</a></li>\n                <li><a href=\"blank.html\">Blank Page</a></li>\n            </ul>\n        </li>        \n    </ul>\n    <!-- END X-NAVIGATION -->\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14783,6 +14783,54 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _Province = require('./Province.vue');
+
+var _Province2 = _interopRequireDefault(_Province);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+	components: {
+		Province: _Province2.default
+	},
+
+	data: function data() {
+		return {
+			current_view: 'Province'
+		};
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n    <component :is=\"current_view\"></component>\n\t</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-afdf6de4", module.exports)
+  } else {
+    hotAPI.update("_v-afdf6de4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./Province.vue":13,"vue":5,"vue-hot-reload-api":2}],13:[function(require,module,exports){
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel-heading\">                                \n      <h3 class=\"panel-title\">Province</h3>\n      <ul class=\"panel-controls\">\n          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n      </ul>                                \n  </div>\n  <div class=\"panel-body\">\n      <table class=\"table datatable\">\n          <thead>\n              <tr>\n                  <th>Name</th>\n                  <th>Position</th>\n                  <th>Office</th>\n                  <th>Age</th>\n                  <th>Start date</th>\n                  <th>Salary</th>\n              </tr>\n          </thead>\n          <tbody>\n              <tr>\n                  <td>Tiger Nixon</td>\n                  <td>System Architect</td>\n                  <td>Edinburgh</td>\n                  <td>61</td>\n                  <td>2011/04/25</td>\n                  <td>$320,800</td>\n              </tr>\n              <tr>\n                  <td>Garrett Winters</td>\n                  <td>Accountant</td>\n                  <td>Tokyo</td>\n                  <td>63</td>\n                  <td>2011/07/25</td>\n                  <td>$170,750</td>\n              </tr>                \n          </tbody>\n      </table>\n  </div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-bb8126b8", module.exports)
+  } else {
+    hotAPI.update("_v-bb8126b8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":5,"vue-hot-reload-api":2}],14:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.currency = currency;
@@ -14802,7 +14850,7 @@ function currency(value, currency, decimals) {
   return sign + currency + head + _int.slice(i).replace(digitsRE, '$1,') + _float;
 }
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14837,7 +14885,7 @@ function deleteCookie(name) {
     if (getCookie(name)) setCookie(name, "", -1);
 }
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -14880,8 +14928,8 @@ var router = new _vueRouter2.default({
 });
 
 router.map({
-  '/': {
-    component: { template: 'A' }
+  '/location': {
+    component: require('./components/locations/Index.vue')
   }
 });
 
@@ -14907,7 +14955,7 @@ router.start({
   }
 }, '#app');
 
-},{"./auth":6,"./components/App.vue":7,"./components/Signin.vue":9,"./currency":12,"vue":5,"vue-resource":3,"vue-router":4}],15:[function(require,module,exports){
+},{"./auth":6,"./components/App.vue":7,"./components/Signin.vue":9,"./components/locations/Index.vue":12,"./currency":14,"vue":5,"vue-resource":3,"vue-router":4}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15442,7 +15490,7 @@ Object.size = function (obj) {
 };
 /* EOF NEW OBJECT(GET SIZE OF ARRAY) */
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15602,24 +15650,25 @@ function initJoliPlugins() {
     var uiElements = function () {
 
         //Datatables
-        var uiDatatable = function uiDatatable() {
-            if ($(".datatable").length > 0) {
-                $(".datatable").dataTable();
-                $(".datatable").on('page.dt', function () {
-                    onresize(100);
-                });
-            }
+        var uiDatatable = function uiDatatable() {}
+        // if($(".datatable").length > 0){                
+        //     $(".datatable").dataTable();
+        //     $(".datatable").on('page.dt',function () {
+        //         onresize(100);
+        //     });
+        // }
 
-            if ($(".datatable_simple").length > 0) {
-                $(".datatable_simple").dataTable({ "ordering": false, "info": false, "lengthChange": false, "searching": false });
-                $(".datatable_simple").on('page.dt', function () {
-                    onresize(100);
-                });
-            }
-        }; //END Datatable        
+        // if($(".datatable_simple").length > 0){                
+        //     $(".datatable_simple").dataTable({"ordering": false, "info": false, "lengthChange": false,"searching": false});
+        //     $(".datatable_simple").on('page.dt',function () {
+        //         onresize(100);
+        //     });                
+        // }            
+
+        //END Datatable        
 
         //RangeSlider // This function can be removed or cleared.
-        var uiRangeSlider = function uiRangeSlider() {
+        ;var uiRangeSlider = function uiRangeSlider() {
 
             //Default Slider with start value
             if ($(".defaultSlider").length > 0) {
@@ -16054,6 +16103,6 @@ Object.size = function (obj) {
     return size;
 };
 
-},{}]},{},[14]);
+},{}]},{},[16]);
 
 //# sourceMappingURL=app.js.map

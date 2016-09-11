@@ -20,7 +20,7 @@
 	                <li><a href="pages-gallery.html">Identity Type</a></li>
 	                <li><a v-link="{ path: '/user' }">User Account</a></li>
 	                <li><a href="pages-profile.html">User Role</a></li>
-	                <li><a href="pages-profile.html">Location</a></li>
+	                <li><a v-link="{ path: '/location' }">Location</a></li>
 	            </ul>
 	        </li>
 	        <li class="xn-openable">

@@ -18,8 +18,8 @@ const router = new VueRouter({
 });
 
 router.map({
-	'/':{
-		component: { template: 'A'}
+	'/location':{
+		component: require('./components/locations/Index.vue')
 	}
 });
 
