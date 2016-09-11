@@ -25,5 +25,7 @@ $api->version('v1', function ($api) {
     $api->get('users', 'App\Http\Controllers\UserController@getUsers');
     $api->get('user/{user_name}', 'App\Http\Controllers\UserController@userExist');
     $api->post('user', 'App\Http\Controllers\UserController@store');
+
+    $api->get('provinces', 'App\Http\Controllers\ProvinceController@index');
   });
 });
