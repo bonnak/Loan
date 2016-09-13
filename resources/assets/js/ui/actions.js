@@ -251,7 +251,7 @@ export function initJoliActions(){
         page_content_onresize();
     });
 
-    showPageLoadingProgressbar();
+    //showPageLoadingProgressbar();
 }
 
 function showPageLoadingProgressbar(){
@@ -538,7 +538,7 @@ function x_navigation(){
 /* EOF X-NAVIGATION CONTROL FUNCTIONS */
 
 /* PAGE ON RESIZE WITH TIMEOUT */
-function onresize(timeout){    
+export function onresize(timeout){    
     timeout = timeout ? timeout : 200;
 
     setTimeout(function(){

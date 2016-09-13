@@ -18,7 +18,7 @@
 	              </tr>
 	          </thead>
 	          <tbody>
-	              <tr v-for="province in provinces">
+	              <tr v-for="province in provinces" v-demo>
                   <td>{{ province.code }}</td>
                   <td>{{ province.name_en }}</td>
                   <td>{{ province.name_kh }}</td>                  
@@ -30,10 +30,13 @@
 </template>
 
 <script>
+// import { onresize } from '../../ui/actions.js'
+
 export default{
 	data(){
 		return {
-			provinces: []
+			provinces: [],
+			v_test: 0
 		}
 	},
 
@@ -42,6 +45,9 @@ export default{
 		.then(
 			(response) => {
 				this.provinces = response.data.provinces;
+				// this.$nextTick(function () {
+	   //      onresize();
+	   //    });
       },
       (error) => {
         console.log(error);

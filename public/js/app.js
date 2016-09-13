@@ -14847,10 +14847,15 @@ if (module.hot) {(function () {  module.hot.accept()
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+
+
+// import { onresize } from '../../ui/actions.js'
+
 exports.default = {
 	data: function data() {
 		return {
-			provinces: []
+			provinces: [],
+			v_test: 0
 		};
 	},
 	created: function created() {
@@ -14858,13 +14863,16 @@ exports.default = {
 
 		this.$http.get('/api/provinces').then(function (response) {
 			_this.provinces = response.data.provinces;
+			// this.$nextTick(function () {
+			//      onresize();
+			//    });
 		}, function (error) {
 			console.log(error);
 		});
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <table class=\"table datatable\">\n\t          <thead>\n\t              <tr>\n                  <th>Code</th>\n                  <th>Name_EN</th>\n                  <th>Name_KH</th>\n\t              </tr>\n\t          </thead>\n\t          <tbody>\n\t              <tr v-for=\"province in provinces\">\n                  <td>{{ province.code }}</td>\n                  <td>{{ province.name_en }}</td>\n                  <td>{{ province.name_kh }}</td>                  \n\t              </tr>               \n\t          </tbody>\n\t      </table>\n\t  </div>\n  </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <table class=\"table datatable\">\n\t          <thead>\n\t              <tr>\n                  <th>Code</th>\n                  <th>Name_EN</th>\n                  <th>Name_KH</th>\n\t              </tr>\n\t          </thead>\n\t          <tbody>\n\t              <tr v-for=\"province in provinces\" v-demo=\"\">\n                  <td>{{ province.code }}</td>\n                  <td>{{ province.name_en }}</td>\n                  <td>{{ province.name_kh }}</td>                  \n\t              </tr>               \n\t          </tbody>\n\t      </table>\n\t  </div>\n  </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14962,12 +14970,28 @@ var _auth = require('./auth');
 
 var _auth2 = _interopRequireDefault(_auth);
 
+var _actions = require('./ui/actions.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue2.default.use(_vueRouter2.default);
 _vue2.default.use(_vueResource2.default);
 
 _vue2.default.filter('currency', _currency.currency);
+
+_vue2.default.directive('demo', {
+  bind: function bind() {
+    console.log('demo bound!');
+  },
+  update: function update(newValue, oldValue) {
+    console.log('show:  ');
+    (0, _actions.onresize)();
+  },
+  unbind: function unbind() {
+    // do clean up work
+    // e.g. remove event listeners added in bind()
+  }
+});
 
 _vue2.default.http.headers.common['Authorization'] = 'Bearer ' + _auth2.default.getAuthHeader().Authorization;
 
@@ -15005,13 +15029,14 @@ router.start({
   }
 }, '#app');
 
-},{"./auth":7,"./components/App.vue":8,"./components/Signin.vue":10,"./components/locations/Index.vue":13,"./currency":15,"vue":5,"vue-resource":3,"vue-router":4}],18:[function(require,module,exports){
+},{"./auth":7,"./components/App.vue":8,"./components/Signin.vue":10,"./components/locations/Index.vue":13,"./currency":15,"./ui/actions.js":18,"vue":5,"vue-resource":3,"vue-router":4}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.initJoliActions = initJoliActions;
+exports.onresize = onresize;
 function initJoliActions() {
 
     var html_click_avail = true;
@@ -15248,7 +15273,7 @@ function initJoliActions() {
         page_content_onresize();
     });
 
-    showPageLoadingProgressbar();
+    //showPageLoadingProgressbar();
 }
 
 function showPageLoadingProgressbar() {
