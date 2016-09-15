@@ -29,3 +29,10 @@ export default {
 	}
 }
 </script>
+
+<style>
+.kh{
+  font-family: "Hanuman";
+  font-size: 14px
+}
+</style>
