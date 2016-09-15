@@ -11,6 +11,7 @@
     <!-- END META SECTION -->
 
     <!-- CSS INCLUDE -->
+    <link href="https://fonts.googleapis.com/css?family=Hanuman" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" id="theme" href="{{ url('joli/css/theme-default.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url('css/app.css') }}"/>    
     <!-- EOF CSS INCLUDE -->
