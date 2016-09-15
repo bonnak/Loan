@@ -15,6 +15,6 @@ class ProvinceController extends Controller
 	 */
   public function getProvinces()
   {
-  	return Province::get();
+  	return Province::paginate($this->pagin_limit);
   }
 }
