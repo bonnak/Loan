@@ -16,9 +16,9 @@ class UserController extends Controller
 	 */
     public function getUsers(Request $request)
     {
-        $paginate_amount = request()->input('paginate_amount') ?: $this->paginate_amount;
+        $pagin_limit = request()->input('pagin_limit') ?: $this->pagin_limit;
 
-    	return User::with('role')->paginate($paginate_amount);
+    	return User::with('role')->paginate($pagin_limit);
     }
 
     /**
