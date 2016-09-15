@@ -16,12 +16,13 @@ class ProvinceTest extends TestCase
 
   	$this->get('/api/provinces', $this->headers($user))
      ->seeJsonStructure([
-        'provinces' => [
-	        '*' => [
-	            'name_kh',
-	            'name_en'
-	        ]
-        ]
+        'data' => [
+          '*' => [
+              'code',
+              'name_en',
+              'name_kh'
+          ]
+       ]
      ]);
   }
 }
