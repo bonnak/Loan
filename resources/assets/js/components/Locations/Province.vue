@@ -9,7 +9,7 @@
 	      </ul>                                
 	  </div>
 	  <div class="panel-body">
-	      <table class="table datatable">
+	      <table class="table datatable_simple">
 	          <thead>
 	              <tr>
                   <th>Code</th>
@@ -18,10 +18,10 @@
 	              </tr>
 	          </thead>
 	          <tbody>
-	              <tr v-for="province in provinces" v-demo>
+	              <tr v-for="province in provinces" v-render-plugin>
                   <td>{{ province.code }}</td>
                   <td>{{ province.name_en }}</td>
-                  <td>{{ province.name_kh }}</td>                  
+                  <td class="kh">{{ province.name_kh }}</td>                  
 	              </tr>               
 	          </tbody>
 	      </table>
