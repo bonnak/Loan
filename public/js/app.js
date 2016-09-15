@@ -14644,7 +14644,9 @@ exports.default = {
   }
 };
 
-},{"./functions":16}],8:[function(require,module,exports){
+},{"./functions":17}],8:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.kh{\n  font-family: \"Hanuman\";\n  font-size: 14px\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14687,13 +14689,17 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.kh{\n  font-family: \"Hanuman\";\n  font-size: 14px\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-7817bbce", module.exports)
   } else {
     hotAPI.update("_v-7817bbce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../ui/actions.js":18,"../ui/plugins.js":19,"./Sidebar.vue":9,"./Signout.vue":11,"./VNav.vue":12,"vue":5,"vue-hot-reload-api":2}],9:[function(require,module,exports){
+},{"../ui/actions.js":19,"../ui/plugins.js":20,"./Sidebar.vue":9,"./Signout.vue":11,"./VNav.vue":12,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],9:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-sidebar page-sidebar-fixed scroll\">\n    <!-- START X-NAVIGATION -->\n    <ul class=\"x-navigation x-navigation-custom\">\n        <li class=\"xn-logo\">\n            <a href=\"index.html\">Joli Admin</a>\n            <a href=\"#\" class=\"x-navigation-control\"></a>\n        </li>\n        <li class=\"xn-title\">Navigation</li>\n        <li class=\"active\">\n            <a v-link=\"{ path: '/' }\"><span class=\"fa fa-desktop\"></span> <span class=\"xn-text\">Dashboard</span></a>                        \n        </li>                    \n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-files-o\"></span> <span class=\"xn-text\">Setup</span></a>\n            <ul>                \n                <li><a href=\"pages-profile.html\">Customer</a></li>\n                <li><a href=\"pages-profile.html\">Loan Group</a></li>\n                <li><a href=\"pages-profile.html\">Chart of Account</a></li>\n                <li><a href=\"pages-gallery.html\">Exchange Rate</a></li>\n                <li><a href=\"pages-gallery.html\">Identity Type</a></li>\n                <li><a v-link=\"{ path: '/user' }\">User Account</a></li>\n                <li><a href=\"pages-profile.html\">User Role</a></li>\n                <li><a v-link=\"{ path: '/location' }\">Location</a></li>\n            </ul>\n        </li>\n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-file-text-o\"></span> <span class=\"xn-text\">Layouts</span></a>\n            <ul>\n                <li><a href=\"layout-boxed.html\">Boxed</a></li>\n                <li><a href=\"layout-nav-toggled.html\">Navigation Toggled</a></li>\n                <li><a href=\"layout-nav-top.html\">Navigation Top</a></li>\n                <li><a href=\"layout-nav-right.html\">Navigation Right</a></li>\n                <li><a href=\"layout-nav-top-fixed.html\">Top Navigation Fixed</a></li>                            \n                <li><a href=\"layout-nav-custom.html\">Custom Navigation</a></li>\n                <li><a href=\"layout-frame-left.html\">Frame Left Column</a></li>\n                <li><a href=\"layout-frame-right.html\">Frame Right Column</a></li>\n                <li><a href=\"layout-search-left.html\">Search Left Side</a></li>\n                <li><a href=\"blank.html\">Blank Page</a></li>\n            </ul>\n        </li>        \n    </ul>\n    <!-- END X-NAVIGATION -->\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
@@ -14872,7 +14878,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <table class=\"table datatable\">\n\t          <thead>\n\t              <tr>\n                  <th>Code</th>\n                  <th>Name_EN</th>\n                  <th>Name_KH</th>\n\t              </tr>\n\t          </thead>\n\t          <tbody>\n\t              <tr v-for=\"province in provinces\" v-demo=\"\">\n                  <td>{{ province.code }}</td>\n                  <td>{{ province.name_en }}</td>\n                  <td>{{ province.name_kh }}</td>                  \n\t              </tr>               \n\t          </tbody>\n\t      </table>\n\t  </div>\n  </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <table class=\"table datatable_simple\">\n\t          <thead>\n\t              <tr>\n                  <th>Code</th>\n                  <th>Name_EN</th>\n                  <th>Name_KH</th>\n\t              </tr>\n\t          </thead>\n\t          <tbody>\n\t              <tr v-for=\"province in provinces\" v-render-plugin=\"\">\n                  <td>{{ province.code }}</td>\n                  <td>{{ province.name_en }}</td>\n                  <td class=\"kh\">{{ province.name_kh }}</td>                  \n\t              </tr>               \n\t          </tbody>\n\t      </table>\n\t  </div>\n  </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14910,6 +14916,23 @@ function currency(value, currency, decimals) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _actions = require('../ui/actions.js');
+
+exports.default = {
+  bind: function bind() {},
+  update: function update(newValue, oldValue) {
+    (0, _actions.onresize)();
+  },
+  unbind: function unbind() {}
+};
+
+},{"../ui/actions.js":19}],17:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.getCookie = getCookie;
@@ -14941,7 +14964,7 @@ function deleteCookie(name) {
     if (getCookie(name)) setCookie(name, "", -1);
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -14970,7 +14993,9 @@ var _auth = require('./auth');
 
 var _auth2 = _interopRequireDefault(_auth);
 
-var _actions = require('./ui/actions.js');
+var _RenderPlugin = require('./directives/RenderPlugin');
+
+var _RenderPlugin2 = _interopRequireDefault(_RenderPlugin);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -14979,19 +15004,7 @@ _vue2.default.use(_vueResource2.default);
 
 _vue2.default.filter('currency', _currency.currency);
 
-_vue2.default.directive('demo', {
-  bind: function bind() {
-    console.log('demo bound!');
-  },
-  update: function update(newValue, oldValue) {
-    console.log('show:  ');
-    (0, _actions.onresize)();
-  },
-  unbind: function unbind() {
-    // do clean up work
-    // e.g. remove event listeners added in bind()
-  }
-});
+_vue2.default.directive('RenderPlugin', _RenderPlugin2.default);
 
 _vue2.default.http.headers.common['Authorization'] = 'Bearer ' + _auth2.default.getAuthHeader().Authorization;
 
@@ -15029,7 +15042,7 @@ router.start({
   }
 }, '#app');
 
-},{"./auth":7,"./components/App.vue":8,"./components/Signin.vue":10,"./components/locations/Index.vue":13,"./currency":15,"./ui/actions.js":18,"vue":5,"vue-resource":3,"vue-router":4}],18:[function(require,module,exports){
+},{"./auth":7,"./components/App.vue":8,"./components/Signin.vue":10,"./components/locations/Index.vue":13,"./currency":15,"./directives/RenderPlugin":16,"vue":5,"vue-resource":3,"vue-router":4}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15565,7 +15578,7 @@ Object.size = function (obj) {
 };
 /* EOF NEW OBJECT(GET SIZE OF ARRAY) */
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15725,25 +15738,25 @@ function initJoliPlugins() {
     var uiElements = function () {
 
         //Datatables
-        var uiDatatable = function uiDatatable() {
-            if ($(".datatable").length > 0) {
-                $(".datatable").dataTable();
-                $(".datatable").on('page.dt', function () {
-                    onresize(100);
-                });
-            }
+        var uiDatatable = function uiDatatable() {}
+        // if($(".datatable").length > 0){                
+        //     $(".datatable").dataTable();
+        //     $(".datatable").on('page.dt',function () {
+        //         onresize(100);
+        //     });
+        // }
 
-            if ($(".datatable_simple").length > 0) {
-                $(".datatable_simple").dataTable({ "ordering": false, "info": false, "lengthChange": false, "searching": false });
-                $(".datatable_simple").on('page.dt', function () {
-                    onresize(100);
-                });
-            }
-        };
+        // if($(".datatable_simple").length > 0){                
+        //     $(".datatable_simple").dataTable({"ordering": false, "info": false, "lengthChange": false,"searching": false});
+        //     $(".datatable_simple").on('page.dt',function () {
+        //         onresize(100);
+        //     });                
+        // }            
+
         //END Datatable        
 
         //RangeSlider // This function can be removed or cleared.
-        var uiRangeSlider = function uiRangeSlider() {
+        ;var uiRangeSlider = function uiRangeSlider() {
 
             //Default Slider with start value
             if ($(".defaultSlider").length > 0) {
@@ -16178,6 +16191,6 @@ Object.size = function (obj) {
     return size;
 };
 
-},{}]},{},[17]);
+},{}]},{},[18]);
 
 //# sourceMappingURL=app.js.map
