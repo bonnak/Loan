@@ -7,6 +7,7 @@
   	</div>
   </div>
   <signout></signout>
+  <modal-box></modal-box>
 </template>
 
 <script>
@@ -15,12 +16,14 @@ import { initJoliActions } from '../ui/actions.js'
 import Sidebar from './Sidebar.vue'
 import VNav from './VNav.vue'
 import Signout from './Signout.vue'
+import ModalBox from './ModalBox.vue'
 
 export default {
   components: { 
   	Sidebar,
   	VNav,
-  	Signout
+  	Signout,
+    ModalBox
   },
 
   ready(){

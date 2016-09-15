@@ -15,13 +15,17 @@
                   <th>Code</th>
                   <th>Name_EN</th>
                   <th>Name_KH</th>
+                  <th>Action</th>
 	              </tr>
 	          </thead>
 	          <tbody>
 	              <tr v-for="province in provinces" v-render-plugin>
                   <td>{{ province.code }}</td>
                   <td>{{ province.name_en }}</td>
-                  <td class="kh">{{ province.name_kh }}</td>                  
+                  <td class="kh">{{ province.name_kh }}</td>   
+                  <td>
+                  	<button class="btn btn-info btn-tb-action active" @click.prevent="showModal()"><span class="fa fa-pencil"></span></button>
+                  </td>               
 	              </tr>               
 	          </tbody>
 	      </table>
@@ -30,8 +34,6 @@
 </template>
 
 <script>
-// import { onresize } from '../../ui/actions.js'
-
 export default{
 	data(){
 		return {
@@ -45,14 +47,33 @@ export default{
 		.then(
 			(response) => {
 				this.provinces = response.data.provinces;
-				// this.$nextTick(function () {
-	   //      onresize();
-	   //    });
       },
       (error) => {
         console.log(error);
       }
 		);
+	},
+
+	methods: {
+		showModal(){
+			$('#modal-box').modal();
+		}		
 	}
 }
 </script>
+
+<style>
+.btn-tb-action{
+	display: flex;
+	align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;  
+}
+
+.btn-tb-action .fa, 
+.btn-tb-action .glyphicon{
+	margin-right: 0;
+}
+</style>
