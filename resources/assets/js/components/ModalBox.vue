@@ -1,5 +1,5 @@
 <template>
-	<div class="modal fade" id="modal-box" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal fade" :id="modalId" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -25,15 +25,22 @@
 <script>
 export default{
 	props:{
-		title: String
+		title: String,
+		modalId: { type: String, default: 'modal-box' }
 	},
 
 	ready(){
 		var self = this;
 
-		$('#modal-box').on('hidden.bs.modal', function (e) {
+		$('#' + this.modalId).on('hidden.bs.modal', function (e) {
 		  self.$dispatch('close-modal');
 		});
+	},
+
+	watch: {
+    'modalId': function (val, oldVal) {
+        console.log(oldVal + ' has been changed to ' + val + ' from outside.');
+    }
 	}
 }
 </script>

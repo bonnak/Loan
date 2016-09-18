@@ -77,7 +77,6 @@ export default	{
 
     showModal(data){    	
 			this.$dispatch('show-modal', data);
-			$('#modal-box').modal();
 		},
 
 		fnSortOrder(sort_order){
@@ -93,3 +92,19 @@ export default	{
   }
 }
 </script>
+
+<style scoped>
+.btn-tb-action{
+	display: flex;
+	align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;  
+}
+
+.btn-tb-action .fa, 
+.btn-tb-action .glyphicon{
+	margin-right: 0;
+}
+</style>

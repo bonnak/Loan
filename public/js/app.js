@@ -14709,19 +14709,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
 	props: {
-		title: String
+		title: String,
+		modalId: { type: String, default: 'modal-box' }
 	},
 
 	ready: function ready() {
 		var self = this;
 
-		$('#modal-box').on('hidden.bs.modal', function (e) {
+		$('#' + this.modalId).on('hidden.bs.modal', function (e) {
 			self.$dispatch('close-modal');
 		});
+	},
+
+
+	watch: {
+		'modalId': function modalId(val, oldVal) {
+			console.log(oldVal + ' has been changed to ' + val + ' from outside.');
+		}
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"modal fade\" id=\"modal-box\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" _v-56781dfe=\"\">\n    <div class=\"modal-dialog\" _v-56781dfe=\"\">\n      <div class=\"modal-content\" _v-56781dfe=\"\">\n        <div class=\"modal-header\" _v-56781dfe=\"\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" _v-56781dfe=\"\"><span aria-hidden=\"true\" _v-56781dfe=\"\">×</span><span class=\"sr-only\" _v-56781dfe=\"\">Close</span></button>\n          <h4 class=\"modal-title\" _v-56781dfe=\"\">{{ title }}</h4>\n        </div>\n        <div class=\"modal-body\" _v-56781dfe=\"\">\n          <div class=\"row\" _v-56781dfe=\"\">\n            <div class=\"col-md-12\" _v-56781dfe=\"\">\n              <slot _v-56781dfe=\"\"></slot>\n            </div>\n          </div>\n        </div>\n        <div class=\"modal-footer\" _v-56781dfe=\"\">\n        \t<slot name=\"footer\" _v-56781dfe=\"\"></slot>\n          <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" _v-56781dfe=\"\">Close</button>                        \n        </div>\n      </div>\n    </div>\n\t</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"modal fade\" :id=\"modalId\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" _v-56781dfe=\"\">\n    <div class=\"modal-dialog\" _v-56781dfe=\"\">\n      <div class=\"modal-content\" _v-56781dfe=\"\">\n        <div class=\"modal-header\" _v-56781dfe=\"\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" _v-56781dfe=\"\"><span aria-hidden=\"true\" _v-56781dfe=\"\">×</span><span class=\"sr-only\" _v-56781dfe=\"\">Close</span></button>\n          <h4 class=\"modal-title\" _v-56781dfe=\"\">{{ title }}</h4>\n        </div>\n        <div class=\"modal-body\" _v-56781dfe=\"\">\n          <div class=\"row\" _v-56781dfe=\"\">\n            <div class=\"col-md-12\" _v-56781dfe=\"\">\n              <slot _v-56781dfe=\"\"></slot>\n            </div>\n          </div>\n        </div>\n        <div class=\"modal-footer\" _v-56781dfe=\"\">\n        \t<slot name=\"footer\" _v-56781dfe=\"\"></slot>\n          <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" _v-56781dfe=\"\">Close</button>                        \n        </div>\n      </div>\n    </div>\n\t</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14843,6 +14851,8 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":5,"vue-hot-reload-api":2}],14:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.btn-tb-action[_v-7becfaf3]{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa[_v-7becfaf3], \n.btn-tb-action .glyphicon[_v-7becfaf3]{\n\tmargin-right: 0;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14883,7 +14893,6 @@ exports.default = {
 
     showModal: function showModal(data) {
       this.$dispatch('show-modal', data);
-      $('#modal-box').modal();
     },
     fnSortOrder: function fnSortOrder(sort_order) {
       if (sort_order > 0) {
@@ -14897,18 +14906,22 @@ exports.default = {
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<table class=\"table datatable_simple\">\n    <thead>\n      <tr>\n        <th v-for=\"key in columns\" @click=\"sortBy(key)\" :class=\"[{active: sortKey == key}, fnSortOrder(sortOrders[key])]\">\n          {{key | capitalize}}\n        </th>\n        <th>Action</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr v-for=\"\n        entry in data\n        | filterBy filterKey\n        | orderBy sortKey sortOrders[sortKey]\" v-render-plugin=\"\">\n\n        <td v-for=\"key in columns\">\n          {{entry[key]}}\n        </td>\n        <td>\n        \t<button class=\"btn btn-info btn-tb-action active\" @click.prevent=\"showModal(entry)\"><span class=\"fa fa-pencil\"></span></button>\n        </td> \n      </tr>\n    </tbody>\n  </table>\n  <!-- Pagination-->\n  <div class=\"dataTables_paginate paging_simple_numbers\" v-if=\"perPage\">\n  \t<a class=\"paginate_button previous disabled\">Previous</a>\n  \t<span>\n  \t\t<a class=\"paginate_button current\">1</a>\n  \t\t<a class=\"paginate_button\">2</a>\n  \t\t<a class=\"paginate_button\">3</a>\n  \t\t<a class=\"paginate_button\">4</a>\n  \t\t<a class=\"paginate_button\">5</a>\n  \t\t<a class=\"paginate_button\">6</a>\n  \t</span>\n  \t<a class=\"paginate_button next\">Next</a>\n \t</div>\n \t<!-- End pagination-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<table class=\"table datatable_simple\" _v-7becfaf3=\"\">\n    <thead _v-7becfaf3=\"\">\n      <tr _v-7becfaf3=\"\">\n        <th v-for=\"key in columns\" @click=\"sortBy(key)\" :class=\"[{active: sortKey == key}, fnSortOrder(sortOrders[key])]\" _v-7becfaf3=\"\">\n          {{key | capitalize}}\n        </th>\n        <th _v-7becfaf3=\"\">Action</th>\n      </tr>\n    </thead>\n    <tbody _v-7becfaf3=\"\">\n      <tr v-for=\"\n        entry in data\n        | filterBy filterKey\n        | orderBy sortKey sortOrders[sortKey]\" v-render-plugin=\"\" _v-7becfaf3=\"\">\n\n        <td v-for=\"key in columns\" _v-7becfaf3=\"\">\n          {{entry[key]}}\n        </td>\n        <td _v-7becfaf3=\"\">\n        \t<button class=\"btn btn-info btn-tb-action active\" @click.prevent=\"showModal(entry)\" _v-7becfaf3=\"\"><span class=\"fa fa-pencil\" _v-7becfaf3=\"\"></span></button>\n        </td> \n      </tr>\n    </tbody>\n  </table>\n  <!-- Pagination-->\n  <div class=\"dataTables_paginate paging_simple_numbers\" v-if=\"perPage\" _v-7becfaf3=\"\">\n  \t<a class=\"paginate_button previous disabled\" _v-7becfaf3=\"\">Previous</a>\n  \t<span _v-7becfaf3=\"\">\n  \t\t<a class=\"paginate_button current\" _v-7becfaf3=\"\">1</a>\n  \t\t<a class=\"paginate_button\" _v-7becfaf3=\"\">2</a>\n  \t\t<a class=\"paginate_button\" _v-7becfaf3=\"\">3</a>\n  \t\t<a class=\"paginate_button\" _v-7becfaf3=\"\">4</a>\n  \t\t<a class=\"paginate_button\" _v-7becfaf3=\"\">5</a>\n  \t\t<a class=\"paginate_button\" _v-7becfaf3=\"\">6</a>\n  \t</span>\n  \t<a class=\"paginate_button next\" _v-7becfaf3=\"\">Next</a>\n \t</div>\n \t<!-- End pagination-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.btn-tb-action[_v-7becfaf3]{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa[_v-7becfaf3], \n.btn-tb-action .glyphicon[_v-7becfaf3]{\n\tmargin-right: 0;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-7becfaf3", module.exports)
   } else {
     hotAPI.update("_v-7becfaf3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],15:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],15:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.page-content-wrap{\n\tpadding: 5px;\n}\n")
 'use strict';
@@ -14952,7 +14965,7 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"./Province.vue":16,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],16:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.btn-tb-action{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa, \n.btn-tb-action .glyphicon{\n\tmargin-right: 0;\n}\n\n.alert{\n\ttext-align: center;\n\tline-height: 10px;\n\tfloat: none;\n}\n")
+var __vueify_style__ = __vueify_insert__.insert("\n.alert[_v-bb8126b8]{\n\ttext-align: center;\n\tline-height: 10px;\n\tfloat: none;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14982,6 +14995,7 @@ exports.default = {
 			columns: ['code', 'name_en', 'name_kh'],
 			form_data: {
 				id: null,
+				code: '',
 				name_en: '',
 				name_kh: ''
 			},
@@ -14999,11 +15013,15 @@ exports.default = {
 	methods: {
 		onShowModal: function onShowModal(data) {
 			this.form_data.id = data.id;
+			this.form_data.code = data.code;
 			this.form_data.name_en = data.name_en;
 			this.form_data.name_kh = data.name_kh;
+
+			$('#modal-box-edit').modal();
 		},
 		onCloseModal: function onCloseModal(data) {
 			this.form_data.id = null;
+			this.form_data.code = '';
 			this.form_data.name_en = '';
 			this.form_data.name_kh = '';
 
@@ -15029,12 +15047,13 @@ exports.default = {
 			var _this2 = this;
 
 			this.$http.post('/api/provinces/update', form_data).then(function (response) {
-				$('#modal-box').modal('hide');
+				$('#modal-box-edit').modal('hide');
 
 				//Update province
 				var province = _this2.provinces.find(function (p) {
 					return p.id == response.data.id;
 				});
+				province.code = response.data.code;
 				province.name_en = response.data.name_en;
 				province.name_kh = response.data.name_kh;
 
@@ -15049,13 +15068,13 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <tbl-grid :data=\"provinces\" :columns=\"columns\" :filter-key=\"searchQuery\" @show-modal=\"onShowModal\">\n\t\t\t  </tbl-grid>\n\t  </div>\n  </div>   \n  <modal-box :title=\"'Province'\" @close-modal=\"onCloseModal\">\n  \t<div class=\"alert alert-danger\" v-show=\"error.has_error\">\n        {{ error.message }}\n    </div>\n  \t<form class=\"form-horizontal\">                                    \n      <div class=\"form-group\">\n        <label class=\"col-md-2 control-label\">Name EN</label>\n        <div class=\"col-md-10\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_en\">\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label class=\"col-md-2 control-label\">Name KH</label>\n        <div class=\"col-md-10\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_kh\">\n        </div>\n      </div>\n      <input type=\"hidden\" v-model=\"form_data.id\">\n  \t</form>\n  \t<button type=\"button\" class=\"btn btn-primary\" slot=\"footer\" @click=\"saveEdit(form_data)\">Save</button> \n  </modal-box> \n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\" _v-bb8126b8=\"\">\n\t\t<div class=\"panel-heading\" _v-bb8126b8=\"\">                                \n\t      <h3 class=\"panel-title\" _v-bb8126b8=\"\">Province</h3>\n\t      <ul class=\"panel-controls\" _v-bb8126b8=\"\">\n\t          <li _v-bb8126b8=\"\"><a href=\"#\" class=\"panel-collapse\" _v-bb8126b8=\"\"><span class=\"fa fa-angle-down\" _v-bb8126b8=\"\"></span></a></li>\n\t          <li _v-bb8126b8=\"\"><a href=\"#\" class=\"panel-refresh\" _v-bb8126b8=\"\"><span class=\"fa fa-refresh\" _v-bb8126b8=\"\"></span></a></li>\n\t          <li _v-bb8126b8=\"\"><a href=\"#\" class=\"panel-remove\" _v-bb8126b8=\"\"><span class=\"fa fa-times\" _v-bb8126b8=\"\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\" _v-bb8126b8=\"\">\n\t      <tbl-grid :data=\"provinces\" :columns=\"columns\" :filter-key=\"searchQuery\" @show-modal=\"onShowModal\" _v-bb8126b8=\"\">\n\t\t\t  </tbl-grid>\n\t\t\t  <button type=\"button\" class=\"btn btn-primary\" _v-bb8126b8=\"\">Add New</button>\n\t  </div>\n  </div>   \n  <modal-box :title=\"'Province'\" :modal-id=\"'modal-box-edit'\" @close-modal=\"onCloseModal\" _v-bb8126b8=\"\">\n  \t<div class=\"alert alert-danger\" v-show=\"error.has_error\" _v-bb8126b8=\"\">\n        {{ error.message }}\n    </div>\n  \t<form class=\"form-horizontal\" _v-bb8126b8=\"\">   \n  \t\t<div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Code</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.code\" _v-bb8126b8=\"\">\n        </div>\n      </div>                                 \n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name EN</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_en\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name KH</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_kh\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <input type=\"hidden\" v-model=\"form_data.id\" _v-bb8126b8=\"\">\n  \t</form>\n  \t<button type=\"button\" class=\"btn btn-primary\" slot=\"footer\" @click=\"saveEdit(form_data)\" _v-bb8126b8=\"\">Save</button> \n  </modal-box> \n\n  <modal-box :title=\"'Province'\" :modal-id=\"'modal-box-new'\" @close-modal=\"onCloseModal\" _v-bb8126b8=\"\">\n  \t<div class=\"alert alert-danger\" v-show=\"error.has_error\" _v-bb8126b8=\"\">\n        {{ error.message }}\n    </div>\n  \t<form class=\"form-horizontal\" _v-bb8126b8=\"\">                                    \n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Code</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.code\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name EN</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_en\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name KH</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_kh\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <input type=\"hidden\" v-model=\"form_data.id\" _v-bb8126b8=\"\">\n  \t</form>\n  \t<button type=\"button\" class=\"btn btn-primary\" slot=\"footer\" @click=\"saveEdit(form_data)\" _v-bb8126b8=\"\">Save</button> \n\t</modal-box>  \n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.btn-tb-action{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa, \n.btn-tb-action .glyphicon{\n\tmargin-right: 0;\n}\n\n.alert{\n\ttext-align: center;\n\tline-height: 10px;\n\tfloat: none;\n}\n"] = false
+    __vueify_insert__.cache["\n.alert[_v-bb8126b8]{\n\ttext-align: center;\n\tline-height: 10px;\n\tfloat: none;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {

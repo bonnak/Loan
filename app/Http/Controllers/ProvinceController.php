@@ -21,7 +21,7 @@ class ProvinceController extends Controller
   public function update()
   {
   	$province = Province::find(request()->get('id'));
-
+  	$province->code = strtoupper(request()->get('code'));
   	$province->name_en = request()->get('name_en');
   	$province->name_kh = request()->get('name_kh');
 

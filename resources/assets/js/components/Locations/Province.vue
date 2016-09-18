@@ -16,13 +16,22 @@
 
 			    @show-modal="onShowModal">
 			  </tbl-grid>
+			  <button type="button" class="btn btn-primary">Add New</button>
 	  </div>
   </div>   
-  <modal-box :title="'Province'" @close-modal="onCloseModal">
+  <modal-box :title="'Province'" 
+  						:modal-id="'modal-box-edit'"
+  						@close-modal="onCloseModal">
   	<div class="alert alert-danger" v-show="error.has_error">
         {{ error.message }}
     </div>
-  	<form class="form-horizontal">                                    
+  	<form class="form-horizontal">   
+  		<div class="form-group">
+        <label class="col-md-2 control-label">Code</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" v-model="form_data.code">
+        </div>
+      </div>                                 
       <div class="form-group">
         <label class="col-md-2 control-label">Name EN</label>
         <div class="col-md-10">
@@ -39,6 +48,36 @@
   	</form>
   	<button type="button" class="btn btn-primary" slot="footer" @click="saveEdit(form_data)">Save</button> 
   </modal-box> 
+
+  <modal-box :title="'Province'" 
+  						:modal-id="'modal-box-new'"
+  						@close-modal="onCloseModal">
+  	<div class="alert alert-danger" v-show="error.has_error">
+        {{ error.message }}
+    </div>
+  	<form class="form-horizontal">                                    
+      <div class="form-group">
+        <label class="col-md-2 control-label">Code</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" v-model="form_data.code">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-2 control-label">Name EN</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" v-model="form_data.name_en">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-2 control-label">Name KH</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" v-model="form_data.name_kh">
+        </div>
+      </div>
+      <input type="hidden" v-model="form_data.id">
+  	</form>
+  	<button type="button" class="btn btn-primary" slot="footer" @click="saveEdit(form_data)">Save</button> 
+	</modal-box>  
 </template>
 
 <script>
@@ -58,6 +97,7 @@ export default{
 	    columns: ['code', 'name_en', 'name_kh'],
 	    form_data: {
 	    	id: null,
+	    	code: '',
 	    	name_en: '',
 	    	name_kh: ''
 	    },
@@ -75,12 +115,16 @@ export default{
 	methods: {	
 		onShowModal(data){
 			this.form_data.id = data.id;
+			this.form_data.code = data.code;
 			this.form_data.name_en = data.name_en;
 			this.form_data.name_kh = data.name_kh;
+
+			$('#modal-box-edit').modal();
 		},
 
 		onCloseModal(data){
 			this.form_data.id = null;
+			this.form_data.code = '';
 			this.form_data.name_en = '';
 			this.form_data.name_kh = '';
 
@@ -111,10 +155,11 @@ export default{
 			this.$http.post('/api/provinces/update', form_data)
 			.then(
 				(response) => {
-					$('#modal-box').modal('hide');
+					$('#modal-box-edit').modal('hide');
 
 					//Update province
 					var province = this.provinces.find(function(p){ return p.id == response.data.id; });
+					province.code = response.data.code;
 					province.name_en = response.data.name_en;
 					province.name_kh = response.data.name_kh;
 
@@ -132,21 +177,7 @@ export default{
 }
 </script>
 
-<style>
-.btn-tb-action{
-	display: flex;
-	align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;  
-}
-
-.btn-tb-action .fa, 
-.btn-tb-action .glyphicon{
-	margin-right: 0;
-}
-
+<style scoped>
 .alert{
 	text-align: center;
 	line-height: 10px;
