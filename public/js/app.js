@@ -14644,7 +14644,7 @@ exports.default = {
   }
 };
 
-},{"./functions":18}],8:[function(require,module,exports){
+},{"./functions":19}],8:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.kh{\n  font-family: \"Hanuman\";\n  font-size: 14px\n}\n")
 'use strict';
@@ -14699,21 +14699,21 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-7817bbce", module.exports)
+    hotAPI.createRecord("_v-03f639de", module.exports)
   } else {
-    hotAPI.update("_v-7817bbce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-03f639de", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../ui/actions.js":20,"../ui/plugins.js":21,"./ModalBox.vue":9,"./Sidebar.vue":10,"./Signout.vue":12,"./VNav.vue":13,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],9:[function(require,module,exports){
+},{"../ui/actions.js":21,"../ui/plugins.js":22,"./ModalBox.vue":9,"./Sidebar.vue":10,"./Signout.vue":12,"./VNav.vue":13,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],9:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"modal fade\" id=\"modal-box\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">×</span><span class=\"sr-only\">Close</span></button>\n          <h4 class=\"modal-title\">Icon preview</h4>\n        </div>\n        <div class=\"modal-body\">\n          <div class=\"row\">\n            <div class=\"col-md-12\">\n                \n            </div>\n          </div>\n        </div>\n        <div class=\"modal-footer\">\n          <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Close</button>                        \n        </div>\n      </div>\n    </div>\n\t</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-56781dfe", module.exports)
+    hotAPI.createRecord("_v-2191bcf1", module.exports)
   } else {
-    hotAPI.update("_v-56781dfe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-2191bcf1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":5,"vue-hot-reload-api":2}],10:[function(require,module,exports){
@@ -14723,9 +14723,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-5ff135ee", module.exports)
+    hotAPI.createRecord("_v-2d585b19", module.exports)
   } else {
-    hotAPI.update("_v-5ff135ee", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-2d585b19", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":5,"vue-hot-reload-api":2}],11:[function(require,module,exports){
@@ -14773,9 +14773,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-25a354f6", module.exports)
+    hotAPI.createRecord("_v-b4434516", module.exports)
   } else {
-    hotAPI.update("_v-25a354f6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-b4434516", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../auth":7,"vue":5,"vue-hot-reload-api":2}],12:[function(require,module,exports){
@@ -14805,9 +14805,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-05ad639e", module.exports)
+    hotAPI.createRecord("_v-62fe59ae", module.exports)
   } else {
-    hotAPI.update("_v-05ad639e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-62fe59ae", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../auth":7,"vue":5,"vue-hot-reload-api":2}],13:[function(require,module,exports){
@@ -14817,12 +14817,77 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-17fc7820", module.exports)
+    hotAPI.createRecord("_v-3819f040", module.exports)
   } else {
-    hotAPI.update("_v-17fc7820", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-3819f040", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":5,"vue-hot-reload-api":2}],14:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  props: {
+    data: Array,
+    columns: Array,
+    filterKey: String,
+    perPage: { type: Number, default: null }
+  },
+
+  data: function data() {
+    var sortOrders = {};
+    this.columns.forEach(function (key) {
+      sortOrders[key] = 0;
+    });
+    return {
+      sortKey: '',
+      sortOrders: sortOrders
+    };
+  },
+
+
+  methods: {
+    sortBy: function sortBy(key) {
+      var self = this;
+      this.columns.forEach(function (k) {
+        if (k != key) {
+          self.sortOrders[k] = 0;
+        }
+      });
+
+      this.sortOrders[key] = !this.sortOrders[key] ? 1 : this.sortOrders[key] * -1;
+      this.sortKey = key;
+    },
+
+    showModal: function showModal() {
+      $('#modal-box').modal();
+    },
+    fnSortOrder: function fnSortOrder(sort_order) {
+      if (sort_order > 0) {
+        return 'sorting_asc';
+      } else if (sort_order < 0) {
+        return 'sorting_desc';
+      }
+
+      return '';
+    }
+  }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<table class=\"table datatable_simple\">\n    <thead>\n      <tr>\n        <th v-for=\"key in columns\" @click=\"sortBy(key)\" :class=\"[{active: sortKey == key}, fnSortOrder(sortOrders[key])]\">\n          {{key | capitalize}}\n        </th>\n        <th>Action</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr v-for=\"\n        entry in data\n        | filterBy filterKey\n        | orderBy sortKey sortOrders[sortKey]\" v-render-plugin=\"\">\n\n        <td v-for=\"key in columns\">\n          {{entry[key]}}\n        </td>\n        <td>\n        \t<button class=\"btn btn-info btn-tb-action active\" @click.prevent=\"showModal()\"><span class=\"fa fa-pencil\"></span></button>\n        </td> \n      </tr>\n    </tbody>\n  </table>\n  <!-- Pagination-->\n  <div class=\"dataTables_paginate paging_simple_numbers\" v-if=\"perPage\">\n  \t<a class=\"paginate_button previous disabled\">Previous</a>\n  \t<span>\n  \t\t<a class=\"paginate_button current\">1</a>\n  \t\t<a class=\"paginate_button\">2</a>\n  \t\t<a class=\"paginate_button\">3</a>\n  \t\t<a class=\"paginate_button\">4</a>\n  \t\t<a class=\"paginate_button\">5</a>\n  \t\t<a class=\"paginate_button\">6</a>\n  \t</span>\n  \t<a class=\"paginate_button next\">Next</a>\n \t</div>\n \t<!-- End pagination-->\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-3cf0a294", module.exports)
+  } else {
+    hotAPI.update("_v-3cf0a294", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":5,"vue-hot-reload-api":2}],15:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.page-content-wrap{\n\tpadding: 5px;\n}\n")
 'use strict';
@@ -14859,12 +14924,12 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-afdf6de4", module.exports)
+    hotAPI.createRecord("_v-a589dcde", module.exports)
   } else {
-    hotAPI.update("_v-afdf6de4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-a589dcde", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Province.vue":15,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],15:[function(require,module,exports){
+},{"./Province.vue":16,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],16:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-tb-action{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa, \n.btn-tb-action .glyphicon{\n\tmargin-right: 0;\n}\n")
 'use strict';
@@ -14872,32 +14937,43 @@ var __vueify_style__ = __vueify_insert__.insert("\n.btn-tb-action{\n\tdisplay: -
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+
+var _TblGrid = require('../_partials/TblGrid.vue');
+
+var _TblGrid2 = _interopRequireDefault(_TblGrid);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 exports.default = {
+	components: {
+		TblGrid: _TblGrid2.default
+	},
+
 	data: function data() {
 		return {
 			provinces: [],
-			v_test: 0
+			searchQuery: '',
+			columns: ['code', 'name_en', 'name_kh']
 		};
 	},
 	created: function created() {
 		var _this = this;
 
 		this.$http.get('/api/provinces').then(function (response) {
-			_this.provinces = response.data.provinces;
+			var self = _this;
+			response.data.provinces.forEach(function (el) {
+				self.provinces.$set(self.provinces.length, el);
+			});
 		}, function (error) {
 			console.log(error);
 		});
 	},
 
 
-	methods: {
-		showModal: function showModal() {
-			$('#modal-box').modal();
-		}
-	}
+	methods: {}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <table class=\"table datatable_simple\">\n\t          <thead>\n\t              <tr>\n                  <th>Code</th>\n                  <th>Name_EN</th>\n                  <th>Name_KH</th>\n                  <th>Action</th>\n\t              </tr>\n\t          </thead>\n\t          <tbody>\n\t              <tr v-for=\"province in provinces\" v-render-plugin=\"\">\n                  <td>{{ province.code }}</td>\n                  <td>{{ province.name_en }}</td>\n                  <td class=\"kh\">{{ province.name_kh }}</td>   \n                  <td>\n                  \t<button class=\"btn btn-info btn-tb-action active\" @click.prevent=\"showModal()\"><span class=\"fa fa-pencil\"></span></button>\n                  </td>               \n\t              </tr>               \n\t          </tbody>\n\t      </table>\n\t  </div>\n  </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <tbl-grid :data=\"provinces\" :columns=\"columns\" :filter-key=\"searchQuery\">\n\t\t\t  </tbl-grid>\n\t  </div>\n  </div>  \n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14907,12 +14983,12 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-bb8126b8", module.exports)
+    hotAPI.createRecord("_v-20099d7e", module.exports)
   } else {
-    hotAPI.update("_v-bb8126b8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-20099d7e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],16:[function(require,module,exports){
+},{"../_partials/TblGrid.vue":14,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14935,7 +15011,7 @@ function currency(value, currency, decimals) {
   return sign + currency + head + _int.slice(i).replace(digitsRE, '$1,') + _float;
 }
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14952,7 +15028,7 @@ exports.default = {
   unbind: function unbind() {}
 };
 
-},{"../ui/actions.js":20}],18:[function(require,module,exports){
+},{"../ui/actions.js":21}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14987,7 +15063,7 @@ function deleteCookie(name) {
     if (getCookie(name)) setCookie(name, "", -1);
 }
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -15065,7 +15141,7 @@ router.start({
   }
 }, '#app');
 
-},{"./auth":7,"./components/App.vue":8,"./components/Signin.vue":11,"./components/locations/Index.vue":14,"./currency":16,"./directives/RenderPlugin":17,"vue":5,"vue-resource":3,"vue-router":4}],20:[function(require,module,exports){
+},{"./auth":7,"./components/App.vue":8,"./components/Signin.vue":11,"./components/locations/Index.vue":15,"./currency":17,"./directives/RenderPlugin":18,"vue":5,"vue-resource":3,"vue-router":4}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15601,7 +15677,7 @@ Object.size = function (obj) {
 };
 /* EOF NEW OBJECT(GET SIZE OF ARRAY) */
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16214,6 +16290,6 @@ Object.size = function (obj) {
     return size;
 };
 
-},{}]},{},[19]);
+},{}]},{},[20]);
 
 //# sourceMappingURL=app.js.map
