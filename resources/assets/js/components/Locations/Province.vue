@@ -9,36 +9,28 @@
 	      </ul>                                
 	  </div>
 	  <div class="panel-body">
-	      <table class="table datatable_simple">
-	          <thead>
-	              <tr>
-                  <th>Code</th>
-                  <th>Name_EN</th>
-                  <th>Name_KH</th>
-                  <th>Action</th>
-	              </tr>
-	          </thead>
-	          <tbody>
-	              <tr v-for="province in provinces" v-render-plugin>
-                  <td>{{ province.code }}</td>
-                  <td>{{ province.name_en }}</td>
-                  <td class="kh">{{ province.name_kh }}</td>   
-                  <td>
-                  	<button class="btn btn-info btn-tb-action active" @click.prevent="showModal()"><span class="fa fa-pencil"></span></button>
-                  </td>               
-	              </tr>               
-	          </tbody>
-	      </table>
+	      <tbl-grid
+			    :data="provinces"
+			    :columns="columns"
+			    :filter-key="searchQuery">
+			  </tbl-grid>
 	  </div>
-  </div>
+  </div>  
 </template>
 
 <script>
+import TblGrid from '../_partials/TblGrid.vue'
+
 export default{
+	components:{
+		TblGrid
+	},
+
 	data(){
 		return {
 			provinces: [],
-			v_test: 0
+			searchQuery: '',
+	    columns: ['code', 'name_en', 'name_kh']
 		}
 	},
 
@@ -46,7 +38,10 @@ export default{
 		this.$http.get('/api/provinces')
 		.then(
 			(response) => {
-				this.provinces = response.data.provinces;
+				var self = this;				
+				response.data.provinces.forEach(function(el){
+					self.provinces.$set(self.provinces.length, el);
+				});
       },
       (error) => {
         console.log(error);
@@ -54,10 +49,7 @@ export default{
 		);
 	},
 
-	methods: {
-		showModal(){
-			$('#modal-box').modal();
-		}		
+	methods: {	
 	}
 }
 </script>
