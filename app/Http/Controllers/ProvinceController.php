@@ -17,4 +17,19 @@ class ProvinceController extends Controller
   {
   	return Province::get();
   }
+
+  public function update()
+  {
+  	$province = Province::find(request()->get('id'));
+
+  	$province->name_en = request()->get('name_en');
+  	$province->name_kh = request()->get('name_kh');
+
+  	if( $province->save() )
+  	{
+  		return response()->json($province->toArray(), 200);
+  	}
+
+  	return response()->json([ 'message' => 'Cannot update province' ], 400);
+  }
 }

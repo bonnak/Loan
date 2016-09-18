@@ -27,5 +27,6 @@ $api->version('v1', function ($api) {
     $api->post('user', 'App\Http\Controllers\UserController@store');
 
     $api->get('provinces', 'App\Http\Controllers\ProvinceController@getProvinces');
+    $api->post('provinces/update', 'App\Http\Controllers\ProvinceController@update');
   });
 });

@@ -12,44 +12,122 @@
 	      <tbl-grid
 			    :data="provinces"
 			    :columns="columns"
-			    :filter-key="searchQuery">
+			    :filter-key="searchQuery"
+
+			    @show-modal="onShowModal">
 			  </tbl-grid>
 	  </div>
-  </div>  
+  </div>   
+  <modal-box :title="'Province'" @close-modal="onCloseModal">
+  	<div class="alert alert-danger" v-show="error.has_error">
+        {{ error.message }}
+    </div>
+  	<form class="form-horizontal">                                    
+      <div class="form-group">
+        <label class="col-md-2 control-label">Name EN</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" v-model="form_data.name_en">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-md-2 control-label">Name KH</label>
+        <div class="col-md-10">
+          <input type="text" class="form-control" v-model="form_data.name_kh">
+        </div>
+      </div>
+      <input type="hidden" v-model="form_data.id">
+  	</form>
+  	<button type="button" class="btn btn-primary" slot="footer" @click="saveEdit(form_data)">Save</button> 
+  </modal-box> 
 </template>
 
 <script>
 import TblGrid from '../_partials/TblGrid.vue'
+import ModalBox from '../ModalBox.vue'
 
 export default{
 	components:{
-		TblGrid
+		TblGrid,
+		ModalBox
 	},
 
 	data(){
 		return {
 			provinces: [],
 			searchQuery: '',
-	    columns: ['code', 'name_en', 'name_kh']
+	    columns: ['code', 'name_en', 'name_kh'],
+	    form_data: {
+	    	id: null,
+	    	name_en: '',
+	    	name_kh: ''
+	    },
+	    error: {
+	    	has_error: false,
+	    	message: ''
+	    }
 		}
 	},
 
 	created(){
-		this.$http.get('/api/provinces')
-		.then(
-			(response) => {
-				var self = this;				
-				response.data.provinces.forEach(function(el){
-					self.provinces.$set(self.provinces.length, el);
-				});
-      },
-      (error) => {
-        console.log(error);
-      }
-		);
+		this.getProvinces();
 	},
 
 	methods: {	
+		onShowModal(data){
+			this.form_data.id = data.id;
+			this.form_data.name_en = data.name_en;
+			this.form_data.name_kh = data.name_kh;
+		},
+
+		onCloseModal(data){
+			this.form_data.id = null;
+			this.form_data.name_en = '';
+			this.form_data.name_kh = '';
+
+			this.resetError();
+		},
+
+		resetError(){
+			this.error.has_error = false;
+			this.error.message = '';
+		},
+
+		getProvinces(){
+			this.$http.get('/api/provinces')
+			.then(
+				(response) => {
+					var self = this;				
+					response.data.provinces.forEach(function(el){
+						self.provinces.$set(self.provinces.length, el);
+					});
+	      },
+	      (error) => {
+	        console.log(error);
+	      }
+			);
+		},
+
+		saveEdit(form_data){
+			this.$http.post('/api/provinces/update', form_data)
+			.then(
+				(response) => {
+					$('#modal-box').modal('hide');
+
+					//Update province
+					var province = this.provinces.find(function(p){ return p.id == response.data.id; });
+					province.name_en = response.data.name_en;
+					province.name_kh = response.data.name_kh;
+
+					//Update error status
+					this.resetError();
+	      },
+	      (error) => {
+	      	console.log(error);
+					this.error.has_error = true;
+			    this.error.message = error.data.message;
+	      }
+			);
+		}
 	}
 }
 </script>
@@ -67,5 +145,11 @@ export default{
 .btn-tb-action .fa, 
 .btn-tb-action .glyphicon{
 	margin-right: 0;
+}
+
+.alert{
+	text-align: center;
+	line-height: 10px;
+	float: none;
 }
 </style>

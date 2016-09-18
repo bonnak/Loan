@@ -21,7 +21,7 @@
           {{entry[key]}}
         </td>
         <td>
-        	<button class="btn btn-info btn-tb-action active" @click.prevent="showModal()"><span class="fa fa-pencil"></span></button>
+        	<button class="btn btn-info btn-tb-action active" @click.prevent="showModal(entry)"><span class="fa fa-pencil"></span></button>
         </td> 
       </tr>
     </tbody>
@@ -50,7 +50,7 @@ export default	{
     filterKey: String,
     perPage: { type: Number, default: null }
   },
-  
+
   data() {
   	var sortOrders = {};
     this.columns.forEach(function (key) {
@@ -75,7 +75,8 @@ export default	{
 			this.sortKey = key; 
     },
 
-    showModal(){
+    showModal(data){    	
+			this.$dispatch('show-modal', data);
 			$('#modal-box').modal();
 		},
 

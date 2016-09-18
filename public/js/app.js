@@ -14669,18 +14669,13 @@ var _Signout = require('./Signout.vue');
 
 var _Signout2 = _interopRequireDefault(_Signout);
 
-var _ModalBox = require('./ModalBox.vue');
-
-var _ModalBox2 = _interopRequireDefault(_ModalBox);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
   components: {
     Sidebar: _Sidebar2.default,
     VNav: _VNav2.default,
-    Signout: _Signout2.default,
-    ModalBox: _ModalBox2.default
+    Signout: _Signout2.default
   },
 
   ready: function ready() {
@@ -14689,7 +14684,7 @@ exports.default = {
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-container\">\n\t<sidebar></sidebar>\n\t<div class=\"page-content\">\n\t\t<v-nav></v-nav>\n\t\t<router-view></router-view>\n\t</div>\n</div>\n<signout></signout>\n<modal-box></modal-box>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-container\">\n\t<sidebar></sidebar>\n\t<div class=\"page-content\">\n\t\t<v-nav></v-nav>\n\t\t<router-view></router-view>\n\t</div>\n</div>\n<signout></signout>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14699,33 +14694,58 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-03f639de", module.exports)
+    hotAPI.createRecord("_v-7817bbce", module.exports)
   } else {
-    hotAPI.update("_v-03f639de", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-7817bbce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../ui/actions.js":21,"../ui/plugins.js":22,"./ModalBox.vue":9,"./Sidebar.vue":10,"./Signout.vue":12,"./VNav.vue":13,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],9:[function(require,module,exports){
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"modal fade\" id=\"modal-box\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">\n    <div class=\"modal-dialog\">\n      <div class=\"modal-content\">\n        <div class=\"modal-header\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">×</span><span class=\"sr-only\">Close</span></button>\n          <h4 class=\"modal-title\">Icon preview</h4>\n        </div>\n        <div class=\"modal-body\">\n          <div class=\"row\">\n            <div class=\"col-md-12\">\n                \n            </div>\n          </div>\n        </div>\n        <div class=\"modal-footer\">\n          <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Close</button>                        \n        </div>\n      </div>\n    </div>\n\t</div>\n"
+},{"../ui/actions.js":21,"../ui/plugins.js":22,"./Sidebar.vue":10,"./Signout.vue":12,"./VNav.vue":13,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],9:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.modal-footer[_v-56781dfe]{\n\tborder: none;\n}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	props: {
+		title: String
+	},
+
+	ready: function ready() {
+		var self = this;
+
+		$('#modal-box').on('hidden.bs.modal', function (e) {
+			self.$dispatch('close-modal');
+		});
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"modal fade\" id=\"modal-box\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" _v-56781dfe=\"\">\n    <div class=\"modal-dialog\" _v-56781dfe=\"\">\n      <div class=\"modal-content\" _v-56781dfe=\"\">\n        <div class=\"modal-header\" _v-56781dfe=\"\">\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" _v-56781dfe=\"\"><span aria-hidden=\"true\" _v-56781dfe=\"\">×</span><span class=\"sr-only\" _v-56781dfe=\"\">Close</span></button>\n          <h4 class=\"modal-title\" _v-56781dfe=\"\">{{ title }}</h4>\n        </div>\n        <div class=\"modal-body\" _v-56781dfe=\"\">\n          <div class=\"row\" _v-56781dfe=\"\">\n            <div class=\"col-md-12\" _v-56781dfe=\"\">\n              <slot _v-56781dfe=\"\"></slot>\n            </div>\n          </div>\n        </div>\n        <div class=\"modal-footer\" _v-56781dfe=\"\">\n        \t<slot name=\"footer\" _v-56781dfe=\"\"></slot>\n          <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" _v-56781dfe=\"\">Close</button>                        \n        </div>\n      </div>\n    </div>\n\t</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.modal-footer[_v-56781dfe]{\n\tborder: none;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-2191bcf1", module.exports)
+    hotAPI.createRecord("_v-56781dfe", module.exports)
   } else {
-    hotAPI.update("_v-2191bcf1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-56781dfe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],10:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],10:[function(require,module,exports){
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"page-sidebar page-sidebar-fixed scroll\">\n    <!-- START X-NAVIGATION -->\n    <ul class=\"x-navigation x-navigation-custom\">\n        <li class=\"xn-logo\">\n            <a href=\"index.html\">Joli Admin</a>\n            <a href=\"#\" class=\"x-navigation-control\"></a>\n        </li>\n        <li class=\"xn-title\">Navigation</li>\n        <li class=\"active\">\n            <a v-link=\"{ path: '/' }\"><span class=\"fa fa-desktop\"></span> <span class=\"xn-text\">Dashboard</span></a>                        \n        </li>                    \n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-files-o\"></span> <span class=\"xn-text\">Setup</span></a>\n            <ul>                \n                <li><a href=\"pages-profile.html\">Customer</a></li>\n                <li><a href=\"pages-profile.html\">Loan Group</a></li>\n                <li><a href=\"pages-profile.html\">Chart of Account</a></li>\n                <li><a href=\"pages-gallery.html\">Exchange Rate</a></li>\n                <li><a href=\"pages-gallery.html\">Identity Type</a></li>\n                <li><a v-link=\"{ path: '/user' }\">User Account</a></li>\n                <li><a href=\"pages-profile.html\">User Role</a></li>\n                <li><a v-link=\"{ path: '/location' }\">Location</a></li>\n            </ul>\n        </li>\n        <li class=\"xn-openable\">\n            <a href=\"#\"><span class=\"fa fa-file-text-o\"></span> <span class=\"xn-text\">Layouts</span></a>\n            <ul>\n                <li><a href=\"layout-boxed.html\">Boxed</a></li>\n                <li><a href=\"layout-nav-toggled.html\">Navigation Toggled</a></li>\n                <li><a href=\"layout-nav-top.html\">Navigation Top</a></li>\n                <li><a href=\"layout-nav-right.html\">Navigation Right</a></li>\n                <li><a href=\"layout-nav-top-fixed.html\">Top Navigation Fixed</a></li>                            \n                <li><a href=\"layout-nav-custom.html\">Custom Navigation</a></li>\n                <li><a href=\"layout-frame-left.html\">Frame Left Column</a></li>\n                <li><a href=\"layout-frame-right.html\">Frame Right Column</a></li>\n                <li><a href=\"layout-search-left.html\">Search Left Side</a></li>\n                <li><a href=\"blank.html\">Blank Page</a></li>\n            </ul>\n        </li>        \n    </ul>\n    <!-- END X-NAVIGATION -->\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-2d585b19", module.exports)
+    hotAPI.createRecord("_v-5ff135ee", module.exports)
   } else {
-    hotAPI.update("_v-2d585b19", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-5ff135ee", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":5,"vue-hot-reload-api":2}],11:[function(require,module,exports){
@@ -14773,9 +14793,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-b4434516", module.exports)
+    hotAPI.createRecord("_v-25a354f6", module.exports)
   } else {
-    hotAPI.update("_v-b4434516", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-25a354f6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../auth":7,"vue":5,"vue-hot-reload-api":2}],12:[function(require,module,exports){
@@ -14805,9 +14825,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-62fe59ae", module.exports)
+    hotAPI.createRecord("_v-05ad639e", module.exports)
   } else {
-    hotAPI.update("_v-62fe59ae", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-05ad639e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../auth":7,"vue":5,"vue-hot-reload-api":2}],13:[function(require,module,exports){
@@ -14817,9 +14837,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-3819f040", module.exports)
+    hotAPI.createRecord("_v-17fc7820", module.exports)
   } else {
-    hotAPI.update("_v-3819f040", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-17fc7820", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":5,"vue-hot-reload-api":2}],14:[function(require,module,exports){
@@ -14861,7 +14881,8 @@ exports.default = {
       this.sortKey = key;
     },
 
-    showModal: function showModal() {
+    showModal: function showModal(data) {
+      this.$dispatch('show-modal', data);
       $('#modal-box').modal();
     },
     fnSortOrder: function fnSortOrder(sort_order) {
@@ -14876,15 +14897,15 @@ exports.default = {
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<table class=\"table datatable_simple\">\n    <thead>\n      <tr>\n        <th v-for=\"key in columns\" @click=\"sortBy(key)\" :class=\"[{active: sortKey == key}, fnSortOrder(sortOrders[key])]\">\n          {{key | capitalize}}\n        </th>\n        <th>Action</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr v-for=\"\n        entry in data\n        | filterBy filterKey\n        | orderBy sortKey sortOrders[sortKey]\" v-render-plugin=\"\">\n\n        <td v-for=\"key in columns\">\n          {{entry[key]}}\n        </td>\n        <td>\n        \t<button class=\"btn btn-info btn-tb-action active\" @click.prevent=\"showModal()\"><span class=\"fa fa-pencil\"></span></button>\n        </td> \n      </tr>\n    </tbody>\n  </table>\n  <!-- Pagination-->\n  <div class=\"dataTables_paginate paging_simple_numbers\" v-if=\"perPage\">\n  \t<a class=\"paginate_button previous disabled\">Previous</a>\n  \t<span>\n  \t\t<a class=\"paginate_button current\">1</a>\n  \t\t<a class=\"paginate_button\">2</a>\n  \t\t<a class=\"paginate_button\">3</a>\n  \t\t<a class=\"paginate_button\">4</a>\n  \t\t<a class=\"paginate_button\">5</a>\n  \t\t<a class=\"paginate_button\">6</a>\n  \t</span>\n  \t<a class=\"paginate_button next\">Next</a>\n \t</div>\n \t<!-- End pagination-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<table class=\"table datatable_simple\">\n    <thead>\n      <tr>\n        <th v-for=\"key in columns\" @click=\"sortBy(key)\" :class=\"[{active: sortKey == key}, fnSortOrder(sortOrders[key])]\">\n          {{key | capitalize}}\n        </th>\n        <th>Action</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr v-for=\"\n        entry in data\n        | filterBy filterKey\n        | orderBy sortKey sortOrders[sortKey]\" v-render-plugin=\"\">\n\n        <td v-for=\"key in columns\">\n          {{entry[key]}}\n        </td>\n        <td>\n        \t<button class=\"btn btn-info btn-tb-action active\" @click.prevent=\"showModal(entry)\"><span class=\"fa fa-pencil\"></span></button>\n        </td> \n      </tr>\n    </tbody>\n  </table>\n  <!-- Pagination-->\n  <div class=\"dataTables_paginate paging_simple_numbers\" v-if=\"perPage\">\n  \t<a class=\"paginate_button previous disabled\">Previous</a>\n  \t<span>\n  \t\t<a class=\"paginate_button current\">1</a>\n  \t\t<a class=\"paginate_button\">2</a>\n  \t\t<a class=\"paginate_button\">3</a>\n  \t\t<a class=\"paginate_button\">4</a>\n  \t\t<a class=\"paginate_button\">5</a>\n  \t\t<a class=\"paginate_button\">6</a>\n  \t</span>\n  \t<a class=\"paginate_button next\">Next</a>\n \t</div>\n \t<!-- End pagination-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-3cf0a294", module.exports)
+    hotAPI.createRecord("_v-7becfaf3", module.exports)
   } else {
-    hotAPI.update("_v-3cf0a294", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-7becfaf3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":5,"vue-hot-reload-api":2}],15:[function(require,module,exports){
@@ -14924,14 +14945,14 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-a589dcde", module.exports)
+    hotAPI.createRecord("_v-afdf6de4", module.exports)
   } else {
-    hotAPI.update("_v-a589dcde", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-afdf6de4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./Province.vue":16,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],16:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.btn-tb-action{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa, \n.btn-tb-action .glyphicon{\n\tmargin-right: 0;\n}\n")
+var __vueify_style__ = __vueify_insert__.insert("\n.btn-tb-action{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa, \n.btn-tb-action .glyphicon{\n\tmargin-right: 0;\n}\n\n.alert{\n\ttext-align: center;\n\tline-height: 10px;\n\tfloat: none;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14942,53 +14963,108 @@ var _TblGrid = require('../_partials/TblGrid.vue');
 
 var _TblGrid2 = _interopRequireDefault(_TblGrid);
 
+var _ModalBox = require('../ModalBox.vue');
+
+var _ModalBox2 = _interopRequireDefault(_ModalBox);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
 	components: {
-		TblGrid: _TblGrid2.default
+		TblGrid: _TblGrid2.default,
+		ModalBox: _ModalBox2.default
 	},
 
 	data: function data() {
 		return {
 			provinces: [],
 			searchQuery: '',
-			columns: ['code', 'name_en', 'name_kh']
+			columns: ['code', 'name_en', 'name_kh'],
+			form_data: {
+				id: null,
+				name_en: '',
+				name_kh: ''
+			},
+			error: {
+				has_error: false,
+				message: ''
+			}
 		};
 	},
 	created: function created() {
-		var _this = this;
-
-		this.$http.get('/api/provinces').then(function (response) {
-			var self = _this;
-			response.data.provinces.forEach(function (el) {
-				self.provinces.$set(self.provinces.length, el);
-			});
-		}, function (error) {
-			console.log(error);
-		});
+		this.getProvinces();
 	},
 
 
-	methods: {}
+	methods: {
+		onShowModal: function onShowModal(data) {
+			this.form_data.id = data.id;
+			this.form_data.name_en = data.name_en;
+			this.form_data.name_kh = data.name_kh;
+		},
+		onCloseModal: function onCloseModal(data) {
+			this.form_data.id = null;
+			this.form_data.name_en = '';
+			this.form_data.name_kh = '';
+
+			this.resetError();
+		},
+		resetError: function resetError() {
+			this.error.has_error = false;
+			this.error.message = '';
+		},
+		getProvinces: function getProvinces() {
+			var _this = this;
+
+			this.$http.get('/api/provinces').then(function (response) {
+				var self = _this;
+				response.data.provinces.forEach(function (el) {
+					self.provinces.$set(self.provinces.length, el);
+				});
+			}, function (error) {
+				console.log(error);
+			});
+		},
+		saveEdit: function saveEdit(form_data) {
+			var _this2 = this;
+
+			this.$http.post('/api/provinces/update', form_data).then(function (response) {
+				$('#modal-box').modal('hide');
+
+				//Update province
+				var province = _this2.provinces.find(function (p) {
+					return p.id == response.data.id;
+				});
+				province.name_en = response.data.name_en;
+				province.name_kh = response.data.name_kh;
+
+				//Update error status
+				_this2.resetError();
+			}, function (error) {
+				console.log(error);
+				_this2.error.has_error = true;
+				_this2.error.message = error.data.message;
+			});
+		}
+	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <tbl-grid :data=\"provinces\" :columns=\"columns\" :filter-key=\"searchQuery\">\n\t\t\t  </tbl-grid>\n\t  </div>\n  </div>  \n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\">\n\t\t<div class=\"panel-heading\">                                \n\t      <h3 class=\"panel-title\">Province</h3>\n\t      <ul class=\"panel-controls\">\n\t          <li><a href=\"#\" class=\"panel-collapse\"><span class=\"fa fa-angle-down\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-refresh\"><span class=\"fa fa-refresh\"></span></a></li>\n\t          <li><a href=\"#\" class=\"panel-remove\"><span class=\"fa fa-times\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\">\n\t      <tbl-grid :data=\"provinces\" :columns=\"columns\" :filter-key=\"searchQuery\" @show-modal=\"onShowModal\">\n\t\t\t  </tbl-grid>\n\t  </div>\n  </div>   \n  <modal-box :title=\"'Province'\" @close-modal=\"onCloseModal\">\n  \t<div class=\"alert alert-danger\" v-show=\"error.has_error\">\n        {{ error.message }}\n    </div>\n  \t<form class=\"form-horizontal\">                                    \n      <div class=\"form-group\">\n        <label class=\"col-md-2 control-label\">Name EN</label>\n        <div class=\"col-md-10\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_en\">\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label class=\"col-md-2 control-label\">Name KH</label>\n        <div class=\"col-md-10\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_kh\">\n        </div>\n      </div>\n      <input type=\"hidden\" v-model=\"form_data.id\">\n  \t</form>\n  \t<button type=\"button\" class=\"btn btn-primary\" slot=\"footer\" @click=\"saveEdit(form_data)\">Save</button> \n  </modal-box> \n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.btn-tb-action{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa, \n.btn-tb-action .glyphicon{\n\tmargin-right: 0;\n}\n"] = false
+    __vueify_insert__.cache["\n.btn-tb-action{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa, \n.btn-tb-action .glyphicon{\n\tmargin-right: 0;\n}\n\n.alert{\n\ttext-align: center;\n\tline-height: 10px;\n\tfloat: none;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-20099d7e", module.exports)
+    hotAPI.createRecord("_v-bb8126b8", module.exports)
   } else {
-    hotAPI.update("_v-20099d7e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-bb8126b8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../_partials/TblGrid.vue":14,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],17:[function(require,module,exports){
+},{"../ModalBox.vue":9,"../_partials/TblGrid.vue":14,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
