@@ -28,3 +28,11 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     'remember_token' => str_random(10),
   ];
 });
+
+$factory->define(App\Province::class, function (Faker\Generator $faker) {
+  return [
+    'code' => str_random(10),
+    'name_en' => $faker->city,
+    'name_kh' => $faker->city,
+  ];
+});

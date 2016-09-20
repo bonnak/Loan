@@ -15020,16 +15020,21 @@ exports.default = {
 			$('#modal-box-edit').modal();
 		},
 		onCloseModal: function onCloseModal(data) {
+			this.emptyFormData();
+			this.resetError();
+		},
+		emptyFormData: function emptyFormData() {
 			this.form_data.id = null;
 			this.form_data.code = '';
 			this.form_data.name_en = '';
 			this.form_data.name_kh = '';
-
-			this.resetError();
 		},
 		resetError: function resetError() {
 			this.error.has_error = false;
 			this.error.message = '';
+		},
+		emptyProvinces: function emptyProvinces() {
+			this.provinces.splice(0, this.provinces.length);
 		},
 		getProvinces: function getProvinces() {
 			var _this = this;
@@ -15046,7 +15051,7 @@ exports.default = {
 		saveEdit: function saveEdit(form_data) {
 			var _this2 = this;
 
-			this.$http.post('/api/provinces/update', form_data).then(function (response) {
+			this.$http.put('/api/province/update', form_data).then(function (response) {
 				$('#modal-box-edit').modal('hide');
 
 				//Update province
@@ -15060,15 +15065,30 @@ exports.default = {
 				//Update error status
 				_this2.resetError();
 			}, function (error) {
-				console.log(error);
 				_this2.error.has_error = true;
 				_this2.error.message = error.data.message;
+			});
+		},
+		showFormNew: function showFormNew() {
+			$('#modal-box-new').modal();
+		},
+		insertNew: function insertNew(form_data) {
+			var _this3 = this;
+
+			this.$http.post('/api/province/store', form_data).then(function (response) {
+				$('#modal-box-new').modal('hide');
+				_this3.emptyProvinces();
+				_this3.getProvinces();
+				_this3.resetError();
+			}, function (error) {
+				_this3.error.has_error = true;
+				_this3.error.message = error.data.message;
 			});
 		}
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\" _v-bb8126b8=\"\">\n\t\t<div class=\"panel-heading\" _v-bb8126b8=\"\">                                \n\t      <h3 class=\"panel-title\" _v-bb8126b8=\"\">Province</h3>\n\t      <ul class=\"panel-controls\" _v-bb8126b8=\"\">\n\t          <li _v-bb8126b8=\"\"><a href=\"#\" class=\"panel-collapse\" _v-bb8126b8=\"\"><span class=\"fa fa-angle-down\" _v-bb8126b8=\"\"></span></a></li>\n\t          <li _v-bb8126b8=\"\"><a href=\"#\" class=\"panel-refresh\" _v-bb8126b8=\"\"><span class=\"fa fa-refresh\" _v-bb8126b8=\"\"></span></a></li>\n\t          <li _v-bb8126b8=\"\"><a href=\"#\" class=\"panel-remove\" _v-bb8126b8=\"\"><span class=\"fa fa-times\" _v-bb8126b8=\"\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\" _v-bb8126b8=\"\">\n\t      <tbl-grid :data=\"provinces\" :columns=\"columns\" :filter-key=\"searchQuery\" @show-modal=\"onShowModal\" _v-bb8126b8=\"\">\n\t\t\t  </tbl-grid>\n\t\t\t  <button type=\"button\" class=\"btn btn-primary\" _v-bb8126b8=\"\">Add New</button>\n\t  </div>\n  </div>   \n  <modal-box :title=\"'Province'\" :modal-id=\"'modal-box-edit'\" @close-modal=\"onCloseModal\" _v-bb8126b8=\"\">\n  \t<div class=\"alert alert-danger\" v-show=\"error.has_error\" _v-bb8126b8=\"\">\n        {{ error.message }}\n    </div>\n  \t<form class=\"form-horizontal\" _v-bb8126b8=\"\">   \n  \t\t<div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Code</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.code\" _v-bb8126b8=\"\">\n        </div>\n      </div>                                 \n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name EN</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_en\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name KH</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_kh\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <input type=\"hidden\" v-model=\"form_data.id\" _v-bb8126b8=\"\">\n  \t</form>\n  \t<button type=\"button\" class=\"btn btn-primary\" slot=\"footer\" @click=\"saveEdit(form_data)\" _v-bb8126b8=\"\">Save</button> \n  </modal-box> \n\n  <modal-box :title=\"'Province'\" :modal-id=\"'modal-box-new'\" @close-modal=\"onCloseModal\" _v-bb8126b8=\"\">\n  \t<div class=\"alert alert-danger\" v-show=\"error.has_error\" _v-bb8126b8=\"\">\n        {{ error.message }}\n    </div>\n  \t<form class=\"form-horizontal\" _v-bb8126b8=\"\">                                    \n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Code</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.code\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name EN</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_en\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name KH</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_kh\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <input type=\"hidden\" v-model=\"form_data.id\" _v-bb8126b8=\"\">\n  \t</form>\n  \t<button type=\"button\" class=\"btn btn-primary\" slot=\"footer\" @click=\"saveEdit(form_data)\" _v-bb8126b8=\"\">Save</button> \n\t</modal-box>  \n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"panel panel-default\" _v-bb8126b8=\"\">\n\t\t<div class=\"panel-heading\" _v-bb8126b8=\"\">                                \n\t      <h3 class=\"panel-title\" _v-bb8126b8=\"\">Province</h3>\n\t      <ul class=\"panel-controls\" _v-bb8126b8=\"\">\n\t          <li _v-bb8126b8=\"\"><a href=\"#\" class=\"panel-collapse\" _v-bb8126b8=\"\"><span class=\"fa fa-angle-down\" _v-bb8126b8=\"\"></span></a></li>\n\t          <li _v-bb8126b8=\"\"><a href=\"#\" class=\"panel-refresh\" _v-bb8126b8=\"\"><span class=\"fa fa-refresh\" _v-bb8126b8=\"\"></span></a></li>\n\t          <li _v-bb8126b8=\"\"><a href=\"#\" class=\"panel-remove\" _v-bb8126b8=\"\"><span class=\"fa fa-times\" _v-bb8126b8=\"\"></span></a></li>\n\t      </ul>                                \n\t  </div>\n\t  <div class=\"panel-body\" _v-bb8126b8=\"\">\n\t      <tbl-grid :data=\"provinces\" :columns=\"columns\" :filter-key=\"searchQuery\" @show-modal=\"onShowModal\" _v-bb8126b8=\"\">\n\t\t\t  </tbl-grid>\n\t\t\t  <button type=\"button\" class=\"btn btn-primary\" @click.prevent=\"showFormNew()\" _v-bb8126b8=\"\">Add New</button>\n\t  </div>\n  </div>   \n  <modal-box :title=\"'Province'\" :modal-id=\"'modal-box-edit'\" @close-modal=\"onCloseModal\" _v-bb8126b8=\"\">\n  \t<div class=\"alert alert-danger\" v-show=\"error.has_error\" _v-bb8126b8=\"\">\n        {{ error.message }}\n    </div>\n  \t<form class=\"form-horizontal\" _v-bb8126b8=\"\">   \n  \t\t<div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Code</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.code\" _v-bb8126b8=\"\">\n        </div>\n      </div>                                 \n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name EN</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_en\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name KH</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_kh\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <input type=\"hidden\" v-model=\"form_data.id\" _v-bb8126b8=\"\">\n  \t</form>\n  \t<button type=\"button\" class=\"btn btn-primary\" slot=\"footer\" @click=\"saveEdit(form_data)\" _v-bb8126b8=\"\">Save</button> \n  </modal-box> \n\n  <modal-box :title=\"'Province'\" :modal-id=\"'modal-box-new'\" @close-modal=\"onCloseModal\" _v-bb8126b8=\"\">\n  \t<div class=\"alert alert-danger\" v-show=\"error.has_error\" _v-bb8126b8=\"\">\n        {{ error.message }}\n    </div>\n  \t<form class=\"form-horizontal\" _v-bb8126b8=\"\">                                    \n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Code</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.code\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name EN</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_en\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <div class=\"form-group\" _v-bb8126b8=\"\">\n        <label class=\"col-md-2 control-label\" _v-bb8126b8=\"\">Name KH</label>\n        <div class=\"col-md-10\" _v-bb8126b8=\"\">\n          <input type=\"text\" class=\"form-control\" v-model=\"form_data.name_kh\" _v-bb8126b8=\"\">\n        </div>\n      </div>\n      <input type=\"hidden\" v-model=\"form_data.id\" _v-bb8126b8=\"\">\n  \t</form>\n  \t<button type=\"button\" class=\"btn btn-primary\" slot=\"footer\" @click=\"insertNew(form_data)\" _v-bb8126b8=\"\">Save</button> \n\t</modal-box>  \n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

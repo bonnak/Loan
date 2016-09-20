@@ -16,7 +16,7 @@
 
 			    @show-modal="onShowModal">
 			  </tbl-grid>
-			  <button type="button" class="btn btn-primary">Add New</button>
+			  <button type="button" class="btn btn-primary" @click.prevent="showFormNew()">Add New</button>
 	  </div>
   </div>   
   <modal-box :title="'Province'" 
@@ -76,7 +76,7 @@
       </div>
       <input type="hidden" v-model="form_data.id">
   	</form>
-  	<button type="button" class="btn btn-primary" slot="footer" @click="saveEdit(form_data)">Save</button> 
+  	<button type="button" class="btn btn-primary" slot="footer" @click="insertNew(form_data)">Save</button> 
 	</modal-box>  
 </template>
 
@@ -123,17 +123,24 @@ export default{
 		},
 
 		onCloseModal(data){
+			this.emptyFormData();
+			this.resetError();
+		},
+
+		emptyFormData(){
 			this.form_data.id = null;
 			this.form_data.code = '';
 			this.form_data.name_en = '';
 			this.form_data.name_kh = '';
-
-			this.resetError();
 		},
 
 		resetError(){
 			this.error.has_error = false;
 			this.error.message = '';
+		},
+
+		emptyProvinces(){
+			this.provinces.splice(0, this.provinces.length);
 		},
 
 		getProvinces(){
@@ -152,7 +159,7 @@ export default{
 		},
 
 		saveEdit(form_data){
-			this.$http.post('/api/provinces/update', form_data)
+			this.$http.put('/api/province/update', form_data)
 			.then(
 				(response) => {
 					$('#modal-box-edit').modal('hide');
@@ -167,8 +174,27 @@ export default{
 					this.resetError();
 	      },
 	      (error) => {
-	      	console.log(error);
 					this.error.has_error = true;
+			    this.error.message = error.data.message;
+	      }
+			);
+		},
+
+		showFormNew(){
+			$('#modal-box-new').modal();
+		},
+
+		insertNew(form_data){
+			this.$http.post('/api/province/store', form_data)
+			.then(
+				(response) => {
+					$('#modal-box-new').modal('hide');
+					this.emptyProvinces();
+					this.getProvinces();
+					this.resetError();
+	      },
+	      (error) => {
+	      	this.error.has_error = true;
 			    this.error.message = error.data.message;
 	      }
 			);
