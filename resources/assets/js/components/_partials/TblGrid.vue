@@ -99,8 +99,7 @@ export default	{
 	align-items: center;
   justify-content: center;
   width: 32px;
-  height: 32px;
-  border-radius: 50%;  
+  height: 32px;  
 }
 
 .btn-tb-action .fa, 

@@ -14852,7 +14852,7 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"vue":5,"vue-hot-reload-api":2}],14:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.btn-tb-action[_v-7becfaf3]{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa[_v-7becfaf3], \n.btn-tb-action .glyphicon[_v-7becfaf3]{\n\tmargin-right: 0;\n}\n")
+var __vueify_style__ = __vueify_insert__.insert("\n.btn-tb-action[_v-7becfaf3]{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;  \n}\n\n.btn-tb-action .fa[_v-7becfaf3], \n.btn-tb-action .glyphicon[_v-7becfaf3]{\n\tmargin-right: 0;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14912,7 +14912,7 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.btn-tb-action[_v-7becfaf3]{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;  \n}\n\n.btn-tb-action .fa[_v-7becfaf3], \n.btn-tb-action .glyphicon[_v-7becfaf3]{\n\tmargin-right: 0;\n}\n"] = false
+    __vueify_insert__.cache["\n.btn-tb-action[_v-7becfaf3]{\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 32px;\n  height: 32px;  \n}\n\n.btn-tb-action .fa[_v-7becfaf3], \n.btn-tb-action .glyphicon[_v-7becfaf3]{\n\tmargin-right: 0;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
