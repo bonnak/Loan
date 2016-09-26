@@ -29,5 +29,7 @@ $api->version('v1', function ($api) {
     $api->get('provinces', 'App\Http\Controllers\ProvinceController@getProvinces');
     $api->post('province/store', 'App\Http\Controllers\ProvinceController@store');
     $api->put('province/update', 'App\Http\Controllers\ProvinceController@update');
+
+    $api->get('districts', 'App\Http\Controllers\DistrictController@getDistricts');
   });
 });
